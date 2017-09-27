@@ -1,0 +1,15 @@
+# Current time Fri Sep 22 16:50:31 2017
+# ModelSim - Intel FPGA Edition Stack Trace
+# Program = vish
+# Id = "10.5b"
+# Version = "2016.10"
+# Date = "Oct  5 2016"
+# Platform = linuxpe
+# 0    0xf5ee83eb: '_ZNK9Scintilla10LineVector16LineFromPositionEi + 0x5b' in '/home/davide/intelFPGA/16.1/modelsim_ase/bin/../linux/ScintillaTk/libScintillaTk0.36.so'
+# Current time Sun Sep 24 10:53:11 2017
+# ModelSim - Intel FPGA Edition Stack Trace
+# Program = vish
+# Id = "10.5b"
+# Version = "2016.10"
+# Date = "Oct  5 2016"
+# Platform = linuxpe
