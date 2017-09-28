@@ -46,7 +46,7 @@ begin  -- IRam_Bhe
     variable tmp_data_u2 : std_logic_vector(I_SIZE-1 downto 0);
   begin  -- process FILL_MEM_P
     if (Rst = '1') then
-      file_open(mem_fp2,"data.mem",READ_MODE);
+      file_open(mem_fp2,"DLX_vhd\test_bench\data.mem",READ_MODE);
       report "RESETTT:";
 	
       while (not endfile(mem_fp2)) loop
