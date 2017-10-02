@@ -24,9 +24,7 @@ entity btb is
 
 	);
 end btb;
-
 architecture Bhe of btb is
-
 
 -- actual BTB memory
 type PC_array is array (integer range 0 to 2**N_LINES - 1) of std_logic_vector(SIZE - 1 downto 0);

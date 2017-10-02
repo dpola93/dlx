@@ -1,8 +1,6 @@
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
---use work.myTypes.all;
 
 entity zerocheck is
 	generic (
@@ -17,7 +15,6 @@ entity zerocheck is
 end zerocheck;
 
 architecture Bhe of zerocheck is
-
 begin
 	process(CTRL, IN0)
 	begin
