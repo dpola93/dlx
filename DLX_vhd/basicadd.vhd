@@ -14,9 +14,9 @@ entity basicadd is
 	SIZE : integer := 32
 );
   port (
-	IN1 : in  unsigned(SIZE - 1 downto 0);
-   	IN2 : in  unsigned(SIZE - 1 downto 0);
-	OUT1 : out  unsigned(SIZE - 1 downto 0)
+	IN1	: in unsigned(SIZE - 1 downto 0);
+   	IN2	: in unsigned(SIZE - 1 downto 0);
+	OUT1	: out unsigned(SIZE - 1 downto 0)
 
 	);
 end basicadd;

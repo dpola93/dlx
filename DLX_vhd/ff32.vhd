@@ -8,10 +8,10 @@ generic (
 	SIZE : integer := 32
 );
 PORT( 
-	D: in std_logic_vector(SIZE - 1 downto 0);
-	clk: in std_logic;
-	rst: in std_logic;
-	Q: out std_logic_vector(SIZE - 1 downto 0)
+	D	: in std_logic_vector(SIZE - 1 downto 0);
+	clk	: in std_logic;
+	rst	: in std_logic;
+	Q	: out std_logic_vector(SIZE - 1 downto 0)
 	);
 end ff32;
 

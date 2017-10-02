@@ -6,10 +6,10 @@ entity piso_r_2 is
 	N : natural := 8
 	);
   port(
-	Clock: in std_logic; 
-	ALOAD : in std_logic; 
-	D   : in std_logic_vector(N-1 downto 0); 
-	SO  : out std_logic_vector(N-1 downto 0)	); 
+	Clock	: in std_logic; 
+	ALOAD	: in std_logic; 
+	D  	: in std_logic_vector(N-1 downto 0); 
+	SO 	: out std_logic_vector(N-1 downto 0)	); 
 end piso_r_2; 
 
 architecture archi of piso_r_2 is 

@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 
 -- BTB number of lines should be correctly evaulated in order to achieve good performance without spending too much area
-
+-- add comment on this, it's not clear at all
 entity btb is
 	generic (
 	N_LINES	: integer := 4;
@@ -44,7 +44,7 @@ signal current_taken	: std_logic;
 
 begin
 
-
+-- TODO: fix identation of this shit
 process(reset,clock)
 begin
 	if reset = '1' then

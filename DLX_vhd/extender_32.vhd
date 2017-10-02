@@ -9,9 +9,9 @@ entity extender_32 is
 	SIZE : integer := 32
 );
   port (
-	IN1 : in  std_logic_vector(SIZE - 1 downto 0);
-	CTRL: in std_logic;                -- when 0 extend on 16 bits , when 1 extend on 26 bits
-	OUT1 : out  std_logic_vector(SIZE - 1 downto 0)
+	IN1	: in std_logic_vector(SIZE - 1 downto 0);
+	CTRL	: in std_logic;                -- when 0 extend on 16 bits , when 1 extend on 26 bits
+	OUT1	: out std_logic_vector(SIZE - 1 downto 0)
 
 	);
 end extender_32;
@@ -23,8 +23,9 @@ architecture Bhe of extender_32 is
 
 begin
 
-	TEMP16 <= IN1(15 downto 0);
-	TEMP26 <= IN1(25 downto 0);
-	OUT1 <= std_logic_vector(resize(signed(TEMP16),SIZE)) when CTRL = '0' else std_logic_vector(resize(signed(TEMP26),SIZE));
+	TEMP16	<= IN1(15 downto 0);
+	TEMP26	<= IN1(25 downto 0);
+	OUT1	<= 	std_logic_vector(resize(signed(TEMP16),SIZE)) when CTRL = '0' else
+			std_logic_vector(resize(signed(TEMP26),SIZE));
 
 end Bhe;

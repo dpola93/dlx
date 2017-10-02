@@ -24,7 +24,7 @@ entity fw_logic is
 	);
 end fw_logic;
 
-architecture Beh of fw_logic is
+architecture beh of fw_logic is
 
 signal S_FWA_wb		: std_logic;
 signal S_FWB_wb		: std_logic;
@@ -74,4 +74,4 @@ S_FWAdec <=	"00" when S_FWAdec_mem = '0' and S_FWAdec_wb = '0' else
 		"XX";
 
 
-end Beh;
+end beh;
