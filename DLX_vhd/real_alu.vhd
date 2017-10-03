@@ -7,14 +7,14 @@ entity real_alu is
 	generic (
 	DATA_SIZE : integer := 32);
 	port (
-	IN1	: in std_logic_vector(DATA_SIZE - 1 downto 0);
-	IN2	: in std_logic_vector(DATA_SIZE - 1 downto 0);
-	OP	: in AluOp;
+	IN1	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
+	IN2	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
+	OP	: in  AluOp;
 	DOUT	: out std_logic_vector(DATA_SIZE - 1 downto 0);
 	ZEROUT	: out std_logic;
 	stall_o	: out std_logic;
-	Clock	: in std_logic;
-	Reset	: in std_logic
+	Clock	: in  std_logic;
+	Reset	: in  std_logic
 	);
 
 end real_alu;
@@ -23,30 +23,30 @@ architecture Bhe of real_alu is
 
 component fake_mult
  port (
-	IN1	: in std_logic_vector(31 downto 0);
-	IN2	: in std_logic_vector(31 downto 0);
+	IN1	: in  std_logic_vector(31 downto 0);
+	IN2	: in  std_logic_vector(31 downto 0);
 	DOUT	: out std_logic_vector(31 downto 0);
 	stall_o	: out std_logic;
-	enable	: in std_logic;
-	Clock	: in std_logic;
-	Reset	: in std_logic
+	enable	: in  std_logic;
+	Clock	: in  std_logic;
+	Reset	: in  std_logic
 	);
 end component;
 
 component simple_booth_add_ext
 generic (N : integer);
 port(	
-	Clock		: in std_logic;
-	Reset		: in std_logic;
-	sign		: in std_logic;
-	enable		: in std_logic;
+	Clock		: in  std_logic;
+	Reset		: in  std_logic;
+	sign		: in  std_logic;
+	enable		: in  std_logic;
 	busy		: out std_logic;
 	valid		: out std_logic;
-	A		: IN std_logic_vector (N-1 downto 0);
-	B		: IN std_logic_vector (N-1 downto 0);
+	A		: in  std_logic_vector (N-1 downto 0);
+	B		: in  std_logic_vector (N-1 downto 0);
 	A_to_add	: out std_logic_vector (2*N-1 downto 0);
 	B_to_add	: out std_logic_vector (2*N-1 downto 0);
-	ACC_from_add	: in std_logic_vector (2*N-1 downto 0)
+	ACC_from_add	: in  std_logic_vector (2*N-1 downto 0)
 	);
 end component;
 
@@ -54,10 +54,10 @@ end component;
 component RCA 
 generic (M : integer);
 Port (
-	A	: In std_logic_vector(M-1 downto 0);
-	B	: In std_logic_vector(M-1 downto 0);
-	Cin	: In std_logic_vector(0 downto 0);
-	S	: Out std_logic_vector(M-1 downto 0)
+	A	: in  std_logic_vector(M-1 downto 0);
+	B	: in  std_logic_vector(M-1 downto 0);
+	Cin	: in  std_logic_vector(0 downto 0);
+	S	: out std_logic_vector(M-1 downto 0)
 	);
  end component; 
 
@@ -202,5 +202,5 @@ begin
 	end if;
 end process;
 
-end Bhe;
+end bhe;
 

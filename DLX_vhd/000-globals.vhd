@@ -125,7 +125,10 @@ package myTypes is
 	constant FFUNC_LED    : std_logic_vector(FUNC_SIZE - 1 downto 0) :=  "000"&X"1C";    -- ADD RS1,RS2,RD
 	constant FFUNC_GED    : std_logic_vector(FUNC_SIZE - 1 downto 0) :=  "000"&X"1D";    -- ADD RS1,RS2,RD
 
-
+	constant TAKE_PC4     : std_logic_vector(1 downto 0) :=  "00";
+	constant TAKE_BRANCH  : std_logic_vector(1 downto 0) :=  "11";
+	constant TAKE_A       : std_logic_vector(1 downto 0) :=  "01";
+	constant TAKE_SUM     : std_logic_vector(1 downto 0) :=  "10";
 
 end myTypes;
 
