@@ -21,18 +21,6 @@ end real_alu;
 
 architecture Bhe of real_alu is		
 
-component fake_mult
- port (
-	IN1	: in  std_logic_vector(31 downto 0);
-	IN2	: in  std_logic_vector(31 downto 0);
-	DOUT	: out std_logic_vector(31 downto 0);
-	stall_o	: out std_logic;
-	enable	: in  std_logic;
-	Clock	: in  std_logic;
-	Reset	: in  std_logic
-	);
-end component;
-
 component simple_booth_add_ext
 generic (N : integer);
 port(	
@@ -99,6 +87,9 @@ mux_B <=	notB		when mux_adder_input = '0' else
 		B_booth_to_add	when mux_adder_input = '1' else
 		(others => 'X');
 
+enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
+			'0';
+
 
 MULT: simple_booth_add_ext 
 	generic map ( N => DATA_SIZE/2)
@@ -128,6 +119,8 @@ ADDER: RCA
 
 ZEROUT <= '0';
 stall_o <= busy_from_booth and not(valid_from_booth);
+--TODO: set this according to what should be done ( ADDER, MULT, LOGIC, SHIFTER, COMP)
+-- TODO: MISSING A FORWARDING ON STORE REG FIX THAT ADDING A FW TO S
 DOUT <= sum_out		when out_mux_sel = "00" else
 	(others => '0')	when out_mux_sel = "01" else
 	(others => '0')	when out_mux_sel = "10" else
@@ -181,12 +174,12 @@ begin
 --  when SGEU => DOUT <= (others => '0');
   when MULTU =>	out_mux_sel <= "00";
 	--		mux_adder_input <= '0';
-			enable_to_booth <= '1';
+--			enable_to_booth <= '1';
 			carry_to_adder <= "0";
 			sign_to_booth <= '0';
   when MULTS =>	out_mux_sel <= "00";
 		--	mux_adder_input <= '0';
-			enable_to_booth <= '1';
+--			enable_to_booth <= '1';
 			carry_to_adder <= "0";
 			sign_to_booth <= '1';
   when others => out_mux_sel <= "00";

@@ -1,0 +1,10 @@
+ line   address	contents
+    2  00000000  20010006	addi r1, r0, 6
+    3  00000004  20020007	addi r2, r0, 7
+    4  00000008  0422180e	mult r3, r1, r2
+    5  0000000c  20630002	addi r3, r3, 2
+    6  00000010          	shift:
+    8  00000010  58630001	srli r3, r3, 1
+    9  00000014  1460fff8	bnez r3, shift
+   11  00000018          	fine:
+   12  00000018  0bfffffc	j fine

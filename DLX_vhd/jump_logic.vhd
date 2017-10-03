@@ -103,15 +103,17 @@ EXTENDER: extender_32 port map(
 	IN1	=> IR_i, 
 	CTRL	=> S_EXT_i, -- FAKE
 	OUT1	=> ext_imm);
-
 ADDRADD: basicadd port map(
 	IN1	=> unsigned(PC4_i), 
 	IN2	=> unsigned(ext_imm), 
 	OUT1	=> sum_addr);
 
-BRANCH4ADD: add4 port map(
-	IN1	=> unsigned(PC4_i),
-	OUT1	=> help_PC8);
+-- REMOVED ( NO MORE NEEDED TO HAVE PC8, THERE IS NO DELAY SLOT
+--BRANCH4ADD: add4 port map(
+--	IN1	=> unsigned(PC4_i),
+--	OUT1	=> help_PC8);
+help_PC8 <= unsigned(PC4_i);
+
 
 MUXTARGET: mux21 port map(
 	IN0	=> std_logic_vector(sum_addr), 

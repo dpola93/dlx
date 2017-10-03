@@ -56,34 +56,34 @@ component mux41
     );
 end component;
 
-component fakeALU
-  generic (
-	DATA_SIZE : integer);
-  port (
-	IN1		: in std_logic_vector(DATA_SIZE - 1 downto 0);
-	IN2		: in std_logic_vector(DATA_SIZE - 1 downto 0);
-	OP		: in AluOp;
-	DOUT		: out std_logic_vector(DATA_SIZE - 1 downto 0);
-	ZEROUT		: out std_logic;
-	stall_o		: out std_logic;
-	Clock		: in std_logic;
-	Reset		: in std_logic
+component real_alu
+	generic (
+	DATA_SIZE : integer := 32);
+	port (
+	IN1	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
+	IN2	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
+	OP	: in  AluOp;
+	DOUT	: out std_logic_vector(DATA_SIZE - 1 downto 0);
+	ZEROUT	: out std_logic;
+	stall_o	: out std_logic;
+	Clock	: in  std_logic;
+	Reset	: in  std_logic
     );
 end component;
 
-signal mux2FWB : std_logic_vector(SIZE - 1 downto 0);
+signal FWB2mux : std_logic_vector(SIZE - 1 downto 0);
 signal FWA2alu : std_logic_vector(SIZE - 1 downto 0);
 signal FWB2alu : std_logic_vector(SIZE - 1 downto 0);
 
 begin
 
 MUXALUIN: mux21 port map(
-	IN0	=> MUXED_B_i,
+	IN0	=> FWB2mux,
 	IN1	=> IMM_i, 
 	CTRL	=> S_MUX_ALUIN_i, 
-	OUT1	=> mux2FWB);
+	OUT1	=> FWB2alu);
 
-ALU: fakealu generic map (
+ALU: real_alu generic map (
 	DATA_SIZE => 32
 	)
 	port map (
@@ -125,12 +125,12 @@ MUX_FWB: mux41 	generic map(
 	MUX_SIZE => 32
 	)
 	port map(
-	IN0	=> mux2FWB, 
+	IN0	=> MUXED_B_i, 
 	IN1	=> FW_X_i,
 	IN2	=> FW_W_i, 
 	IN3	=> "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", 
 	CTRL	=> S_FW_B_i, 
-	OUT1	=> FWB2alu
+	OUT1	=> FWB2mux
 	);
 
 end Struct;
