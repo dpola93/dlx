@@ -70,6 +70,7 @@ component extender_32
 	port(
 	IN1	: in std_logic_vector(SIZE - 1 downto 0);
 	CTRL	: in std_logic;                -- when 0 extend on 16 bits , when 1 extend on 26 bits
+	SIGN	: in std_logic;                -- when 0 unsigned, when 1 signed 
 	OUT1	: out std_logic_vector(SIZE - 1 downto 0)
 	);
 end component;
@@ -102,6 +103,7 @@ begin
 EXTENDER: extender_32 port map(
 	IN1	=> IR_i, 
 	CTRL	=> S_EXT_i, -- FAKE
+	SIGN	=> '0',		--TODO: fix this ADD SIGN ON CW and correct this value
 	OUT1	=> ext_imm);
 ADDRADD: basicadd port map(
 	IN1	=> unsigned(PC4_i), 
