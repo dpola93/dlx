@@ -39,7 +39,7 @@ component shift
 		Clock	: in std_logic; 
 		ALOAD	: in std_logic; 
 		D	: in std_logic_vector(N-1 downto 0); 
-		SO	: out std_logic	); 
+		SO	: out std_logic	); 
 end component; 
 
 component piso_r_2
@@ -50,7 +50,7 @@ component piso_r_2
 	Clock	: in std_logic; 
 	ALOAD	: in std_logic; 
 	D	: in std_logic_vector(N-1 downto 0); 
-	SO	: out std_logic_vector(N-1 downto 0)	); 
+	SO	: out std_logic_vector(N-1 downto 0)	); 
 end component;
   component mux8to1_gen 
 

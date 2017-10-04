@@ -60,6 +60,7 @@ component jump_logic is
 	FW_W_i		: in  std_logic_vector(31 downto 0);
 	S_FW_Adec_i	: in  std_logic_vector(1 downto 0);
 	S_EXT_i		: in  std_logic;
+	S_EXT_SIGN_i	: in  std_logic;
 	S_MUX_LINK_i	: in  std_logic;
 	S_EQ_NEQ_i	: in  std_logic 
 	);
@@ -87,7 +88,7 @@ component dlx_cu is
   OP_CODE_SIZE		:   integer := 6; -- Op Code Size
   -- ALU_OPC_ZE   	:   integer := 6; -- ALU Op Code Word Size
   IR_SIZE		:   integer := 32; -- Instruction Register Size  
-  CW_SIZE		:   integer := 12); -- Control Word Size
+  CW_SIZE		:   integer := 13); -- Control Word Size
  port (
   Clk			: in  std_logic; -- clock
   Rst			: in  std_logic; -- rst:Active-Low
@@ -102,6 +103,7 @@ component dlx_cu is
   S3_LATCH_EN		: out std_logic;
   S_MUX_PC_BUS		: out std_logic_vector(1 downto 0);
   S_EXT			: out std_logic;
+  S_EXT_SIGN		: out std_logic;
   S_EQ_NEQ		: out std_logic;
   S_MUX_LINK		: out std_logic;
   S_MUX_DEST		: out std_logic_vector(1 downto 0);
@@ -266,6 +268,7 @@ signal dummy_sum_addr		: std_logic_vector(31 downto 0);
 signal dummy_S_MUX_PC_BUS	: std_logic_vector(1 downto 0);
 signal dummy_S_MUX_DEST		: std_logic_vector(1 downto 0);
 signal dummy_S_EXT		: std_logic;
+signal dummy_S_EXT_SIGN		: std_logic;
 signal dummy_S_MUX_LINK		: std_logic;
 signal dummy_S_MUX_ALUIN	: std_logic;
 signal dummy_S_EQ_NEQ		: std_logic;
@@ -388,6 +391,7 @@ begin
 	FW_W_i		=> wb2reg,
 	S_FW_Adec_i	=> dummy_S_FWAdec,
 	S_EXT_i		=> dummy_S_EXT,
+	S_EXT_SIGN_i	=> dummy_S_EXT_SIGN,
 	S_MUX_LINK_i	=> dummy_S_MUX_LINK,
 	S_EQ_NEQ_i	=> dummy_S_EQ_NEQ
 	);
@@ -406,6 +410,7 @@ begin
 	S3_LATCH_EN 	=> open,
 	S_MUX_PC_BUS	=> dummy_S_MUX_PC_BUS,
 	S_EXT		=> dummy_S_EXT,
+	S_EXT_SIGN	=> dummy_S_EXT_SIGN,
 	S_EQ_NEQ	=> dummy_S_EQ_NEQ,
 	S_MUX_LINK	=> dummy_S_MUX_LINK,
 	S_MUX_DEST	=> dummy_S_MUX_DEST,

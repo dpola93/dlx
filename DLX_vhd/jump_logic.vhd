@@ -26,6 +26,7 @@ entity jump_logic is
 	FW_W_i		: in std_logic_vector(SIZE - 1 downto 0);
 	S_FW_Adec_i	: in std_logic_vector(1 downto 0);
 	S_EXT_i		: in std_logic;
+	S_EXT_SIGN_i	: in std_logic;
 	S_MUX_LINK_i	: in std_logic;
 	S_EQ_NEQ_i	: in std_logic 
 	);
@@ -103,7 +104,7 @@ begin
 EXTENDER: extender_32 port map(
 	IN1	=> IR_i, 
 	CTRL	=> S_EXT_i, -- FAKE
-	SIGN	=> '0',		--TODO: fix this ADD SIGN ON CW and correct this value
+	SIGN	=> S_EXT_SIGN_i,		--TODO: fix this ADD SIGN ON CW and correct this value
 	OUT1	=> ext_imm);
 ADDRADD: basicadd port map(
 	IN1	=> unsigned(PC4_i), 

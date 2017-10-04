@@ -1,2 +1,4 @@
 *.bak
 work/_*
+transcript
+*.wlf

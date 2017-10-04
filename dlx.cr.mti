@@ -101,16 +101,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity IRAM
 -- Compiling architecture IRam_Bhe of IRAM
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/ff32.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/ff32.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Compiling entity ff32
--- Compiling architecture behavioral of ff32
-
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/mem_block.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/mem_block.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -120,6 +110,16 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Loading package myTypes
 -- Compiling entity mem_block
 -- Compiling architecture Struct of mem_block
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/ff32.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/ff32.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity ff32
+-- Compiling architecture behavioral of ff32
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/jump_logic.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/jump_logic.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -152,15 +152,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity dlx_cu
 -- Compiling architecture dlx_cu_hw of dlx_cu
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/basicadd.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/basicadd.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity basicadd
--- Compiling architecture Bhe of basicadd
-
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/execute_regs.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/execute_regs.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -170,6 +161,15 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity execute_regs
 -- Compiling architecture struct of execute_regs
 
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/basicadd.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/basicadd.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity basicadd
+-- Compiling architecture Bhe of basicadd
+
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/extender_32.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/extender_32.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -178,24 +178,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Loading package NUMERIC_STD
 -- Compiling entity extender_32
 -- Compiling architecture Bhe of extender_32
-
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/decode_regs.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/decode_regs.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity decode_regs
--- Compiling architecture struct of decode_regs
-
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/fetch_block.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/fetch_block.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity fetch_block
--- Compiling architecture Struct of fetch_block
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/useless/fakealu.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/useless/fakealu.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -207,24 +189,49 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity fakeALU
 -- Compiling architecture Bhe of fakealu
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/a.e-DRAM.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/a.e-DRAM.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/fetch_block.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/fetch_block.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
 -- Loading package NUMERIC_STD
--- Loading package std_logic_textio
--- Compiling entity DRAM
--- Compiling architecture DRam_Bhe of DRAM
+-- Compiling entity fetch_block
+-- Compiling architecture Struct of fetch_block
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fw_logic.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fw_logic.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/decode_regs.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/decode_regs.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Loading package myTypes
--- Compiling entity tb_fw_logic
--- Compiling architecture TEST of tb_fw_logic
+-- Loading package NUMERIC_STD
+-- Compiling entity decode_regs
+-- Compiling architecture struct of decode_regs
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/simple_booth_add_ext.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/simple_booth_add_ext.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity simple_booth_add_ext
+-- Compiling architecture struct of simple_booth_add_ext
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/mux21.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/mux21.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity mux21
+-- Compiling architecture Bhe of mux21
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/logic_unit.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/logic_unit.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity logic_unit
+-- Compiling architecture Bhe of logic_unit
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/stall_logic.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/stall_logic.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -239,31 +246,24 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity stall_logic
 -- Compiling architecture stall_logic_hw of stall_logic
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/simple_booth_add_ext.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/simple_booth_add_ext.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fw_logic.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fw_logic.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package myTypes
+-- Compiling entity tb_fw_logic
+-- Compiling architecture TEST of tb_fw_logic
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/a.e-DRAM.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/a.e-DRAM.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
 -- Loading package NUMERIC_STD
--- Compiling entity simple_booth_add_ext
--- Compiling architecture struct of simple_booth_add_ext
-
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/logic_unit.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/logic_unit.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling entity logic_unit
--- Compiling architecture Bhe of logic_unit
-
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/mux21.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/mux21.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity mux21
--- Compiling architecture Bhe of mux21
+-- Loading package std_logic_textio
+-- Compiling entity DRAM
+-- Compiling architecture DRam_Bhe of DRAM
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/execute_block.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/execute_block.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -284,14 +284,15 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity zerocheck
 -- Compiling architecture Bhe of zerocheck
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fetch_block.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fetch_block.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/mux41.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/mux41.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
 -- Loading package myTypes
--- Compiling entity tb_fetch_block
--- Compiling architecture TEST of tb_fetch_block
+-- Compiling entity mux41
+-- Compiling architecture Bhe of mux41
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/01-generic_shifter.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/01-generic_shifter.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -303,15 +304,23 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity SHIFTER_GENERIC
 -- Compiling architecture BEHAVIORAL of SHIFTER_GENERIC
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/mux41.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/mux41.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fetch_block.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_fetch_block.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package myTypes
+-- Compiling entity tb_fetch_block
+-- Compiling architecture TEST of tb_fetch_block
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/btb.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/btb.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
 -- Loading package NUMERIC_STD
--- Loading package myTypes
--- Compiling entity mux41
--- Compiling architecture Bhe of mux41
+-- Compiling entity btb
+-- Compiling architecture Bhe of btb
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_real_alu.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/test_bench/tb_real_alu.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -323,15 +332,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity tb_real_alu
 -- Compiling architecture TEST of tb_real_alu
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/btb.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/btb.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity btb
--- Compiling architecture Bhe of btb
-
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/000-globals.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/000-globals.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -339,14 +339,14 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Loading package std_logic_1164
 -- Compiling package myTypes
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/fetch_regs.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/fetch_regs.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/top_level.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/top_level.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity fetch_regs
--- Compiling architecture struct of fetch_regs
+-- Loading package myTypes
+-- Compiling entity top_level
+-- Compiling architecture arch of top_level
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/fw_logic.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/fw_logic.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -359,24 +359,22 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity fw_logic
 -- Compiling architecture beh of fw_logic
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/top_level.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/top_level.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/fetch_regs.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/fetch_regs.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Loading package myTypes
--- Compiling entity top_level
--- Compiling architecture arch of top_level
+-- Loading package NUMERIC_STD
+-- Compiling entity fetch_regs
+-- Compiling architecture struct of fetch_regs
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/booth_encoder.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/booth_encoder.vhd
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/piso.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/piso.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Compiling entity Booth_encoder
--- Compiling architecture behavior of booth_encoder
+-- Compiling entity shift
+-- Compiling architecture archi of shift
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/ff32_en.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/ff32_en.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
@@ -387,5 +385,15 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Loading package STD_LOGIC_UNSIGNED
 -- Compiling entity ff32_en
 -- Compiling architecture behavioral of ff32_en
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/booth_encoder.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/booth_encoder.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity Booth_encoder
+-- Compiling architecture behavior of booth_encoder
 
 } {} {}}
