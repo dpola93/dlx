@@ -2,3 +2,7 @@
 work/_*
 transcript
 *.wlf
+assembler/*.list
+assembler/*.dump
+assembler/*.txt
+assembler/*.bin

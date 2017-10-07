@@ -19,9 +19,12 @@ architecture arch of top_level is
 	branch_target_i		: in  std_logic_vector(31 downto 0);
 	sum_addr_i		: in  std_logic_vector(31 downto 0);
 	A_i			: in  std_logic_vector(31 downto 0);
+	NPC4_i			: in  std_logic_vector(31 downto 0);
 	S_MUX_PC_BUS_i		: in  std_logic_vector(1 downto 0);
 	PC_o			: out std_logic_vector(31 downto 0);
+	PC4_o			: out std_logic_vector(31 downto 0);
 	stall_i			: in  std_logic;
+	wrong_back_pred_i	: in  std_logic;
 	take_prediction_i	: in  std_logic;
 	predicted_PC		: in  std_logic_vector(31 downto 0);
 	clk			: in  std_logic;
@@ -249,13 +252,15 @@ component btb is
 	target_PC_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	predicted_next_PC_o	: out std_logic_vector(SIZE - 1 downto 0);
 	taken_o			: out std_logic;
-	mispredict_o		: out std_logic
+	mispredict_o		: out std_logic; -- 1 when last branch was not correctly predicted
+	wrong_back_pred_o	: out std_logic -- 1 when last branch was predicted taken but its not
 
 	);
 end component;
 
 
 signal dummy_PC_BUS		: std_logic_vector(31 downto 0);
+signal dummy_PC4_BUS		: std_logic_vector(31 downto 0);
 signal dummy_FETCH_o		: std_logic_vector(31 downto 0);
 signal help_IR 			: std_logic_vector(31 downto 0);
 signal help_NPCF		: std_logic_vector(31 downto 0);
@@ -330,6 +335,7 @@ signal was_branch		: std_logic;
 
 signal mispredict		: std_logic;
 signal take_prediction		: std_logic;
+signal wrong_back_pred		: std_logic;
 signal predicted_PC		: std_logic_vector(31 downto 0);
 
 begin
@@ -341,9 +347,12 @@ begin
 	branch_target_i 	=> dummy_branch_target,
 	sum_addr_i		=> dummy_sum_addr,
 	A_i			=> dummy_A,
+	NPC4_i			=> help_NPCF,
 	S_MUX_PC_BUS_i		=> dummy_S_MUX_PC_BUS,
-	PC_o			=> dummy_PC_BUS,
+	PC_o			=> dummy_PC_BUS, 
+	PC4_o			=> dummy_PC4_BUS, --this is actually PC4 
 	stall_i			=> stall_fetch,
+	wrong_back_pred_i	=> wrong_back_pred,
 	take_prediction_i	=> take_prediction,
 	predicted_PC		=> predicted_PC,
 	clk			=> clock,
@@ -352,25 +361,26 @@ begin
 
 	UBTB : btb
 	generic map(
-	N_LINES	=> 2,
+	N_LINES	=> PRED_SIZE,
 	SIZE	=> 32
 	)
  	port map(
 	clock			=> clock,
 	reset			=> rst,
 	stall_i			=> stall_btb,
-	TAG_i			=> dummy_PC_BUS(2 - 1 + 2 downto 2),
+	TAG_i			=> dummy_PC_BUS(2+PRED_SIZE-1 downto 2),
 	was_taken_i		=> was_taken,
 	was_branch_i		=> was_branch,
 	target_PC_i		=> dummy_branch_target,
 	predicted_next_PC_o	=> predicted_PC,
 	taken_o			=> take_prediction,
-	mispredict_o		=> mispredict
+	mispredict_o		=> mispredict,
+	wrong_back_pred_o	=> wrong_back_pred
 
 	);
 	
 	UFEETCH_REGS: fetch_regs
-	Port Map (dummy_PC_BUS,dummy_FETCH_o,help_NPCF,help_IR,stall_decode,clock, rst);
+	Port Map (dummy_PC4_BUS,dummy_FETCH_o,help_NPCF,help_IR,stall_decode,clock, rst);
 
 	UJUMP_LOGIC: jump_logic
 	Port Map (

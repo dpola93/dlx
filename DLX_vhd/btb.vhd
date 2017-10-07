@@ -1,26 +1,29 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.myTypes.all;
 
-
+-- TODO: its useless to have both valid and taken?? what if use only taken instead?? think about this
+-- TODO: do a 2 bit predictor scheme too
 -- BTB number of lines should be correctly evaulated in order to achieve good performance without spending too much area
 -- add comment on this, it's not clear at all
 entity btb is
 	generic (
-	N_LINES	: integer := 4;
+	N_LINES	: integer := PRED_SIZE;
 	SIZE	: integer := 32
 );
   port (
-	clock			: in std_logic;
-	reset			: in std_logic;
-	stall_i			: in std_logic;
-	TAG_i			: in std_logic_vector(N_LINES - 1 downto 0); -- TAG is taken from the PC ( remove 2 lowest bits)
-	was_taken_i		: in std_logic; -- signal coming from CU, was last branch taken?
-	was_branch_i		: in std_logic; -- signal coming from CU, was last operation a branch?
-	target_PC_i		: in std_logic_vector(SIZE - 1 downto 0); -- output to PC
+	clock			: in  std_logic;
+	reset			: in  std_logic;
+	stall_i			: in  std_logic;
+	TAG_i			: in  std_logic_vector(N_LINES - 1 downto 0); -- TAG is taken from the PC ( remove 2 lowest bits)
+	was_taken_i		: in  std_logic; -- signal coming from CU, was last branch taken?
+	was_branch_i		: in  std_logic; -- signal coming from CU, was last operation a branch?
+	target_PC_i		: in  std_logic_vector(SIZE - 1 downto 0); -- output to PC
 	predicted_next_PC_o	: out std_logic_vector(SIZE - 1 downto 0); -- correct value from dec stage 
 	taken_o			: out std_logic; -- control to bypass PC_MUX and use prediction
-	mispredict_o		: out std_logic -- 1 when last branch was not correctly predicted
+	mispredict_o		: out std_logic; -- 1 when last branch was not correctly predicted
+	wrong_back_pred_o	: out std_logic -- 1 when last branch was predicted taken but its not
 
 	);
 end btb;
@@ -42,6 +45,8 @@ signal last_taken	: std_logic;
 signal current_valid	: std_logic;
 signal current_taken	: std_logic;
 
+signal mispredict_A	: std_logic;
+signal mispredict_B	: std_logic;
 begin
 
 -- TODO: fix identation of this shit
@@ -72,6 +77,8 @@ begin
 			if last_taken /= was_taken_i then
 				taken(to_integer(unsigned(last_TAG))) <= was_taken_i;
 			end if;
+		else -- in case last op was NOT a branch, remove valid	
+			valid(to_integer(unsigned(last_TAG))) <= '0';
 		end if;
 	end if;
 	end if;
@@ -79,21 +86,27 @@ end process;
 
 
 -- mispredict triggers when last operation was a branch and predicted value is different from actual value
-mispredict_o <= was_branch_i and (last_taken xor was_taken_i) and ( not stall_i);
+mispredict_A		<= was_branch_i and (last_taken xor was_taken_i);
 
+-- or when last operation was not a branch but we took the prediction
+mispredict_B		<= (not was_branch_i ) and last_taken;
+
+mispredict_o		<= (mispredict_A or mispredict_B) and ( not stall_i) and (not reset);
+wrong_back_pred_o	<= mispredict_B;
 --accesses to memory
-current_valid <= valid(to_integer(unsigned(TAG_i)));
-current_taken <= taken(to_integer(unsigned(TAG_i)));
-predicted_next_PC_o <= predict_PC(to_integer(unsigned(TAG_i)));
+current_valid		<= valid(to_integer(unsigned(TAG_i))) when TAG_i /= last_TAG else
+			   was_branch_i; -- DONT KNOW IF THIS SHIT WORKS!!!! WRITE THIS SPECIAL CASE ON THE REPORT!!!
+current_taken		<= taken(to_integer(unsigned(TAG_i)));
+predicted_next_PC_o	<= predict_PC(to_integer(unsigned(TAG_i)));
 
 -- need to have a correct behavior at reset
-last_TAG_next <= 	TAG_i when reset = '0' else
-			"00";
+last_TAG_next		<= 	TAG_i when reset = '0' else
+				(others => '0');
 --taken ( and last_taken_next ) when curret op is valid (found in memory) and prediction is taken
-taken_o <=	'1' when current_valid = '1' and current_taken = '1' and reset = '0' else
-	 	'0';
+taken_o			<=	'1' when current_valid = '1' and current_taken = '1' and reset = '0' else
+	 			'0';
 
-last_taken_next <=	'1' when current_valid = '1' and current_taken = '1' and reset = '0' else
-	 		'0';
+last_taken_next		<=	'1' when current_valid = '1' and current_taken = '1' and reset = '0' else
+	 			'0';
 
 end Bhe;

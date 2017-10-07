@@ -144,6 +144,7 @@ architecture dlx_cu_hw of dlx_cu is
   signal bubble			: std_logic; -- transform next op in decode into a NOP
   signal next_bubble		: std_logic; -- TODO: rename this into something similar to unconditional jump
 
+  signal was_no_branch	: std_logic;
 
 -- instantiation of stall_logic block
 
@@ -220,7 +221,7 @@ STALL_L : stall_logic
 
   -- control work is assigned to the word looked up in microcode memory
   -- unless we have bubbled the pipeline, in that case any instruction is transformed to NOP
-  cw_d <= cw_mem(conv_integer(IR_opcode)) when bubble = '0' else "0000000000000";
+  cw_d <= cw_mem(conv_integer(IR_opcode)) when (bubble = '0' or (bubble = '1' and was_no_branch = '0')) else "0000000000000";
 
   -- *** ATM THE LATCH ENABLES ARE DOING NOTHING! EVERYTHING IS CONTROLLED BY STALL ***
   -- TODO: FIX THIS 
@@ -254,12 +255,12 @@ STALL_L : stall_logic
   S_RF_W_exe	<= cw_e(CW_SIZE - 13);
 
   -- is the current op in mem stage a LOAD?
-  S_MEM_LOAD <= cw_m(CW_SIZE - 10) and (not cw_m(CW_SIZE - 11));
+  S_MEM_LOAD	<= cw_m(CW_SIZE - 10) and (not cw_m(CW_SIZE - 11));
 
   -- is the current op in exe stage a LOAD?
-  S_EXE_LOAD <= cw_e(CW_SIZE - 10) and (not cw_e(CW_SIZE - 11));
+  S_EXE_LOAD	<= cw_e(CW_SIZE - 10) and (not cw_e(CW_SIZE - 11));
 
-  was_branch_o <=  cw_d(CW_SIZE - 1) and cw_d(CW_SIZE - 2);
+  was_branch_o	<=  cw_d(CW_SIZE - 1) and cw_d(CW_SIZE - 2);
 
 
 
@@ -281,6 +282,9 @@ STALL_L : stall_logic
       -- update of the bubbe signal
       -- bubble means: cancel next decode operation and make it a nop ( used in case of misprediction or inconditional jumps)
       bubble <= next_bubble or mispredict_i;
+
+     -- write here if previous op was not a branch 
+      was_no_branch <= cw_d(CW_SIZE - 1) and cw_d(CW_SIZE - 2);
 
       -- exe stalled 
       if stall_exe_i = '1' or stall_exe_o_TEMP = '1' then
@@ -345,7 +349,7 @@ STALL_L : stall_logic
 				when 58 => aluOpcode_d <= SLTUS; 
 				when 59 => aluOpcode_d <= SGTUS; 
 				when 60 => aluOpcode_d <= SLEUS; 
-				when 61 => aluOpcode_d <= SGEU;
+				when 61 => aluOpcode_d <= SGEUS;
 				when others => aluOpcode_d <= NOP;
 			end case;
 

@@ -45,10 +45,22 @@ Port (
 	A	: in  std_logic_vector(M-1 downto 0);
 	B	: in  std_logic_vector(M-1 downto 0);
 	Cin	: in  std_logic_vector(0 downto 0);
-	S	: out std_logic_vector(M-1 downto 0)
+	S	: out std_logic_vector(M-1 downto 0);
+	Cout	: out std_logic
 	);
  end component; 
 
+component comparator 
+	generic (M : integer := 32);	
+	port (	
+	C	: in  std_logic; -- carry out
+	V	: in  std_logic; -- overflow
+	SUM	: in  std_logic_vector(M-1 downto 0);
+	sel	: in  std_logic_vector(2 downto 0); -- selection
+	sign	: in  std_logic; -- 0 unsigned / signed 1
+	S	: out std_logic
+	);
+end component; 
 
 
 signal enable2mult 	: std_logic := '0';
@@ -61,13 +73,17 @@ signal A_booth_to_add	: std_logic_vector(DATA_SIZE-1 downto 0);
 signal B_booth_to_add	: std_logic_vector(DATA_SIZE-1 downto 0);
 
 signal sum_out		: std_logic_vector(DATA_SIZE-1 downto 0);
+signal comp_out		: std_logic;
 
 signal mux_A		: std_logic_vector(DATA_SIZE-1 downto 0);
 signal mux_B		: std_logic_vector(DATA_SIZE-1 downto 0);
 
 signal carry_to_adder	: std_logic_vector(0 downto 0);
+signal carry_from_adder	: std_logic;
+signal overflow		: std_logic;
 
 signal out_mux_sel	: std_logic_vector(1 downto 0);
+signal comp_sel		: std_logic_vector(2 downto 0);
 
 signal mux_adder_input	: std_logic;
 signal not_control	: std_logic;
@@ -89,7 +105,7 @@ mux_B <=	notB		when mux_adder_input = '0' else
 
 enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
 			'0';
-
+overflow	<= (IN2(DATA_SIZE-1) xnor sum_out(DATA_SIZE-1)) and (IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1)); 
 
 MULT: simple_booth_add_ext 
 	generic map ( N => DATA_SIZE/2)
@@ -113,9 +129,20 @@ ADDER: RCA
 	A	=> mux_A,
 	B	=> mux_B,
 	Cin	=> carry_to_adder,
-	S	=> sum_out
+	S	=> sum_out,
+	Cout	=> carry_from_adder
 	);
 
+COMP: comparator
+	generic map ( M => DATA_SIZE)
+	port map (
+	C	=> carry_from_adder,
+	V	=> overflow,
+	SUM	=> sum_out,
+	sel	=> comp_sel,
+	sign	=> sign_to_booth, --TODO: check if can use this signal, maybe rename it to avoid confusion
+	S	=> comp_out
+	);
 
 ZEROUT <= '0';
 stall_o <= busy_from_booth and not(valid_from_booth);
@@ -124,7 +151,7 @@ stall_o <= busy_from_booth and not(valid_from_booth);
 DOUT <= sum_out		when out_mux_sel = "00" else
 	(others => '0')	when out_mux_sel = "01" else
 	(others => '0')	when out_mux_sel = "10" else
-	(others => '0')	when out_mux_sel = "11" else
+	"000"&X"0000000"&comp_out	when out_mux_sel = "11" else
 	(others => 'X');
 
 process(IN1,IN2,OP,multDATA)
@@ -134,32 +161,69 @@ begin
 --  when SLLS => DOUT <= (others => '0');
 --  when SRLS => DOUT <= (others => '0');
 --  when SRAS => DOUT <= (others => '0');
-  when ADDS =>	--mux_adder_input <= '0';
-			not_control <= '0';
-			carry_to_adder <= "0";
-			out_mux_sel <= "00";
-  when ADDUS =>	--mux_adder_input <= '0';
-			not_control <= '0';
-			carry_to_adder <= "0";	
-			out_mux_sel <= "00";
-  when SUBS =>	--mux_adder_input <= '0';
-			not_control <= '1';
-			carry_to_adder <= "1";	
-			out_mux_sel <= "00";
-  when SUBUS =>	--mux_adder_input <= '0';
-			not_control <= '1';
-			carry_to_adder <= "1";
-			out_mux_sel <= "00";
+  when ADDS =>
+		not_control <= '0';
+		carry_to_adder <= "0";
+		out_mux_sel <= "00";
+ 
+  when ADDUS =>
+		not_control <= '0';
+		carry_to_adder <= "0";	
+		out_mux_sel <= "00";
+
+  when SUBS =>		
+		not_control <= '1';
+		carry_to_adder <= "1";	
+		out_mux_sel <= "00";
+
+  when SUBUS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		out_mux_sel <= "00";
 
   when ANDS =>	out_mux_sel <= "01";
   when ORS =>	out_mux_sel <= "01";
   when XORS =>	out_mux_sel <= "01";
-  when SEQS =>	out_mux_sel <= "11";
-  when SNES =>	out_mux_sel <= "11";
-  when SLTS =>	out_mux_sel <= "11";
-  when SGTS =>	out_mux_sel <= "11";
-  when SLES =>	out_mux_sel <= "11";
-  when SGES =>	out_mux_sel <= "11";
+  when SEQS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "100";
+		out_mux_sel <= "11";
+
+  when SNES =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "101";
+		out_mux_sel <= "11";
+
+  when SLTS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "010";
+		out_mux_sel <= "11";
+		sign_to_booth <= '1';
+
+  when SGTS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "000";
+		out_mux_sel <= "11";
+		sign_to_booth <= '1';
+
+  when SLES =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "011";
+		out_mux_sel <= "11";
+		sign_to_booth <= '1';
+
+  when SGES =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "001";
+		out_mux_sel <= "11";
+		sign_to_booth <= '1';
+
 --  when MOVI2SS => DOUT <= (others => '0');
 --  when MOVS2IS => DOUT <= (others => '0');
 --  when MOVFS => DOUT <= (others => '0');
@@ -168,18 +232,38 @@ begin
 --  when MOVI2FP => DOUT <= (others => '0');
 --  when MOVI2TS => DOUT <= (others => '0');
 --  when MOVT2IS => DOUT <= (others => '0');
---  when SLTUS => DOUT <= (others => '0');
---  when SGTUS => DOUT <= (others => '0');
---  when SLEUS => DOUT <= (others => '0');
---  when SGEU => DOUT <= (others => '0');
+  when SLTUS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "010";
+		out_mux_sel <= "11";
+		sign_to_booth <= '0';
+
+  when SGTUS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "000";
+		out_mux_sel <= "11";
+		sign_to_booth <= '0';
+
+  when SLEUS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "011";
+		out_mux_sel <= "11";
+		sign_to_booth <= '0';
+
+  when SGEUS =>
+		not_control <= '1';
+		carry_to_adder <= "1";
+		comp_sel <= "001";
+		out_mux_sel <= "11";
+		sign_to_booth <= '0';
+
   when MULTU =>	out_mux_sel <= "00";
-	--		mux_adder_input <= '0';
---			enable_to_booth <= '1';
 			carry_to_adder <= "0";
 			sign_to_booth <= '0';
   when MULTS =>	out_mux_sel <= "00";
-		--	mux_adder_input <= '0';
---			enable_to_booth <= '1';
 			carry_to_adder <= "0";
 			sign_to_booth <= '1';
   when others => out_mux_sel <= "00";

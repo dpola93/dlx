@@ -12,10 +12,13 @@ entity fetch_block is
 	branch_target_i :	in std_logic_vector(SIZE - 1 downto 0);
 	sum_addr_i :		in std_logic_vector(SIZE - 1 downto 0);
 	A_i :			in std_logic_vector(SIZE - 1 downto 0);
+	NPC4_i :		in std_logic_vector(SIZE - 1 downto 0);
 	S_MUX_PC_BUS_i :	in std_logic_vector(1 downto 0);
 	PC_o :			out std_logic_vector(SIZE - 1 downto 0);
+	PC4_o :			out std_logic_vector(SIZE - 1 downto 0);
 	stall_i :		in std_logic;
 	take_prediction_i :	in std_logic;
+	wrong_back_pred_i :	in std_logic;
 	predicted_PC :		in std_logic_vector(SIZE - 1 downto 0);
 	clk :			in std_logic;
 	rst :			in std_logic
@@ -75,6 +78,7 @@ end component;
 signal PC_help		: std_logic_vector(SIZE - 1 downto 0);
 signal PC_BUS		: std_logic_vector(SIZE - 1 downto 0);
 signal PC_BUS_no_BTB	: std_logic_vector(SIZE - 1 downto 0);
+signal help_ctrl	: std_logic_vector(1 downto 0);
 signal PC4_o_uns	: unsigned(SIZE - 1 downto 0);
 signal en_IR		: std_logic;
 
@@ -105,12 +109,15 @@ MUXTARGET: mux41 port map(
 	CTRL	=> S_MUX_PC_BUS_i, 
 	OUT1	=> PC_BUS_no_btb);
 
-MUXPREDICTION: mux21 port map(
+MUXPREDICTION: mux41 port map(
 	IN0	=> PC_BUS_no_btb, 
 	IN1	=> predicted_PC, 
-	CTRL	=> take_prediction_i, 
+	IN2	=> NPC4_i, 
+	IN3	=> NPC4_i, 
+	CTRL	=> help_ctrl, 
 	OUT1	=> PC_BUS);
-
-PC_o <= std_logic_vector(PC4_o_uns);
+help_ctrl <= wrong_back_pred_i&take_prediction_i;
+PC4_o <= std_logic_vector(PC4_o_uns);
+PC_o <= PC_help;
 
 end Struct;

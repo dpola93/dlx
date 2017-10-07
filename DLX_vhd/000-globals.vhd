@@ -4,10 +4,11 @@ use ieee.std_logic_1164.all;
 package myTypes is
 	constant OP_CODE_SIZE : integer :=  6;                                              -- OPCODE field size
    	constant FUNC_SIZE    : integer :=  11; 
+   	constant PRED_SIZE    : integer :=  3; 
 	type aluOp is (
 		NOP, SLLS, SRLS, SRAS, ADDS, ADDUS, SUBS, SUBUS, ANDS, ORS, XORS, SEQS, SNES,
 		SLTS,SGTS,SLES,SGES,MOVI2SS,MOVS2IS,MOVFS,MOVDS,MOVFP2IS,MOVI2FP,MOVI2TS,MOVT2IS,
-		SLTUS,SGTUS,SLEUS,SGEU,
+		SLTUS,SGTUS,SLEUS,SGEUS,
 		MULTU,MULTS
 			);
 	constant RTYPE : std_logic_vector(OP_CODE_SIZE - 1 downto 0) :=  "00"&X"0";

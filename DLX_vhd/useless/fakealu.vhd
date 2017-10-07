@@ -111,7 +111,7 @@ begin
     when SLTUS => DOUT <= (others => '0');
     when SGTUS => DOUT <= (others => '0');
     when SLEUS => DOUT <= (others => '0');
-    when SGEU => DOUT <= (others => '0');
+    when SGEUS => DOUT <= (others => '0');
     when MULTU => 
 		DOUT <= multDATA;
 		enable2mult <= '1';
