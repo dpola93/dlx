@@ -28,6 +28,6 @@ begin
 	OUT1 <= IN1 and IN2	when CTRL = "00" else
 		IN1 or IN2	when CTRL = "01" else
 		IN1 xor IN2	when CTRL = "10" else
-		(others => 'X');
+		(others => '0');
 
 end Bhe;

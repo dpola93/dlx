@@ -73,6 +73,16 @@ component shifter
 	);
 end component;
 
+component logic_unit 
+	generic ( SIZE : integer := 32 );
+	port (
+	IN1	: in std_logic_vector(SIZE - 1 downto 0);
+   	IN2	: in std_logic_vector(SIZE - 1 downto 0);
+	CTRL	: in std_logic_vector(1 downto 0); -- need to do only and, or and xor
+	OUT1	: out  std_logic_vector(SIZE - 1 downto 0)
+	);
+end component;
+
 signal enable2mult 	: std_logic := '0';
 signal multDATA 	: std_logic_vector(31 downto 0);
 signal sign_to_booth	: std_logic;
@@ -101,6 +111,9 @@ signal not_control	: std_logic;
 
 signal left_right	: std_logic; -- 1 = logic, 0 = arith
 signal logic_arith	: std_logic; -- 1 = left, 0 = right
+
+signal lu_ctrl		: std_logic_vector(1 downto 0);
+signal lu_out		: std_logic_vector(DATA_SIZE-1 downto 0);
 
 signal notB		: std_logic_vector(DATA_SIZE-1 downto 0);
 
@@ -157,7 +170,8 @@ COMP: comparator
 	sign	=> sign_to_booth, --TODO: check if can use this signal, maybe rename it to avoid confusion
 	S	=> comp_out
 	);
-SHIFT: shifter
+
+SHIFT:	shifter
 	generic map( N => DATA_SIZE)
 	port map(
 	A		=> IN1,
@@ -166,6 +180,16 @@ SHIFT: shifter
 	LEFT_RIGHT	=> left_right,
 	OUTPUT		=> shift_out
 	);
+
+LU:	logic_unit
+	generic map( SIZE => DATA_SIZE)
+	port map(
+	IN1	=> IN1,
+   	IN2	=> IN2,
+	CTRL	=> lu_ctrl,
+	OUT1	=> lu_out
+	);
+
 
 ZEROUT <= '0';
 stall_o <= busy_from_booth and not(valid_from_booth);
@@ -216,9 +240,17 @@ begin
 		carry_to_adder <= "1";
 		out_mux_sel <= "00";
 
-  when ANDS =>	out_mux_sel <= "01";
-  when ORS =>	out_mux_sel <= "01";
-  when XORS =>	out_mux_sel <= "01";
+  when ANDS =>
+		lu_ctrl	<= "00";
+		out_mux_sel <= "01";
+
+  when ORS =>
+		lu_ctrl	<= "01";
+		out_mux_sel <= "01";
+  when XORS =>
+		lu_ctrl	<= "10";
+		out_mux_sel <= "01";
+
   when SEQS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
