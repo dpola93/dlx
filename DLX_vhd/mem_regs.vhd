@@ -10,12 +10,12 @@ entity mem_regs is
 	SIZE : integer := 32
 );
   port (
-	W_i	: in std_logic_vector(SIZE - 1 downto 0);
-	D3_i	: in std_logic_vector(4 downto 0);
+	W_i	: in  std_logic_vector(SIZE - 1 downto 0);
+	D3_i	: in  std_logic_vector(4 downto 0);
 	W_o	: out std_logic_vector(SIZE - 1 downto 0);
 	D3_o	: out std_logic_vector(4 downto 0);
-	clk	: in std_logic;
-	rst	: in std_logic
+	clk	: in  std_logic;
+	rst	: in  std_logic
 
 	);
 end mem_regs;
@@ -27,10 +27,10 @@ component ff32
 		SIZE : integer
 	);
 	port(
-		D	: in std_logic_vector(SIZE - 1 downto 0);
+		D	: in  std_logic_vector(SIZE - 1 downto 0);
 		Q	: out std_logic_vector(SIZE - 1 downto 0);
-		clk	: in std_logic;
-		rst	: in std_logic
+		clk	: in  std_logic;
+		rst	: in  std_logic
 	);
 end component;
 

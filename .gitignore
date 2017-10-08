@@ -6,3 +6,4 @@ assembler/*.list
 assembler/*.dump
 assembler/*.txt
 assembler/*.bin
+*.swp

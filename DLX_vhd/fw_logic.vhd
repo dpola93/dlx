@@ -8,16 +8,16 @@ use ieee.std_logic_misc.all;
 
 entity fw_logic is
   port (
-	D1_i		: in std_logic_vector(4 downto 0); -- taken from output of destination mux in EXE stage
-	rAdec_i		: in std_logic_vector(4 downto 0); -- taken from IR directly in DEC stage
-	D2_i		: in std_logic_vector(4 downto 0);
-	D3_i		: in std_logic_vector(4 downto 0);
-	rA_i		: in std_logic_vector(4 downto 0);
-	rB_i		: in std_logic_vector(4 downto 0);
-	S_mem_W		: in std_logic; -- will the current instruction in MEM stage write to RF?
-	S_mem_LOAD	: in std_logic; -- is the current instruction in MEM stage a LOAD?
-	S_wb_W		: in std_logic; -- will the current instruction in WB stage write to RF?
-	S_exe_W		: in std_logic; -- will the current instruction in EXE stage write to RF?
+	D1_i		: in  std_logic_vector(4 downto 0); -- taken from output of destination mux in EXE stage
+	rAdec_i		: in  std_logic_vector(4 downto 0); -- taken from IR directly in DEC stage
+	D2_i		: in  std_logic_vector(4 downto 0);
+	D3_i		: in  std_logic_vector(4 downto 0);
+	rA_i		: in  std_logic_vector(4 downto 0);
+	rB_i		: in  std_logic_vector(4 downto 0);
+	S_mem_W		: in  std_logic; -- will the current instruction in MEM stage write to RF?
+	S_mem_LOAD	: in  std_logic; -- is the current instruction in MEM stage a LOAD?
+	S_wb_W		: in  std_logic; -- will the current instruction in WB stage write to RF?
+	S_exe_W		: in  std_logic; -- will the current instruction in EXE stage write to RF?
 	S_FWAdec	: out std_logic_vector(1 downto 0); -- this signal controls forward of A in DEC stage
 	S_FWA		: out std_logic_vector(1 downto 0);
 	S_FWB		: out std_logic_vector(1 downto 0)

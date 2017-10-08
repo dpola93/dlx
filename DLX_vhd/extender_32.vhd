@@ -9,9 +9,9 @@ entity extender_32 is
 	SIZE : integer := 32
 );
   port (
-	IN1	: in std_logic_vector(SIZE - 1 downto 0);
-	CTRL	: in std_logic;                -- when 0 extend on 16 bits , when 1 extend on 26 bits
-	SIGN	: in std_logic;                -- when 0 unsigned, when 1 signed 
+	IN1	: in  std_logic_vector(SIZE - 1 downto 0);
+	CTRL	: in  std_logic;                -- when 0 extend on 16 bits , when 1 extend on 26 bits
+	SIGN	: in  std_logic;                -- when 0 unsigned, when 1 signed 
 	OUT1	: out std_logic_vector(SIZE - 1 downto 0)
 
 	);

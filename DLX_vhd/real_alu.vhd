@@ -11,7 +11,6 @@ entity real_alu is
 	IN2	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
 	OP	: in  AluOp;
 	DOUT	: out std_logic_vector(DATA_SIZE - 1 downto 0);
-	ZEROUT	: out std_logic;
 	stall_o	: out std_logic;
 	Clock	: in  std_logic;
 	Reset	: in  std_logic
@@ -84,7 +83,6 @@ component logic_unit
 end component;
 
 signal enable2mult 	: std_logic := '0';
-signal multDATA 	: std_logic_vector(31 downto 0);
 signal sign_to_booth	: std_logic;
 signal enable_to_booth	: std_logic;
 signal busy_from_booth	: std_logic;
@@ -132,6 +130,7 @@ mux_B <=	notB		when mux_adder_input = '0' else
 
 enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
 			'0';
+
 overflow	<= (IN2(DATA_SIZE-1) xnor sum_out(DATA_SIZE-1)) and (IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1)); 
 
 MULT: simple_booth_add_ext 
@@ -191,20 +190,25 @@ LU:	logic_unit
 	);
 
 
-ZEROUT <= '0';
+-- stalling while booth is in process
 stall_o <= busy_from_booth and not(valid_from_booth);
---TODO: set this according to what should be done ( ADDER, MULT, LOGIC, SHIFTER, COMP)
+
 -- TODO: MISSING A FORWARDING ON STORE REG FIX THAT ADDING A FW TO S
 DOUT <= sum_out		when out_mux_sel = "00" else
-	(others => '0')	when out_mux_sel = "01" else
+	lu_out		when out_mux_sel = "01" else
 	shift_out	when out_mux_sel = "10" else
 	"000"&X"0000000"&comp_out	when out_mux_sel = "11" else
 	(others => 'X');
 
-process(IN1,IN2,OP,multDATA)
+
+-- combinatorial process used to send the right data to components
+process(IN1,IN2,OP)
 begin
  case OP is
---  when NOP => DOUT <= (others => '0');
+  -- when NOP we do a random LU operation, maybe change this into something smarter??
+  when NOP  =>
+		out_mux_sel <= "01";
+
   when SLLS =>
 		out_mux_sel <= "10";
 		left_right <= '1';
@@ -291,6 +295,7 @@ begin
 		out_mux_sel <= "11";
 		sign_to_booth <= '1';
 
+--  UNIMPLEMENTED OPS
 --  when MOVI2SS => DOUT <= (others => '0');
 --  when MOVS2IS => DOUT <= (others => '0');
 --  when MOVFS => DOUT <= (others => '0');
@@ -327,16 +332,21 @@ begin
 		out_mux_sel <= "11";
 		sign_to_booth <= '0';
 
-  when MULTU =>	out_mux_sel <= "00";
-			carry_to_adder <= "0";
-			sign_to_booth <= '0';
-  when MULTS =>	out_mux_sel <= "00";
-			carry_to_adder <= "0";
-			sign_to_booth <= '1';
+  when MULTU =>
+		out_mux_sel <= "00";
+		carry_to_adder <= "0";
+		sign_to_booth <= '0';
+
+  when MULTS =>
+		out_mux_sel <= "00";
+		carry_to_adder <= "0";
+		sign_to_booth <= '1';
+
   when others => out_mux_sel <= "00";
  end case;
 end process;
 
+-- sequential process used to send the correct value to the adder
 process(Clock)
 begin
 	if busy_from_booth = '1' then 

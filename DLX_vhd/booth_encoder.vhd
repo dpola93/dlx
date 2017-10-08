@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 
-entity Booth_encoder is
+entity booth_encoder is
 port(	
 		B_in	: in std_logic_vector (2 downto 0);
 		A_out	: out std_logic_vector (2 downto 0)

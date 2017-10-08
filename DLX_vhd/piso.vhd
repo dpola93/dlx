@@ -6,10 +6,11 @@ entity shift is
 	N : natural := 8
 	);
   port(
-	Clock: in std_logic; 
-	ALOAD : in std_logic; 
-	D   : in std_logic_vector(N-1 downto 0); 
-	SO  : out std_logic	); 
+	Clock	: in  std_logic; 
+	ALOAD	: in  std_logic; 
+	D  	: in  std_logic_vector(N-1 downto 0); 
+	SO 	: out std_logic
+	); 
 end shift; 
 
 architecture archi of shift is 

@@ -17,15 +17,15 @@ entity stall_logic is
     -- Instruction Register
     OPCODE_i		: in  std_logic_vector(OP_CODE_SIZE-1  downto 0);
     FUNC_i		: in  std_logic_vector(FUNC_SIZE-1  downto 0);
-    rA_i		: in std_logic_vector(4 downto 0);
-    rB_i		: in std_logic_vector(4 downto 0);
-    D1_i		: in std_logic_vector(4 downto 0); -- taken from output of destination mux in EXE stage
-    D2_i		: in std_logic_vector(4 downto 0);
-    S_mem_LOAD_i	: in std_logic;
-    S_exe_LOAD_i	: in std_logic;
-    S_exe_WRITE_i	: in std_logic;
-    S_MUX_PC_BUS_i	: in std_logic_vector(1 downto 0);
-    mispredict_i	: in std_logic;
+    rA_i		: in  std_logic_vector(4 downto 0);
+    rB_i		: in  std_logic_vector(4 downto 0);
+    D1_i		: in  std_logic_vector(4 downto 0); -- taken from output of destination mux in EXE stage
+    D2_i		: in  std_logic_vector(4 downto 0);
+    S_mem_LOAD_i	: in  std_logic;
+    S_exe_LOAD_i	: in  std_logic;
+    S_exe_WRITE_i	: in  std_logic;
+    S_MUX_PC_BUS_i	: in  std_logic_vector(1 downto 0);
+    mispredict_i	: in  std_logic;
     bubble_o		: out std_logic;
     stall_exe_o		: out std_logic;
     stall_dec_o		: out std_logic;
@@ -38,13 +38,13 @@ end stall_logic;
 
 architecture stall_logic_hw of stall_logic is
 
-signal IS_JMP_BRANCH : std_logic;
-signal STALL_JMP_BRANCH_DECODE : std_logic;
-signal STALL_JMP_BRANCH_LOAD : std_logic;
-signal STALL_LOAD_RTYPE : std_logic;
-signal STALL_LOAD_ITYPE : std_logic;
-signal IS_NO_STALL : std_logic;
-signal IS_JMP : std_logic;
+signal IS_JMP_BRANCH		: std_logic;
+signal STALL_JMP_BRANCH_DECODE	: std_logic;
+signal STALL_JMP_BRANCH_LOAD	: std_logic;
+signal STALL_LOAD_RTYPE		: std_logic;
+signal STALL_LOAD_ITYPE		: std_logic;
+signal IS_NO_STALL		: std_logic;
+signal IS_JMP			: std_logic;
 
 begin
 

@@ -10,10 +10,10 @@ generic (
 	SIZE : integer := 32
 );
 PORT( 
-	D	: in std_logic_vector(SIZE - 1 downto 0);
-	en	: in std_logic;
-	clk	: in std_logic;
-	rst	: in std_logic;
+	D	: in  std_logic_vector(SIZE - 1 downto 0);
+	en	: in  std_logic;
+	clk	: in  std_logic;
+	rst	: in  std_logic;
 	Q	: out std_logic_vector(SIZE - 1 downto 0)
 	);
 end ff32_en_IR;

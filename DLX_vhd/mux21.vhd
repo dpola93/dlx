@@ -9,9 +9,9 @@ entity mux21 is
 	SIZE : integer := 32
 );
  port (
-	IN0	: in std_logic_vector(SIZE - 1 downto 0);
-	IN1	: in std_logic_vector(SIZE - 1 downto 0);
-	CTRL	: in std_logic;
+	IN0	: in  std_logic_vector(SIZE - 1 downto 0);
+	IN1	: in  std_logic_vector(SIZE - 1 downto 0);
+	CTRL	: in  std_logic;
 	OUT1	: out std_logic_vector(SIZE - 1 downto 0)
 
 	);
@@ -25,7 +25,7 @@ begin
 	case CTRL is
 		when '0'	=> OUT1 <= IN0;
 		when '1'	=> OUT1 <= IN1;
-		when others	=> OUT1 <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+		when others	=> OUT1 <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"; -- should never appear
 	end case;
 	end process;
 end Bhe;

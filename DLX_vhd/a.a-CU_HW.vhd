@@ -12,14 +12,14 @@ entity dlx_cu is
     IR_SIZE		: integer := 32;	-- Instruction Register Size    
     CW_SIZE		: integer := 13);	-- Control Word Size
   port (
-    Clk			: in std_logic;		-- Clock
-    Rst			: in std_logic;		-- Reset: Active-High
+    Clk			: in  std_logic;		-- Clock
+    Rst			: in  std_logic;		-- Reset: Active-High
 
-    IR_IN		: in std_logic_vector(IR_SIZE - 1 downto 0);	-- Instruction Register
-    stall_exe_i		: in std_logic;					-- Stall signal coming from EXE stage
-    mispredict_i	: in std_logic;
-    D1_i		: in std_logic_vector(4 downto 0);		-- Destination register of exe stage
-    D2_i		: in std_logic_vector(4 downto 0);		-- Destination register of mem stage
+    IR_IN		: in  std_logic_vector(IR_SIZE - 1 downto 0);	-- Instruction Register
+    stall_exe_i		: in  std_logic;					-- Stall signal coming from EXE stage
+    mispredict_i	: in  std_logic;
+    D1_i		: in  std_logic_vector(4 downto 0);		-- Destination register of exe stage
+    D2_i		: in  std_logic_vector(4 downto 0);		-- Destination register of mem stage
     
     S1_LATCH_EN		: out std_logic;			-- Latch enable of Fetch stage
     S2_LATCH_EN		: out std_logic;			-- Latch enable of Dec stage 
@@ -146,8 +146,8 @@ architecture dlx_cu_hw of dlx_cu is
 
   signal was_no_branch	: std_logic;
 
--- instantiation of stall_logic block
 
+-- instantiation of stall_logic block
 component stall_logic is
   generic (
     FUNC_SIZE          :     integer; -- Func Field Size for R-Type Ops
@@ -155,17 +155,17 @@ component stall_logic is
 );
   port (
     -- Instruction Register
-    OPCODE_i		: in std_logic_vector(OP_CODE_SIZE-1  downto 0);
-    FUNC_i		: in std_logic_vector(FUNC_SIZE-1  downto 0);
-    rA_i		: in std_logic_vector(4 downto 0);
-    rB_i		: in std_logic_vector(4 downto 0);
-    D1_i		: in std_logic_vector(4 downto 0); -- taken from output of destination mux in EXE stage
-    D2_i		: in std_logic_vector(4 downto 0);
-    S_mem_LOAD_i	: in std_logic;
-    S_exe_LOAD_i	: in std_logic;
-    S_exe_WRITE_i	: in std_logic;
-    S_MUX_PC_BUS_i	: in std_logic_vector(1 downto 0);
-    mispredict_i	: in std_logic;
+    OPCODE_i		: in  std_logic_vector(OP_CODE_SIZE-1  downto 0);
+    FUNC_i		: in  std_logic_vector(FUNC_SIZE-1  downto 0);
+    rA_i		: in  std_logic_vector(4 downto 0);
+    rB_i		: in  std_logic_vector(4 downto 0);
+    D1_i		: in  std_logic_vector(4 downto 0); -- taken from output of destination mux in EXE stage
+    D2_i		: in  std_logic_vector(4 downto 0);
+    S_mem_LOAD_i	: in  std_logic;
+    S_exe_LOAD_i	: in  std_logic;
+    S_exe_WRITE_i	: in  std_logic;
+    S_MUX_PC_BUS_i	: in  std_logic_vector(1 downto 0);
+    mispredict_i	: in  std_logic;
     bubble_o		: out std_logic;
     stall_exe_o		: out std_logic;
     stall_dec_o		: out std_logic;
@@ -209,19 +209,19 @@ STALL_L : stall_logic
 
   -- stall signals for each individual stage of the pipeline
   -- an OR is needed cause a stall might come from ALU too
-  stall_exe_o <= stall_exe_i or stall_exe_o_TEMP;
-  stall_dec_o <= stall_exe_i or stall_dec_o_TEMP;
+  stall_exe_o	<= stall_exe_i or stall_exe_o_TEMP;
+  stall_dec_o	<= stall_exe_i or stall_dec_o_TEMP;
   stall_fetch_o	<= stall_exe_i or stall_fetch_o_TEMP;
-  stall_btb_o <=  stall_exe_i or stall_btb_o_TEMP;
+  stall_btb_o	<=  stall_exe_i or stall_btb_o_TEMP;
 
   -- split function in OPCODE and FUNC
-  IR_opcode(5 downto 0) <= IR_IN(31 downto 26);
-  IR_func(10 downto 0)  <= IR_IN(FUNC_SIZE - 1 downto 0);
+  IR_opcode(5 downto 0)	<= IR_IN(31 downto 26);
+  IR_func(10 downto 0) 	<= IR_IN(FUNC_SIZE - 1 downto 0);
 
 
   -- control work is assigned to the word looked up in microcode memory
   -- unless we have bubbled the pipeline, in that case any instruction is transformed to NOP
-  cw_d <= cw_mem(conv_integer(IR_opcode)) when (bubble = '0' or (bubble = '1' and was_no_branch = '0')) else "0000000000000";
+  cw_d	<= cw_mem(conv_integer(IR_opcode)) when (bubble = '0' or (bubble = '1' and was_no_branch = '0')) else "0000000000000";
 
   -- *** ATM THE LATCH ENABLES ARE DOING NOTHING! EVERYTHING IS CONTROLLED BY STALL ***
   -- TODO: FIX THIS 
@@ -230,7 +230,6 @@ STALL_L : stall_logic
   S3_LATCH_EN	<= '1';
 
   -- stage two control signals
- -- S_MUX_PC_BUS	<= cw_d(CW_SIZE - 1 downto CW_SIZE - 2);
   S_MUX_PC_BUS	<=	"00" when mispredict_i = '0' and cw_d(CW_SIZE - 1) = '1' and cw_d(CW_SIZE - 2) = '1' else
 			cw_d(CW_SIZE - 1 downto CW_SIZE - 2);
   S_EXT		<= cw_d(CW_SIZE - 3);
@@ -322,9 +321,9 @@ STALL_L : stall_logic
 	        -- case of R type requires analysis of FUNC
 		when 0 =>
 			case conv_integer(unsigned(IR_func)) is
-				when 4 => aluOpcode_d <= SLLS; -- sll according to instruction set coding
-				when 6 => aluOpcode_d <= SRLS; 
-				when 7 => aluOpcode_d <= SRAS; 
+				when  4 => aluOpcode_d <= SLLS; -- sll according to instruction set coding
+				when  6 => aluOpcode_d <= SRLS; 
+				when  7 => aluOpcode_d <= SRAS; 
 				when 32 => aluOpcode_d <= ADDS; 
 				when 33 => aluOpcode_d <= ADDUS; 
 				when 34 => aluOpcode_d <= SUBS; 
@@ -356,14 +355,15 @@ STALL_L : stall_logic
 			-- type F instruction case
 			when 1 =>
 			case conv_integer(unsigned(IR_func)) is
-				when 22 => aluOpcode_d <= MULTU; -- sll according to instruction set code
+				when 22 => aluOpcode_d <= MULTU;
+				when 14 => aluOpcode_d <= MULTS;
 				when others => aluOpcode_d <= NOP;
 			end case;
 
-		when 2 => aluOpcode_d <= NOP;		-- j
-		when 3 => aluOpcode_d <= NOP;		-- jal
-		when 8 => aluOpcode_d <= ADDS;		-- addi
-		when 9 => aluOpcode_d <= ADDUS;		-- addui
+		when 2  => aluOpcode_d <= NOP;		-- j
+		when 3  => aluOpcode_d <= NOP;		-- jal
+		when 8  => aluOpcode_d <= ADDS;		-- addi
+		when 9  => aluOpcode_d <= ADDUS;	-- addui
 		when 10 => aluOpcode_d <= SUBS;		-- subi
 		when 11 => aluOpcode_d <= SUBUS;	-- subui
 		when 12 => aluOpcode_d <= ANDS;		-- andi

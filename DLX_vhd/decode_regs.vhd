@@ -9,21 +9,21 @@ entity decode_regs is
 	SIZE : integer := 32
 );
   port (
-	A_i	: in std_logic_vector(SIZE - 1 downto 0);
-	B_i	: in std_logic_vector(SIZE - 1 downto 0);
-	rA_i	: in std_logic_vector(4 downto 0);
-	rB_i	: in std_logic_vector(4 downto 0);
-	rC_i	: in std_logic_vector(4 downto 0);
-	IMM_i	: in std_logic_vector(SIZE - 1 downto 0);
+	A_i	: in  std_logic_vector(SIZE - 1 downto 0);
+	B_i	: in  std_logic_vector(SIZE - 1 downto 0);
+	rA_i	: in  std_logic_vector(4 downto 0);
+	rB_i	: in  std_logic_vector(4 downto 0);
+	rC_i	: in  std_logic_vector(4 downto 0);
+	IMM_i	: in  std_logic_vector(SIZE - 1 downto 0);
 	A_o	: out std_logic_vector(SIZE - 1 downto 0);
 	B_o	: out std_logic_vector(SIZE - 1 downto 0);
 	rA_o	: out std_logic_vector(4 downto 0);
 	rB_o	: out std_logic_vector(4 downto 0);
 	rC_o	: out std_logic_vector(4 downto 0);
 	IMM_o	: out std_logic_vector(SIZE - 1 downto 0);
-	stall_i	: in std_logic;
-	clk	: in std_logic;
-	rst	: in std_logic
+	stall_i	: in  std_logic;
+	clk	: in  std_logic;
+	rst	: in  std_logic
 
 	);
 end decode_regs;
@@ -36,10 +36,10 @@ component ff32_en
 	);
 	port(
 		D	: in  std_logic_vector(SIZE - 1 downto 0);
-		Q	: out  std_logic_vector(SIZE - 1 downto 0);
-		en	: in std_logic;
-		clk	: in std_logic;
-		rst	: in std_logic
+		Q	: out std_logic_vector(SIZE - 1 downto 0);
+		en	: in  std_logic;
+		clk	: in  std_logic;
+		rst	: in  std_logic
 	);
 end component;
 

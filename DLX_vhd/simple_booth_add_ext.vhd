@@ -7,17 +7,17 @@ ENTITY simple_booth_add_ext IS
 	generic (N : integer := 8);
 
 PORT(	
-		Clock		: in std_logic;
-		Reset		: in std_logic;
-		sign		: in std_logic;
-		enable		: in std_logic;
+		Clock		: in  std_logic;
+		Reset		: in  std_logic;
+		sign		: in  std_logic;
+		enable		: in  std_logic;
 		busy		: out std_logic;
 		valid		: out std_logic;
-		A		: IN std_logic_vector (N-1 downto 0);
-		B		: IN std_logic_vector (N-1 downto 0);
+		A		: in  std_logic_vector (N-1 downto 0);
+		B		: in  std_logic_vector (N-1 downto 0);
 		A_to_add	: out std_logic_vector (2*N-1 downto 0);
 		B_to_add	: out std_logic_vector (2*N-1 downto 0);
-		ACC_from_add	: in std_logic_vector (2*N-1 downto 0)
+		ACC_from_add	: in  std_logic_vector (2*N-1 downto 0)
 		);
 END simple_booth_add_ext;
 
@@ -25,9 +25,9 @@ END simple_booth_add_ext;
 architecture struct of simple_booth_add_ext is
 
 component booth_encoder 
-PORT(	
-	B_in	: IN std_logic_vector (2 downto 0);
-	A_out	: OUT std_logic_vector (2 downto 0)
+	port(	
+	B_in	: in  std_logic_vector (2 downto 0);
+	A_out	: out std_logic_vector (2 downto 0)
 	);
 end component;
 
@@ -36,10 +36,10 @@ component shift
 		N : natural
 	);
 	port(
-		Clock	: in std_logic; 
-		ALOAD	: in std_logic; 
-		D	: in std_logic_vector(N-1 downto 0); 
-		SO	: out std_logic	); 
+	Clock	: in  std_logic; 
+	ALOAD	: in  std_logic; 
+	D	: in  std_logic_vector(N-1 downto 0); 
+	SO	: out std_logic	); 
 end component; 
 
 component piso_r_2
@@ -47,37 +47,37 @@ component piso_r_2
 	N : natural 
 	);
   port(
-	Clock	: in std_logic; 
-	ALOAD	: in std_logic; 
-	D	: in std_logic_vector(N-1 downto 0); 
+	Clock	: in  std_logic; 
+	ALOAD	: in  std_logic; 
+	D	: in  std_logic_vector(N-1 downto 0); 
 	SO	: out std_logic_vector(N-1 downto 0)	); 
 end component;
   component mux8to1_gen 
 
 	generic (  M : integer ); 	
 
-	PORT(	
-		A : IN std_logic_vector (M-1 downto 0); 
-		B : IN std_logic_vector (M-1 downto 0); 
- 		C : IN std_logic_vector (M-1 downto 0);
-		D : IN std_logic_vector (M-1 downto 0);
-		E : IN std_logic_vector (M-1 downto 0);
-		F : IN std_logic_vector (M-1 downto 0);
-		G : IN std_logic_vector (M-1 downto 0);
-		H : IN std_logic_vector (M-1 downto 0);
+	port(	
+		A : in  std_logic_vector (M-1 downto 0); 
+		B : in  std_logic_vector (M-1 downto 0); 
+ 		C : in  std_logic_vector (M-1 downto 0);
+		D : in  std_logic_vector (M-1 downto 0);
+		E : in  std_logic_vector (M-1 downto 0);
+		F : in  std_logic_vector (M-1 downto 0);
+		G : in  std_logic_vector (M-1 downto 0);
+		H : in  std_logic_vector (M-1 downto 0);
 		
-		S : IN std_logic_vector (2 downto 0);
-		Y : OUT std_logic_vector (M-1 downto 0)
+		S : in  std_logic_vector (2 downto 0);
+		Y : out std_logic_vector (M-1 downto 0)
 		);
   end component; 
 
   component RCA 
  	generic (M : integer
 	        );
-	Port (	A:	In	std_logic_vector(M-1 downto 0);
-		B:	In	std_logic_vector(M-1 downto 0);
-		Cin:	In 	std_logic_vector(0 downto 0);
-		S:	Out	std_logic_vector(M-1 downto 0)
+	Port (	A:	in  std_logic_vector(M-1 downto 0);
+		B:	in  std_logic_vector(M-1 downto 0);
+		Cin:	in  std_logic_vector(0 downto 0);
+		S:	out std_logic_vector(M-1 downto 0)
 		);
   end component; 
 
@@ -159,7 +159,6 @@ encod_loop: for i in 0 to N/2 generate
       
 end generate encod_loop;
 
--- todo: add parallel load
 piso_0 : shift generic map( N => N/2) port map(Clock,load,piso_0_in,piso_0_out);
 piso_1 : shift generic map( N => N/2) port map(Clock,load,piso_1_in,piso_1_out);
 piso_2 : shift generic map( N => N/2) port map(Clock,load,piso_2_in,piso_2_out);
@@ -209,15 +208,15 @@ mux_i : mux8to1_gen
 A_to_add <= accumulate;
 B_to_add <= mux_out_to_add;
 
-load <=	'1' when count = 8 else
-	'0';
+load	<=	'1' when count = 8 else
+		'0';
 
 next_accumulate <=	mux_out_to_add when count = 8 else
 			ACC_from_add;
 
-busy <=	'1' when count /= 8 or enable = '1' else
-	'0';
-valid <=	'1' when count = 0 else
+busy	<=	'1' when count /= 8 or enable = '1' else
+		'0';
+valid	<=	'1' when count = 0 else
 		'0';
 
 process(Reset,Clock)
