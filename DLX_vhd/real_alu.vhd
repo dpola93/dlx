@@ -62,6 +62,16 @@ component comparator
 	);
 end component; 
 
+component shifter
+	generic (N: integer);
+	port(
+	A		: in  std_logic_vector(N-1 downto 0);
+	B		: in  std_logic_vector(4 downto 0);
+	LOGIC_ARITH	: in  std_logic;	-- 1 = logic, 0 = arith
+	LEFT_RIGHT	: in  std_logic;	-- 1 = left, 0 = right
+	OUTPUT		: out std_logic_vector(N-1 downto 0)
+	);
+end component;
 
 signal enable2mult 	: std_logic := '0';
 signal multDATA 	: std_logic_vector(31 downto 0);
@@ -74,6 +84,7 @@ signal B_booth_to_add	: std_logic_vector(DATA_SIZE-1 downto 0);
 
 signal sum_out		: std_logic_vector(DATA_SIZE-1 downto 0);
 signal comp_out		: std_logic;
+signal shift_out	: std_logic_vector(DATA_SIZE-1 downto 0);
 
 signal mux_A		: std_logic_vector(DATA_SIZE-1 downto 0);
 signal mux_B		: std_logic_vector(DATA_SIZE-1 downto 0);
@@ -87,6 +98,9 @@ signal comp_sel		: std_logic_vector(2 downto 0);
 
 signal mux_adder_input	: std_logic;
 signal not_control	: std_logic;
+
+signal left_right	: std_logic; -- 1 = logic, 0 = arith
+signal logic_arith	: std_logic; -- 1 = left, 0 = right
 
 signal notB		: std_logic_vector(DATA_SIZE-1 downto 0);
 
@@ -143,6 +157,15 @@ COMP: comparator
 	sign	=> sign_to_booth, --TODO: check if can use this signal, maybe rename it to avoid confusion
 	S	=> comp_out
 	);
+SHIFT: shifter
+	generic map( N => DATA_SIZE)
+	port map(
+	A		=> IN1,
+	B		=> IN2,
+	LOGIC_ARITH	=> logic_arith,
+	LEFT_RIGHT	=> left_right,
+	OUTPUT		=> shift_out
+	);
 
 ZEROUT <= '0';
 stall_o <= busy_from_booth and not(valid_from_booth);
@@ -150,7 +173,7 @@ stall_o <= busy_from_booth and not(valid_from_booth);
 -- TODO: MISSING A FORWARDING ON STORE REG FIX THAT ADDING A FW TO S
 DOUT <= sum_out		when out_mux_sel = "00" else
 	(others => '0')	when out_mux_sel = "01" else
-	(others => '0')	when out_mux_sel = "10" else
+	shift_out	when out_mux_sel = "10" else
 	"000"&X"0000000"&comp_out	when out_mux_sel = "11" else
 	(others => 'X');
 
@@ -158,9 +181,21 @@ process(IN1,IN2,OP,multDATA)
 begin
  case OP is
 --  when NOP => DOUT <= (others => '0');
---  when SLLS => DOUT <= (others => '0');
---  when SRLS => DOUT <= (others => '0');
---  when SRAS => DOUT <= (others => '0');
+  when SLLS =>
+		out_mux_sel <= "10";
+		left_right <= '1';
+		logic_arith <= '1';
+ 
+  when SRLS =>
+		out_mux_sel <= "10";
+		left_right <= '0';
+		logic_arith <= '1';
+ 
+  when SRAS =>
+		out_mux_sel <= "10";
+		left_right <= '0';
+		logic_arith <= '0';
+ 
   when ADDS =>
 		not_control <= '0';
 		carry_to_adder <= "0";
