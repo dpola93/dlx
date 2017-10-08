@@ -175,7 +175,7 @@ SHIFT:	shifter
 	generic map( N => DATA_SIZE)
 	port map(
 	A		=> IN1,
-	B		=> IN2,
+	B		=> IN2(4 downto 0),
 	LOGIC_ARITH	=> logic_arith,
 	LEFT_RIGHT	=> left_right,
 	OUTPUT		=> shift_out
