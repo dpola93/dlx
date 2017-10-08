@@ -362,6 +362,8 @@ STALL_L : stall_logic
 
 		when 2  => aluOpcode_d <= NOP;		-- j
 		when 3  => aluOpcode_d <= NOP;		-- jal
+		when 4  => aluOpcode_d <= NOP;		-- beqz
+		when 5  => aluOpcode_d <= NOP;		-- bnez
 		when 8  => aluOpcode_d <= ADDS;		-- addi
 		when 9  => aluOpcode_d <= ADDUS;	-- addui
 		when 10 => aluOpcode_d <= SUBS;		-- subi
@@ -369,9 +371,24 @@ STALL_L : stall_logic
 		when 12 => aluOpcode_d <= ANDS;		-- andi
 		when 13 => aluOpcode_d <= ORS;		-- ori
 		when 14 => aluOpcode_d <= XORS;		-- xori
-		-- to be continued and filled with other cases
+		when 18 => aluOpcode_d <= NOP;		-- jr
+		when 19 => aluOpcode_d <= NOP;		-- jalr
+		when 20 => aluOpcode_d <= SLLS;		-- slli
+		when 21 => aluOpcode_d <= NOP;		-- nop
+		when 22 => aluOpcode_d <= SRLS;		-- srli
+		when 23 => aluOpcode_d <= SRAS;		-- srai
+		when 24 => aluOpcode_d <= SEQS;		-- seqi
+		when 25 => aluOpcode_d <= SNES;		-- snei
+		when 26 => aluOpcode_d <= SLTS;		-- slti
+		when 27 => aluOpcode_d <= SGTS;		-- sgti
+		when 28 => aluOpcode_d <= SLES;		-- slei	
+		when 29 => aluOpcode_d <= SGES;		-- sgei	
 		when 35 => aluOpcode_d <= ADDS;		-- lw
 		when 43 => aluOpcode_d <= ADDS;		-- sw
+		when 58 => aluOpcode_d <= SLTUS;	-- sltui
+		when 59 => aluOpcode_d <= SGTUS;	-- sgtui
+		when 60 => aluOpcode_d <= SLEUS;	-- sleui	
+		when 61 => aluOpcode_d <= SGEUS;	-- sgeui	
 		when others => aluOpcode_d <= NOP;
 	 end case;
 	end process ALU_OP_CODE_P;
