@@ -10,7 +10,7 @@ use ieee.std_logic_textio.all;
 -- file name is "data.mem"
 entity DRAM is
   generic (
-    RAM_DEPTH : integer := 128;
+    RAM_DEPTH : integer := 1024;
     I_SIZE : integer := 32);
   port (
     Clk  : in  std_logic;

@@ -145,6 +145,7 @@ architecture dlx_cu_hw of dlx_cu is
   signal next_bubble		: std_logic; -- TODO: rename this into something similar to unconditional jump
 
   signal was_no_branch	: std_logic;
+  signal was_no_jmp	: std_logic;
 
 
 -- instantiation of stall_logic block
@@ -220,8 +221,10 @@ STALL_L : stall_logic
 
 
   -- control work is assigned to the word looked up in microcode memory
-  -- unless we have bubbled the pipeline, in that case any instruction is transformed to NOP
-  cw_d	<= cw_mem(conv_integer(IR_opcode)) when (bubble = '0' or (bubble = '1' and was_no_branch = '0')) else "0000000000000";
+grep: assembler: Is a directory
+grep: DLX_vhd: Is a directory
+grep: scripts: Is a directory
+grep: work: Is a directory
 
   -- *** ATM THE LATCH ENABLES ARE DOING NOTHING! EVERYTHING IS CONTROLLED BY STALL ***
   -- TODO: FIX THIS 
@@ -284,6 +287,8 @@ STALL_L : stall_logic
 
      -- write here if previous op was not a branch 
       was_no_branch <= cw_d(CW_SIZE - 1) and cw_d(CW_SIZE - 2);
+      
+      was_no_jmp <= cw_d(CW_SIZE - 1) nor cw_d(CW_SIZE - 2);
 
       -- exe stalled 
       if stall_exe_i = '1' or stall_exe_o_TEMP = '1' then
@@ -352,7 +357,7 @@ STALL_L : stall_logic
 				when others => aluOpcode_d <= NOP;
 			end case;
 
-			-- type F instruction case
+			-- type F instruction case -- MULT only
 			when 1 =>
 			case conv_integer(unsigned(IR_func)) is
 				when 22 => aluOpcode_d <= MULTU;

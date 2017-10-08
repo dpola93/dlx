@@ -28,6 +28,6 @@ begin
 	TEMP26	<= IN1(25 downto 0);
 	OUT1	<= 	std_logic_vector(resize(signed(TEMP26),SIZE)) when CTRL = '1' else
 			std_logic_vector(resize(signed(TEMP16),SIZE)) when CTRL = '0' and SIGN = '1' else
-			std_logic_vector(resize(unsigned(TEMP16),SIZE));
+			std_logic_vector(resize(unsigned(TEMP16),SIZE)); -- CTRL = 0 SIGN = 0
 
 end Bhe;

@@ -208,6 +208,7 @@ begin
   -- when NOP we do a random LU operation, maybe change this into something smarter??
   when NOP  =>
 		out_mux_sel <= "01";
+		sign_to_booth <= '0'; -- useless but avoids errors on simulation
 
   when SLLS =>
 		out_mux_sel <= "10";

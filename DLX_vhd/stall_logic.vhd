@@ -53,7 +53,7 @@ IS_JMP <= S_MUX_PC_BUS_i(1) xor S_MUX_PC_BUS_i(0);
 
 -- TODO: need to add JALR???
 -- this operation might have an hazard on decode stage ( need to access A )
-IS_JMP_BRANCH <= (not or_reduce(OPCODE_i xor ITYPE_JR)) or (not or_reduce(OPCODE_i xor ITYPE_BEQZ)) or (not or_reduce(OPCODE_i xor ITYPE_BNEZ));
+IS_JMP_BRANCH <= (not or_reduce(OPCODE_i xor ITYPE_JR)) or (not or_reduce(OPCODE_i xor ITYPE_JALR)) or (not or_reduce(OPCODE_i xor ITYPE_BEQZ)) or (not or_reduce(OPCODE_i xor ITYPE_BNEZ));
 
 -- jump operation that wont trigger any hazard ( do not require data from registers )
 IS_NO_STALL <= (not or_reduce(OPCODE_i xor ITYPE_J)) or (not or_reduce(OPCODE_i xor ITYPE_JAL)) or (not or_reduce(OPCODE_i xor ITYPE_TRAP)) or (not or_reduce(OPCODE_i xor ITYPE_RFE)) or (not or_reduce(OPCODE_i xor ITYPE_NOP)); 
@@ -86,7 +86,7 @@ stall_btb_o <= STALL_JMP_BRANCH_LOAD or STALL_JMP_BRANCH_DECODE or STALL_LOAD_RT
 stall_fetch_o <= STALL_JMP_BRANCH_LOAD or STALL_JMP_BRANCH_DECODE or STALL_LOAD_RTYPE or STALL_LOAD_ITYPE;
 
 -- bubble is triggered only for mispredictions or unpredictable jumps
-bubble_o <= IS_JMP or mispredict_i;
+bubble_o <= (IS_JMP or mispredict_i) and (STALL_JMP_BRANCH_DECODE nor STALL_JMP_BRANCH_LOAD);
 
 end stall_logic_hw;
 
