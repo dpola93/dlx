@@ -71,17 +71,6 @@ end component;
 		);
   end component; 
 
-  component RCA 
- 	generic (M : integer
-	        );
-	Port (	A:	in  std_logic_vector(M-1 downto 0);
-		B:	in  std_logic_vector(M-1 downto 0);
-		Cin:	in  std_logic_vector(0 downto 0);
-		S:	out std_logic_vector(M-1 downto 0)
-		);
-  end component; 
-
-
 
 type mux_select is array (N/2 downto 0) of std_logic_vector(2 downto 0);
 signal tot_select	: mux_select;
