@@ -96,6 +96,7 @@ signal piso_2_out	: std_logic;
 signal enc_0_in		: std_logic_vector(2 downto 0);
 signal enc_N2_in	: std_logic_vector(2 downto 0);
 
+signal last_bit		: std_logic;
 signal extend_vector	: std_logic_vector(N-1 downto 0);
 signal extended_A	: std_logic_vector(2*N-1 downto 0);
 signal zeros		: std_logic_vector(2*N-1 downto 0);
@@ -132,9 +133,11 @@ signal sum_out		: std_logic_vector(2*N-1 downto 0);
 signal triggered	: std_logic;
 
 begin
+-- TODO: check if this is correct!
+last_bit <= sign and B(N-1);
 
 enc_0_in <= B(1 downto 0)&'0';
-enc_N2_in <= sign&sign&B(N-1);
+enc_N2_in <= last_bit&last_bit&B(N-1);
 
 piso_gen: for i in 1 to N/2 generate
 	piso_0_in(i-1) <= tot_select(i)(0);
