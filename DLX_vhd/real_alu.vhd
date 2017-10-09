@@ -101,7 +101,7 @@ signal carry_to_adder	: std_logic_vector(0 downto 0);
 signal carry_from_adder	: std_logic;
 signal overflow		: std_logic;
 
-signal out_mux_sel	: std_logic_vector(1 downto 0);
+signal out_mux_sel	: std_logic_vector(2 downto 0);
 signal comp_sel		: std_logic_vector(2 downto 0);
 
 signal mux_adder_input	: std_logic;
@@ -194,10 +194,11 @@ LU:	logic_unit
 stall_o <= busy_from_booth and not(valid_from_booth);
 
 -- TODO: MISSING A FORWARDING ON STORE REG FIX THAT ADDING A FW TO S
-DOUT <= sum_out		when out_mux_sel = "00" else
-	lu_out		when out_mux_sel = "01" else
-	shift_out	when out_mux_sel = "10" else
-	"000"&X"0000000"&comp_out	when out_mux_sel = "11" else
+DOUT <= sum_out				when out_mux_sel = "000" else
+	lu_out				when out_mux_sel = "001" else
+	shift_out			when out_mux_sel = "010" else
+	"000"&X"0000000"&comp_out	when out_mux_sel = "011" else
+	IN2 				when out_mux_sel = "100" else
 	(others => 'X');
 
 
@@ -207,93 +208,93 @@ begin
  case OP is
   -- when NOP we do a random LU operation, maybe change this into something smarter??
   when NOP  =>
-		out_mux_sel <= "01";
+		out_mux_sel <= "100";
 		sign_to_booth <= '0'; -- useless but avoids errors on simulation
 
   when SLLS =>
-		out_mux_sel <= "10";
+		out_mux_sel <= "010";
 		left_right <= '1';
 		logic_arith <= '1';
  
   when SRLS =>
-		out_mux_sel <= "10";
+		out_mux_sel <= "010";
 		left_right <= '0';
 		logic_arith <= '1';
  
   when SRAS =>
-		out_mux_sel <= "10";
+		out_mux_sel <= "010";
 		left_right <= '0';
 		logic_arith <= '0';
  
   when ADDS =>
 		not_control <= '0';
 		carry_to_adder <= "0";
-		out_mux_sel <= "00";
+		out_mux_sel <= "000";
  
   when ADDUS =>
 		not_control <= '0';
 		carry_to_adder <= "0";	
-		out_mux_sel <= "00";
+		out_mux_sel <= "000";
 
   when SUBS =>		
 		not_control <= '1';
 		carry_to_adder <= "1";	
-		out_mux_sel <= "00";
+		out_mux_sel <= "000";
 
   when SUBUS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
-		out_mux_sel <= "00";
+		out_mux_sel <= "000";
 
   when ANDS =>
 		lu_ctrl	<= "00";
-		out_mux_sel <= "01";
+		out_mux_sel <= "001";
 
   when ORS =>
 		lu_ctrl	<= "01";
-		out_mux_sel <= "01";
+		out_mux_sel <= "001";
   when XORS =>
 		lu_ctrl	<= "10";
-		out_mux_sel <= "01";
+		out_mux_sel <= "001";
 
   when SEQS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "100";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 
   when SNES =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "101";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 
   when SLTS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "010";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '1';
 
   when SGTS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "000";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '1';
 
   when SLES =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "011";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '1';
 
   when SGES =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "001";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '1';
 
 --  UNIMPLEMENTED OPS
@@ -309,41 +310,41 @@ begin
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "010";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when SGTUS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "000";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when SLEUS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "011";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when SGEUS =>
 		not_control <= '1';
 		carry_to_adder <= "1";
 		comp_sel <= "001";
-		out_mux_sel <= "11";
+		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when MULTU =>
-		out_mux_sel <= "00";
+		out_mux_sel <= "000";
 		carry_to_adder <= "0";
 		sign_to_booth <= '0';
 
   when MULTS =>
-		out_mux_sel <= "00";
+		out_mux_sel <= "000";
 		carry_to_adder <= "0";
 		sign_to_booth <= '1';
 
-  when others => out_mux_sel <= "00";
+  when others => out_mux_sel <= "000";
  end case;
 end process;
 
