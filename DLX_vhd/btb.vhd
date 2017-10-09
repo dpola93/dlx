@@ -42,7 +42,9 @@ signal last_PC			: std_logic_vector(SIZE -1 downto 0);
 signal current_PC_prediction	: std_logic_vector(SIZE -1 downto 0);
 signal last_taken_next		: std_logic;
 signal last_taken		: std_logic;
+signal last_mispredict		: std_logic;
 signal current_taken		: std_logic;
+signal current_mispredict	: std_logic;
 
 begin
 
@@ -54,6 +56,7 @@ begin
 		taken <= (others => '0');
 		last_TAG <= (others => '0');
 		last_taken <= '0';
+		last_mispredict <= '0';
 		last_PC <= (others => '0');
 		for i in 0 to 2**N_LINES-1 loop
 			predict_PC(i) <= (others => '0');
@@ -67,6 +70,8 @@ begin
 			-- update even if the prediction is correct
 			predict_PC(to_integer(unsigned(last_TAG))) <= target_PC_i;
 			taken(to_integer(unsigned(last_TAG)))	<= was_taken_i;
+			taken(to_integer(unsigned(last_TAG)))	<= was_taken_i;
+			last_mispredict <= current_mispredict;
 		else -- is this else really necessary??
 			last_taken <= last_taken;
 			last_TAG <= last_TAG;
@@ -78,7 +83,8 @@ begin
 end process;
 
 -- SURE?? in this case if mispredicted NT, CPU always stalls
-mispredict_o		<= (or_reduce(target_PC_i xor last_PC) and last_taken) or ( not(last_taken) and was_taken_i) ;
+current_mispredict	<= ((or_reduce(target_PC_i xor last_PC) and last_taken) or ( not(last_taken) and was_taken_i)) and (not last_mispredict) ;
+mispredict_o		<= current_mispredict;
 
 
 --accesses to memory
