@@ -77,7 +77,7 @@ begin
 	end if;
 end process;
 
--- SURE??
+-- SURE?? in this case if mispredicted NT, CPU always stalls
 mispredict_o		<= (or_reduce(target_PC_i xor last_PC) and last_taken) or ( not(last_taken) and was_taken_i) ;
 
 

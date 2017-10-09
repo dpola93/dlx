@@ -117,6 +117,7 @@ MUXPREDICTION: mux41 port map(
 	IN3	=> PC_BUS_no_btb, 
 	CTRL	=> help_ctrl, 
 	OUT1	=> PC_BUS);
+
 help_ctrl <= mispredict_i&take_prediction_i;
 PC4_o <= std_logic_vector(PC4_o_uns);
 PC_o <= PC_help;
