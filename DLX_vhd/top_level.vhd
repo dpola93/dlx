@@ -191,7 +191,7 @@ end component;
 
 component DRAM
   generic (
-	RAM_DEPTH	: integer := 1024;
+	RAM_DEPTH	: integer := 4096;
 	I_SIZE		: integer := 32);
  port (
 	Clk 		: in  std_logic;
@@ -511,7 +511,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	S2mem <= B2exe;
 
 	UDMEM : DRAM
-	generic map ( RAM_DEPTH => 1024, I_SIZE => 32)
+	generic map ( RAM_DEPTH => 4096, I_SIZE => 32)
 	Port Map (clock,rst,dummy_S_MEM_EN,dummy_S_MEM_W_R,S2wb,X2wb,L2wb);
 
 	UMEM_REGS: mem_regs
