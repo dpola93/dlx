@@ -26,7 +26,8 @@ entity stall_logic is
     S_exe_WRITE_i	: in  std_logic;
     S_MUX_PC_BUS_i	: in  std_logic_vector(1 downto 0);
     mispredict_i	: in  std_logic;
-    bubble_o		: out std_logic;
+    bubble_dec_o	: out std_logic;
+    bubble_exe_o	: out std_logic;
     stall_exe_o		: out std_logic;
     stall_dec_o		: out std_logic;
     stall_btb_o		: out std_logic;
@@ -45,6 +46,7 @@ signal STALL_LOAD_RTYPE		: std_logic;
 signal STALL_LOAD_ITYPE		: std_logic;
 signal IS_NO_STALL		: std_logic;
 signal IS_JMP			: std_logic;
+signal stall_dec_help		: std_logic;
 
 begin
 
@@ -76,17 +78,18 @@ STALL_LOAD_ITYPE <= S_exe_LOAD_i and (or_reduce(OPCODE_i xor RTYPE)) and (not IS
 --exe is never stopped at the moment
 stall_exe_o <= '0'; 
 
--- stalls for ALL hazards + jumps + misprediction
-stall_dec_o <= STALL_JMP_BRANCH_LOAD or STALL_JMP_BRANCH_DECODE or STALL_LOAD_RTYPE or STALL_LOAD_ITYPE or IS_JMP or mispredict_i;
-
 -- stalls for ALL hazards + jumps 
-stall_btb_o <= STALL_JMP_BRANCH_LOAD or STALL_JMP_BRANCH_DECODE or STALL_LOAD_RTYPE or STALL_LOAD_ITYPE or IS_JMP;
+stall_dec_o <= stall_dec_help;
+stall_dec_help <= STALL_JMP_BRANCH_LOAD or STALL_JMP_BRANCH_DECODE or STALL_LOAD_RTYPE or STALL_LOAD_ITYPE; 
+-- stalls for ALL hazards + jumps 
+stall_btb_o <= STALL_JMP_BRANCH_LOAD or STALL_JMP_BRANCH_DECODE or STALL_LOAD_RTYPE or STALL_LOAD_ITYPE ;
 
 -- stall only in case of hazard, not for jumps
 stall_fetch_o <= STALL_JMP_BRANCH_LOAD or STALL_JMP_BRANCH_DECODE or STALL_LOAD_RTYPE or STALL_LOAD_ITYPE;
 
 -- bubble is triggered only for mispredictions or unpredictable jumps
-bubble_o <= (IS_JMP or mispredict_i) and (STALL_JMP_BRANCH_DECODE nor STALL_JMP_BRANCH_LOAD);
+bubble_dec_o <= mispredict_i and (not stall_dec_help);
+bubble_exe_o <= stall_dec_help;
 
 end stall_logic_hw;
 

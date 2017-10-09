@@ -42,6 +42,7 @@ entity dlx_cu is
     stall_fetch_o	: out std_logic;			-- Stall fetch stage
     stall_btb_o		: out std_logic;			-- Stall btb
     was_branch_o	: out std_logic;			-- Op in decode is a branch or not?
+    was_jmp_o		: out std_logic;
 
     ALU_OPCODE		: out aluOp		-- Opcode to ALU
 
@@ -141,8 +142,10 @@ architecture dlx_cu_hw of dlx_cu is
   signal stall_btb_o_TEMP	: std_logic;	
   signal stall_fetch_o_TEMP	: std_logic;
 
-  signal bubble			: std_logic; -- transform next op in decode into a NOP
-  signal next_bubble		: std_logic; -- TODO: rename this into something similar to unconditional jump
+  signal bubble_dec			: std_logic; -- transform next op in decode into a NOP
+  signal next_bubble_dec		: std_logic; -- TODO: rename this into something similar to unconditional jump
+  signal bubble_exe			: std_logic; -- transform next op in exe into a NOP
+  signal next_bubble_exe		: std_logic; -- TODO: rename this into something similar to unconditional jump
 
   signal was_no_branch	: std_logic;
   signal was_no_jmp	: std_logic;
@@ -167,7 +170,8 @@ component stall_logic is
     S_exe_WRITE_i	: in  std_logic;
     S_MUX_PC_BUS_i	: in  std_logic_vector(1 downto 0);
     mispredict_i	: in  std_logic;
-    bubble_o		: out std_logic;
+    bubble_dec_o	: out std_logic;
+    bubble_exe_o	: out std_logic;
     stall_exe_o		: out std_logic;
     stall_dec_o		: out std_logic;
     stall_btb_o		: out std_logic;
@@ -199,7 +203,8 @@ STALL_L : stall_logic
     S_exe_WRITE_i	=> cw_e(CW_SIZE - 13),
     S_MUX_PC_BUS_i	=> cw_d(CW_SIZE - 1 downto CW_SIZE - 2),
     mispredict_i	=> mispredict_i,
-    bubble_o		=> next_bubble,
+    bubble_dec_o	=> next_bubble_dec,
+    bubble_exe_o	=> next_bubble_exe,
     stall_exe_o		=> stall_exe_o_TEMP,
     stall_dec_o		=> stall_dec_o_TEMP,
     stall_btb_o		=> stall_btb_o_TEMP,
@@ -221,11 +226,7 @@ STALL_L : stall_logic
 
 
   -- control work is assigned to the word looked up in microcode memory
-grep: assembler: Is a directory
-grep: DLX_vhd: Is a directory
-grep: scripts: Is a directory
-grep: work: Is a directory
-
+  cw_d	<= cw_mem(conv_integer(IR_opcode)) when bubble_dec = '0' else "0000000000000";
   -- *** ATM THE LATCH ENABLES ARE DOING NOTHING! EVERYTHING IS CONTROLLED BY STALL ***
   -- TODO: FIX THIS 
   S1_LATCH_EN	<= '1';
@@ -233,8 +234,7 @@ grep: work: Is a directory
   S3_LATCH_EN	<= '1';
 
   -- stage two control signals
-  S_MUX_PC_BUS	<=	"00" when mispredict_i = '0' and cw_d(CW_SIZE - 1) = '1' and cw_d(CW_SIZE - 2) = '1' else
-			cw_d(CW_SIZE - 1 downto CW_SIZE - 2);
+  S_MUX_PC_BUS	<=cw_d(CW_SIZE - 1 downto CW_SIZE - 2); --IS THIS OK????
   S_EXT		<= cw_d(CW_SIZE - 3);
   S_EXT_SIGN	<= cw_d(CW_SIZE - 4);
   S_EQ_NEQ	<= cw_d(CW_SIZE - 5);
@@ -263,6 +263,7 @@ grep: work: Is a directory
   S_EXE_LOAD	<= cw_e(CW_SIZE - 10) and (not cw_e(CW_SIZE - 11));
 
   was_branch_o	<=  cw_d(CW_SIZE - 1) and cw_d(CW_SIZE - 2);
+  was_jmp_o	<=  cw_d(CW_SIZE - 1) xor cw_d(CW_SIZE - 2);
 
 
 
@@ -282,13 +283,9 @@ grep: work: Is a directory
     elsif Clk'event and Clk = '1' then  -- rising clock edge
 
       -- update of the bubbe signal
-      -- bubble means: cancel next decode operation and make it a nop ( used in case of misprediction or inconditional jumps)
-      bubble <= next_bubble or mispredict_i;
-
-     -- write here if previous op was not a branch 
-      was_no_branch <= cw_d(CW_SIZE - 1) and cw_d(CW_SIZE - 2);
-      
-      was_no_jmp <= cw_d(CW_SIZE - 1) nor cw_d(CW_SIZE - 2);
+      -- bubble means: cancel next operation and make it a nop ( used in case of misprediction or inconditional jumps)
+      bubble_dec <= next_bubble_dec;
+      bubble_exe <= next_bubble_exe;
 
       -- exe stalled 
       if stall_exe_i = '1' or stall_exe_o_TEMP = '1' then

@@ -16,9 +16,10 @@ entity fetch_block is
 	S_MUX_PC_BUS_i :	in  std_logic_vector(1 downto 0);
 	PC_o :			out std_logic_vector(SIZE - 1 downto 0);
 	PC4_o :			out std_logic_vector(SIZE - 1 downto 0);
+	PC_BUS_pre_BTB :	out std_logic_vector(SIZE - 1 downto 0);
 	stall_i :		in  std_logic;
 	take_prediction_i :	in  std_logic;
-	wrong_back_pred_i :	in  std_logic;
+	mispredict_i	 :	in  std_logic;
 	predicted_PC :		in  std_logic_vector(SIZE - 1 downto 0);
 	clk :			in  std_logic;
 	rst :			in  std_logic
@@ -102,7 +103,7 @@ PCADD: add4 port map(
 	OUT1	=> PC4_o_uns);
 
 MUXTARGET: mux41 port map(
-	IN0	=> std_logic_vector(PC4_o_uns), 
+	IN0	=> NPC4_i, 
 	IN1	=> A_i, 
 	IN2	=> sum_addr_i, 
 	IN3	=> branch_target_i, 
@@ -110,14 +111,14 @@ MUXTARGET: mux41 port map(
 	OUT1	=> PC_BUS_no_btb);
 
 MUXPREDICTION: mux41 port map(
-	IN0	=> PC_BUS_no_btb, 
+	IN0	=> std_logic_vector(PC4_o_uns), 
 	IN1	=> predicted_PC, 
-	IN2	=> NPC4_i, 
-	IN3	=> NPC4_i, 
+	IN2	=> PC_BUS_no_btb, 
+	IN3	=> PC_BUS_no_btb, 
 	CTRL	=> help_ctrl, 
 	OUT1	=> PC_BUS);
-help_ctrl <= wrong_back_pred_i&take_prediction_i;
+help_ctrl <= mispredict_i&take_prediction_i;
 PC4_o <= std_logic_vector(PC4_o_uns);
 PC_o <= PC_help;
-
+PC_BUS_pre_BTB <= PC_BUS_no_btb;
 end Struct;

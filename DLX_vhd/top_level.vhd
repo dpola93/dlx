@@ -23,8 +23,9 @@ architecture arch of top_level is
 	S_MUX_PC_BUS_i		: in  std_logic_vector(1 downto 0);
 	PC_o			: out std_logic_vector(31 downto 0);
 	PC4_o			: out std_logic_vector(31 downto 0);
+	PC_BUS_pre_BTB		: out std_logic_vector(31 downto 0);
 	stall_i			: in  std_logic;
-	wrong_back_pred_i	: in  std_logic;
+	mispredict_i		: in  std_logic;
 	take_prediction_i	: in  std_logic;
 	predicted_PC		: in  std_logic_vector(31 downto 0);
 	clk			: in  std_logic;
@@ -122,6 +123,7 @@ component dlx_cu is
   stall_fetch_o    	: out std_logic;
   stall_btb_o		: out std_logic;
   was_branch_o		: out std_logic;
+  was_jmp_o		: out std_logic;
   ALU_OPCODE		: out aluOp
 
 
@@ -246,24 +248,22 @@ component btb is
 	SIZE	: integer
 );
  port (
-	clock 			: in  std_logic;
-	reset 			: in  std_logic;
+	clock			: in  std_logic;
+	reset			: in  std_logic;
 	stall_i			: in  std_logic;
-	TAG_i			: in  std_logic_vector(N_LINES - 1 downto 0);
-	was_taken_i		: in  std_logic;
-	was_branch_i		: in  std_logic;
-	target_PC_i		: in  std_logic_vector(SIZE - 1 downto 0);
-	predicted_next_PC_o	: out std_logic_vector(SIZE - 1 downto 0);
-	taken_o			: out std_logic;
-	mispredict_o		: out std_logic; -- 1 when last branch was not correctly predicted
-	wrong_back_pred_o	: out std_logic -- 1 when last branch was predicted taken but its not
-
+	TAG_i			: in  std_logic_vector(N_LINES - 1 downto 0); -- TAG is taken from the PC ( remove 2 lowest bits)
+	target_PC_i		: in  std_logic_vector(SIZE - 1 downto 0); -- correct value from dec stage
+	was_taken_i		: in  std_logic; -- correct value from dec stage
+	predicted_next_PC_o	: out std_logic_vector(SIZE - 1 downto 0);  -- output to PC
+	taken_o			: out std_logic; -- control to bypass PC_MUX and use prediction
+	mispredict_o		: out std_logic -- 1 when last branch was not correctly predicted
 	);
 end component;
 
 
 signal dummy_PC_BUS		: std_logic_vector(31 downto 0);
 signal dummy_PC4_BUS		: std_logic_vector(31 downto 0);
+signal dummy_PC_BUS_pre_BTB	: std_logic_vector(31 downto 0);
 signal dummy_FETCH_o		: std_logic_vector(31 downto 0);
 signal help_IR 			: std_logic_vector(31 downto 0);
 signal help_NPCF		: std_logic_vector(31 downto 0);
@@ -333,8 +333,10 @@ signal stall_exe		: std_logic;
 signal exe_stall_cu		: std_logic;
 signal dec_stall_cu		: std_logic;
 
+signal was_taken_from_jl	: std_logic;
 signal was_taken		: std_logic;
-signal was_branch		: std_logic; 
+signal was_branch		: std_logic;
+signal was_jmp			: std_logic;
 
 signal mispredict		: std_logic;
 signal take_prediction		: std_logic;
@@ -342,6 +344,8 @@ signal wrong_back_pred		: std_logic;
 signal predicted_PC		: std_logic_vector(31 downto 0);
 
 begin
+
+was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 
     -- instance of DLX
 	UFETCH_BLOCK: fetch_block
@@ -354,8 +358,9 @@ begin
 	S_MUX_PC_BUS_i		=> dummy_S_MUX_PC_BUS,
 	PC_o			=> dummy_PC_BUS, 
 	PC4_o			=> dummy_PC4_BUS, --this is actually PC4 
+	PC_BUS_pre_BTB		=> dummy_PC_BUS_pre_BTB,
 	stall_i			=> stall_fetch,
-	wrong_back_pred_i	=> wrong_back_pred,
+	mispredict_i		=> mispredict,
 	take_prediction_i	=> take_prediction,
 	predicted_PC		=> predicted_PC,
 	clk			=> clock,
@@ -372,13 +377,11 @@ begin
 	reset			=> rst,
 	stall_i			=> stall_btb,
 	TAG_i			=> dummy_PC_BUS(2+PRED_SIZE-1 downto 2),
+	target_PC_i		=> dummy_PC_BUS_pre_BTB,
 	was_taken_i		=> was_taken,
-	was_branch_i		=> was_branch,
-	target_PC_i		=> dummy_branch_target,
 	predicted_next_PC_o	=> predicted_PC,
 	taken_o			=> take_prediction,
-	mispredict_o		=> mispredict,
-	wrong_back_pred_o	=> wrong_back_pred
+	mispredict_o		=> mispredict
 
 	);
 	
@@ -399,7 +402,7 @@ begin
 	branch_target_o	=> dummy_branch_target,
 	sum_addr_o	=> dummy_sum_addr,
 	extended_imm	=> help_IMM,
-	taken_o		=> was_taken,
+	taken_o		=> was_taken_from_jl,
 	FW_X_i		=> X2wb,
 	FW_W_i		=> wb2reg,
 	S_FW_Adec_i	=> dummy_S_FWAdec,
@@ -439,6 +442,7 @@ begin
 	stall_fetch_o	=> stall_fetch,
 	stall_btb_o	=> stall_btb,
 	was_branch_o	=> was_branch, 
+	was_jmp_o	=> was_jmp, 
 	ALU_OPCODE	=> dummy_OP
 	);
 

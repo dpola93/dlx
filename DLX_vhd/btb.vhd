@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.std_logic_misc.all;
 use ieee.numeric_std.all;
 use work.myTypes.all;
 
@@ -17,36 +18,32 @@ entity btb is
 	reset			: in  std_logic;
 	stall_i			: in  std_logic;
 	TAG_i			: in  std_logic_vector(N_LINES - 1 downto 0); -- TAG is taken from the PC ( remove 2 lowest bits)
-	was_taken_i		: in  std_logic; -- signal coming from CU, was last branch taken?
-	was_branch_i		: in  std_logic; -- signal coming from CU, was last operation a branch?
-	target_PC_i		: in  std_logic_vector(SIZE - 1 downto 0); -- output to PC
-	predicted_next_PC_o	: out std_logic_vector(SIZE - 1 downto 0); -- correct value from dec stage 
+	target_PC_i		: in  std_logic_vector(SIZE - 1 downto 0); -- correct value from dec stage
+	was_taken_i		: in  std_logic; -- correct value from dec stage
+	predicted_next_PC_o	: out std_logic_vector(SIZE - 1 downto 0);  -- output to PC
 	taken_o			: out std_logic; -- control to bypass PC_MUX and use prediction
-	mispredict_o		: out std_logic; -- 1 when last branch was not correctly predicted
-	wrong_back_pred_o	: out std_logic -- 1 when last branch was predicted taken but its not
-
+	mispredict_o		: out std_logic -- 1 when last branch was not correctly predicted
 	);
 end btb;
+
 architecture Bhe of btb is
 
 -- actual BTB memory
 type PC_array is array (integer range 0 to 2**N_LINES - 1) of std_logic_vector(SIZE - 1 downto 0);
 
-signal predict_PC : PC_array;
-signal valid		: std_logic_vector(2**N_LINES - 1 downto 0);
+signal predict_PC	: PC_array;
 signal taken		: std_logic_vector(2**N_LINES - 1 downto 0);
 
 
 -- help signal
-signal last_TAG		: std_logic_vector(N_LINES - 1 downto 0);
-signal last_TAG_next	: std_logic_vector(N_LINES - 1 downto 0);
-signal last_taken_next	: std_logic;
-signal last_taken	: std_logic;
-signal current_valid	: std_logic;
-signal current_taken	: std_logic;
+signal last_TAG			: std_logic_vector(N_LINES - 1 downto 0);
+signal last_TAG_next		: std_logic_vector(N_LINES - 1 downto 0);
+signal last_PC			: std_logic_vector(SIZE -1 downto 0);
+signal current_PC_prediction	: std_logic_vector(SIZE -1 downto 0);
+signal last_taken_next		: std_logic;
+signal last_taken		: std_logic;
+signal current_taken		: std_logic;
 
-signal mispredict_A	: std_logic;
-signal mispredict_B	: std_logic;
 begin
 
 -- TODO: fix identation of this shit
@@ -54,59 +51,48 @@ process(reset,clock)
 begin
 	if reset = '1' then
 		-- reset behavior
-		valid <= (others => '0');
+		taken <= (others => '0');
 		last_TAG <= (others => '0');
 		last_taken <= '0';
+		last_PC <= (others => '0');
+		for i in 0 to 2**N_LINES-1 loop
+			predict_PC(i) <= (others => '0');
+		end loop;
 	else if clock = '1' and clock'event then
 		-- update registers ( when stalled keep the old value )
 		if stall_i <= '0' then
 			last_taken <= last_taken_next;
 			last_TAG <= last_TAG_next;
-		else
+			last_PC <= current_PC_prediction;
+			-- update even if the prediction is correct
+			predict_PC(to_integer(unsigned(last_TAG))) <= target_PC_i;
+			taken(to_integer(unsigned(last_TAG)))	<= was_taken_i;
+		else -- is this else really necessary??
 			last_taken <= last_taken;
 			last_TAG <= last_TAG;
+			last_PC <= last_PC;
 		end if;
 
-		-- if last op was a branch update value
-		-- update even if the prediction is correct
-		if was_branch_i = '1' then
-			valid(to_integer(unsigned(last_TAG))) <= '1';
-			if was_taken_i = '1' then
-				predict_PC(to_integer(unsigned(last_TAG))) <= target_PC_i;
-			end if;
-			if last_taken /= was_taken_i then
-				taken(to_integer(unsigned(last_TAG))) <= was_taken_i;
-			end if;
-		else -- in case last op was NOT a branch, remove valid	
-			valid(to_integer(unsigned(last_TAG))) <= '0';
-		end if;
 	end if;
 	end if;
 end process;
 
+-- SURE??
+mispredict_o		<= (or_reduce(target_PC_i xor last_PC) and last_taken) or ( not(last_taken) and was_taken_i) ;
 
--- mispredict triggers when last operation was a branch and predicted value is different from actual value
-mispredict_A		<= was_branch_i and (last_taken xor was_taken_i);
 
--- or when last operation was not a branch but we took the prediction
-mispredict_B		<= (not was_branch_i ) and last_taken;
-
-mispredict_o		<= (mispredict_A or mispredict_B) and ( not stall_i) and (not reset);
-wrong_back_pred_o	<= mispredict_B;
 --accesses to memory
-current_valid		<= valid(to_integer(unsigned(TAG_i))) when TAG_i /= last_TAG else
-			   was_branch_i; -- DONT KNOW IF THIS SHIT WORKS!!!! WRITE THIS SPECIAL CASE ON THE REPORT!!!
 current_taken		<= taken(to_integer(unsigned(TAG_i)));
-predicted_next_PC_o	<= predict_PC(to_integer(unsigned(TAG_i)));
+current_PC_prediction	<= predict_PC(to_integer(unsigned(TAG_i)));
+predicted_next_PC_o	<= current_PC_prediction;
 
 -- need to have a correct behavior at reset
 last_TAG_next		<= 	TAG_i when reset = '0' else
 				(others => '0');
 --taken ( and last_taken_next ) when curret op is valid (found in memory) and prediction is taken
-taken_o			<=	'1' when current_valid = '1' and current_taken = '1' and reset = '0' else
+taken_o			<=	current_taken when reset = '0' else
 	 			'0';
 
-last_taken_next		<=	'1' when current_valid = '1' and current_taken = '1' and reset = '0' else
-	 			'0';
+last_taken_next		<=	current_taken;
 
 end Bhe;
