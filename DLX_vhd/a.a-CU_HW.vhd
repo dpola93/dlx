@@ -56,7 +56,7 @@ architecture dlx_cu_hw of dlx_cu is
   signal cw_mem : mem_array := ("0000000010001", -- (0X00) R type
                                 "0000000010001", -- (0X01) F type
                                 "1011000000000", -- (0X02) J 
-                                "1011011100001", -- (0X03) JAL -- TODO: ALU must bypass B value to output in order to have a correct behavior
+                                "1011010110001", -- (0X03) JAL -- TODO: ALU must bypass B value to output in order to have a correct behavior
                                 "1101000000000", -- (0X04) BEQZ 
                                 "1101100000000", -- (0X05) BNEZ
                                 "0000000000000", -- (0X06) BFPT
