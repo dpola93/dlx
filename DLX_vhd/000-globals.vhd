@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 package myTypes is
 	constant OP_CODE_SIZE : integer :=  6;                                              -- OPCODE field size
    	constant FUNC_SIZE    : integer :=  11; 
-   	constant PRED_SIZE    : integer :=  2; 
+   	constant PRED_SIZE    : integer :=  4; 
 	type aluOp is (
 		NOP, SLLS, SRLS, SRAS, ADDS, ADDUS, SUBS, SUBUS, ANDS, ORS, XORS, SEQS, SNES,
 		SLTS,SGTS,SLES,SGES,MOVI2SS,MOVS2IS,MOVFS,MOVDS,MOVFP2IS,MOVI2FP,MOVI2TS,MOVT2IS,

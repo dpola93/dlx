@@ -10,7 +10,7 @@ use ieee.std_logic_textio.all;
 -- file name is "data.mem"
 entity DRAM is
   generic (
-    RAM_DEPTH : integer := 1024;
+    RAM_DEPTH : natural := 4096;
     I_SIZE : integer := 32);
   port (
     Clk  : in  std_logic;
@@ -30,15 +30,14 @@ architecture DRam_Bhe of DRAM is
 
   signal DRAM_mem : RAMtype;
 
-begin  -- IRam_Bhe
-
-  Dout <= DRAM_mem(to_integer(unsigned(Addr))/4) when WR = '0' and Enable = '1' else (others => 'Z');
+begin  -- DRam_Bhe
+--  Dout <= DRAM_mem(to_integer(unsigned(Addr))/4) when WR = '0' and Enable = '1' else (others => 'Z');
 
 
   -- purpose: This process is in charge of filling the Instruction RAM with the firmware
   -- type   : combinational
   -- inputs : Rst
-  -- outputs: IRAM_mem
+  -- outputs: DRAM_mem
   FILL_MEM_P: process (Rst,Clk)
     file mem_fp2: text;
     variable file_line2 : line;
@@ -58,8 +57,10 @@ begin  -- IRam_Bhe
     else
 	if(clk'event and clk = '0') then
 	if(Enable = '1' and Wr = '1') then
-	DRAM_mem(to_integer(unsigned(Addr))/4) <= Din;
-	report "unexpected value. i = " & integer'image(to_integer(unsigned(Addr)));
+		DRAM_mem(to_integer(unsigned(Addr))/4) <= Din;
+		report "i = " & integer'image(to_integer(unsigned(Addr)));
+	elsif ( Enable = '1' and WR='0' ) then
+  		Dout <= DRAM_mem(to_integer(unsigned(Addr))/4);
 	end if;
 	end if;
     end if;
