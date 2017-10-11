@@ -28,12 +28,22 @@ end btb;
 
 architecture Bhe of btb is
 
+component predictor_2 
+  port (
+	clock			: in  std_logic;
+	reset			: in  std_logic;
+	enable			: in  std_logic;
+	taken_i			: in  std_logic;
+	prediction_o		: out std_logic
+	);
+end component;
+
 -- actual BTB memory
 type PC_array is array (integer range 0 to 2**N_LINES - 1) of std_logic_vector(SIZE - 1 downto 0);
 
 signal predict_PC	: PC_array;
-signal taken		: std_logic_vector(2**N_LINES - 1 downto 0);
-
+signal taken		: std_logic_vector(2**N_LINES-1 downto 0);
+signal enable		: std_logic_vector(2**N_LINES-1 downto 0);
 
 -- help signal
 signal last_TAG			: std_logic_vector(N_LINES - 1 downto 0);
@@ -48,34 +58,37 @@ signal current_mispredict	: std_logic;
 
 begin
 
+pred: for i in 0 to 2**N_LINES-1 generate
+	pred_x: predictor_2 port map(clock,reset,enable(i),was_taken_i,taken(i));
+end generate pred; 
+
 -- TODO: fix identation of this shit
 process(reset,clock)
 begin
 	if reset = '1' then
 		-- reset behavior
-		taken <= (others => '0');
 		last_TAG <= (others => '0');
-		last_taken <= '0';
 		last_mispredict <= '0';
 		last_PC <= (others => '0');
+		enable <= (others => '0');
 		for i in 0 to 2**N_LINES-1 loop
 			predict_PC(i) <= (others => '0');
 		end loop;
 	else if clock = '1' and clock'event then
 		-- update registers ( when stalled keep the old value )
 		if stall_i <= '0' then
-			last_taken <= last_taken_next;
-			last_TAG <= last_TAG_next;
-			last_PC <= current_PC_prediction;
+			last_taken	<= last_taken_next;
+			last_TAG	<= last_TAG_next;
+			last_PC		<= current_PC_prediction;
 			-- update even if the prediction is correct
 			predict_PC(to_integer(unsigned(last_TAG))) <= target_PC_i;
-			taken(to_integer(unsigned(last_TAG)))	<= was_taken_i;
-			taken(to_integer(unsigned(last_TAG)))	<= was_taken_i;
 			last_mispredict <= current_mispredict;
+			enable <= (others => '0');
+			enable(to_integer(unsigned(last_tag))) <= '1';
 		else -- is this else really necessary??
-			last_taken <= last_taken;
-			last_TAG <= last_TAG;
-			last_PC <= last_PC;
+			last_taken	<= last_taken;
+			last_TAG	<= last_TAG;
+			last_PC		<= last_PC;
 		end if;
 
 	end if;
@@ -98,7 +111,14 @@ last_TAG_next		<= 	TAG_i when reset = '0' else
 --taken ( and last_taken_next ) when curret op is valid (found in memory) and prediction is taken
 taken_o			<=	current_taken when reset = '0' else
 	 			'0';
-
 last_taken_next		<=	current_taken;
 
-end Bhe;
+
+process(last_tag)
+begin
+	report "X:"&integer'image(to_integer(unsigned(enable))); 
+end process;
+
+
+
+end bhe;
