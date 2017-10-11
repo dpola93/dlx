@@ -1,5 +1,6 @@
 *.bak
 work/_*
+DLX_VHD/work/_*
 transcript
 *.wlf
 assembler/*.list

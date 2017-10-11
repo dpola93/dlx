@@ -1,0 +1,15 @@
+WHAT HAS BEEN DONE SO FAR:
+
+5 stage classic pipeline
+in order execution
+2bit BTB with reconfigurable number of entries
+aggressive branch/jump address calculation done in dec stage 1cc penalty for mispredictions
+control unit hardwired, 13 control signals
+REGFILE has 2 read ports and 1 write port
+forwarding to DEC/EXE/MEM stages
+stall logic on hazards and mispredictions
+ALU with SHIFTER, LOGIC UNIT, ADDER, COMPARATOR, MULTIPLIER
+comparator,addition and multiply operations share the same adder ( P4 adder)
+multiplication is done as 16x16(truncate MSBs) in 8 cc, both signed and unsigned
+SYNCHRONOUS dram,iram,regfile triggered on falling edge
+support almost all RTYPE and ITYPE instructions (missing memory operations lb,lh,sb,sh) 
