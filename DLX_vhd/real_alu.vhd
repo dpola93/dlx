@@ -43,7 +43,7 @@ end component;
 
 component RCA 
 generic (M : integer);
-Port (
+port (
 	A	: in  std_logic_vector(M-1 downto 0);
 	B	: in  std_logic_vector(M-1 downto 0);
 	Cin	: in  std_logic_vector(0 downto 0);
@@ -51,6 +51,18 @@ Port (
 	Cout	: out std_logic
 	);
  end component; 
+
+component p4add
+generic (
+	N	: integer := 32;
+	logN	: integer := 5);
+Port (
+	A	: in  std_logic_vector(N-1 downto 0);
+	B	: in  std_logic_vector(N-1 downto 0);
+	Cin	: in  std_logic;
+	S	: out std_logic_vector(N-1 downto 0);
+	Cout	: out std_logic);
+end component; 
 
 component comparator 
 	generic (M : integer := 32);	
@@ -100,7 +112,7 @@ signal shift_out	: std_logic_vector(DATA_SIZE-1 downto 0);
 signal mux_A		: std_logic_vector(DATA_SIZE-1 downto 0);
 signal mux_B		: std_logic_vector(DATA_SIZE-1 downto 0);
 
-signal carry_to_adder	: std_logic_vector(0 downto 0);
+signal carry_to_adder	: std_logic;
 signal carry_from_adder	: std_logic;
 signal overflow		: std_logic;
 
@@ -152,8 +164,11 @@ MULT: simple_booth_add_ext
 	ACC_from_add	=> sum_out
   );
 
-ADDER: RCA 
-	generic map ( M => DATA_SIZE)
+ADDER: p4add 
+	generic map (
+	N => DATA_SIZE,
+	logN => 5
+	)
 	port map (
 	A	=> mux_A,
 	B	=> mux_B,
@@ -231,22 +246,22 @@ begin
  
   when ADDS =>
 		not_control <= '0';
-		carry_to_adder <= "0";
+		carry_to_adder <= '0';
 		out_mux_sel <= "000";
  
   when ADDUS =>
 		not_control <= '0';
-		carry_to_adder <= "0";	
+		carry_to_adder <= '0';	
 		out_mux_sel <= "000";
 
   when SUBS =>		
 		not_control <= '1';
-		carry_to_adder <= "1";	
+		carry_to_adder <= '1';	
 		out_mux_sel <= "000";
 
   when SUBUS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		out_mux_sel <= "000";
 
   when ANDS =>
@@ -262,40 +277,40 @@ begin
 
   when SEQS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "100";
 		out_mux_sel <= "011";
 
   when SNES =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "101";
 		out_mux_sel <= "011";
 
   when SLTS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "010";
 		out_mux_sel <= "011";
 		sign_to_booth <= '1';
 
   when SGTS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "000";
 		out_mux_sel <= "011";
 		sign_to_booth <= '1';
 
   when SLES =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "011";
 		out_mux_sel <= "011";
 		sign_to_booth <= '1';
 
   when SGES =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "001";
 		out_mux_sel <= "011";
 		sign_to_booth <= '1';
@@ -311,40 +326,40 @@ begin
 --  when MOVT2IS => DOUT <= (others => '0');
   when SLTUS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "010";
 		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when SGTUS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "000";
 		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when SLEUS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "011";
 		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when SGEUS =>
 		not_control <= '1';
-		carry_to_adder <= "1";
+		carry_to_adder <= '1';
 		comp_sel <= "001";
 		out_mux_sel <= "011";
 		sign_to_booth <= '0';
 
   when MULTU =>
 		out_mux_sel <= "000";
-		carry_to_adder <= "0";
+		carry_to_adder <= '0';
 		sign_to_booth <= '0';
 
   when MULTS =>
 		out_mux_sel <= "000";
-		carry_to_adder <= "0";
+		carry_to_adder <= '0';
 		sign_to_booth <= '1';
 
   when others => out_mux_sel <= "000";
