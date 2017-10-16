@@ -9,4 +9,8 @@
 * BTB size evaluation
 * STALL logic check
 * Do schematics(top level & sub-blocks)
+ * Fix top level
+ * Fix ALU
+ * Add Detailed BTB
+ * add detailed Address computation
 
