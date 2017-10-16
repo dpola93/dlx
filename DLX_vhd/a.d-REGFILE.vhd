@@ -1,7 +1,13 @@
+-- *** a.d-REGFILE.vhd *** --
+
+-- this block is a simple Register File.
+-- This has 2 read port and 1 write port with enable signals
+-- When reading and writing to the same registers, input data is redirect to the output 
+-- R0 is hardwired to 0
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
---use work.myTypes.all;
 
 
 entity dlx_regfile is
@@ -32,42 +38,43 @@ signal REGISTERS : REG_ARRAY;
 
 
 begin 
--- write your RF code 
 process(clk)
 begin
 	if(clk = '0' and clk'event) then
-	if(Rst = '1') then
-	--reset behavior
-	for i in 0 to 31 loop
-	REGISTERS(i) <= std_logic_vector(to_unsigned(i,databit));
-	end loop;
-	out1<= (others =>'0');
-	out2<= (others =>'0');
-	else if(enable = '1') then
-	--normal behavior
-		if (wr = '1') then
-		--write
-		REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN;
+		if(Rst = '1') then
+			--reset synchronous behavior
+			for i in 0 to 31 loop
+				REGISTERS(i) <= (others => '0'); 
+			end loop;
+			out1<= (others =>'0');
+			out2<= (others =>'0');
+
+		elsif(enable = '1') then
+		--normal behavior
+			if (wr = '1') then
+				--write
+				if to_integer(unsigned(ADD_WR)) /= 0 then
+					REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN;
+				end if;
+			end if;
+			if(rd1 = '1') then
+				--read first
+				if(wr = '1') and (ADD_RD1 = ADD_WR) and to_integer(unsigned(ADD_WR)) /= 0 then
+					out1 <= DATAIN;
+				else
+					out1 <= REGISTERS(to_integer(unsigned(ADD_RD1)));
+				end if;
+			end if;
+			if(rd2 = '1') then
+				--read second
+				if(wr = '1') and (ADD_RD2 = ADD_WR) and to_integer(unsigned(ADD_WR)) /= 0 then
+					out2 <= DATAIN;
+				else
+					out2 <= REGISTERS(to_integer(unsigned(ADD_RD2)));
+				end if;
+			end if;
 		end if;
-		if(rd1 = '1') then
-		--read first
-		if(wr = '1') and (ADD_RD1 = ADD_WR) then
-			out1 <= DATAIN;
-		else
-  			out1 <= REGISTERS(to_integer(unsigned(ADD_RD1)));
-		end if;
-		end if;
-if(rd2 = '1') then
---read second
-if(wr = '1') and (ADD_RD2 = ADD_WR) then
-  out2 <= DATAIN;
-else
-  out2 <= REGISTERS(to_integer(unsigned(ADD_RD2)));
-end if;
-end if;
-end if;
-end if;
-end if;
+	end if;
 end process;
 
 end A;

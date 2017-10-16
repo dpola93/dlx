@@ -111,10 +111,6 @@ ADDRADD: basicadd port map(
 	IN2	=> unsigned(ext_imm), 
 	OUT1	=> sum_addr);
 
--- REMOVED ( NO MORE NEEDED TO HAVE PC8, THERE IS NO DELAY SLOT
---BRANCH4ADD: add4 port map(
---	IN1	=> unsigned(PC4_i),
---	OUT1	=> help_PC8);
 help_PC8 <= unsigned(PC4_i);
 
 

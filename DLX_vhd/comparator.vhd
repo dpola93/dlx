@@ -1,17 +1,22 @@
+-- *** comparator.vhd *** --
+
+-- structural comparator as described in prof. Graziano documents
+-- extended in order to handle both signed and unsigned comparisons 
+-- sum is computed outside of the comparator
+
 library ieee; 
 use ieee.std_logic_1164.all; 
 use ieee.std_logic_misc.all;
 
---TODO: make this look a little bit better
 
 entity comparator is 
 	generic (M : integer := 64);	
 	port (	
-	C	: in  std_logic; -- carry out
-	V	: in  std_logic; -- overflow
+	C	: in  std_logic;			-- carry out
+	V	: in  std_logic;			-- overflow
 	SUM	: in  std_logic_vector(M-1 downto 0);
-	sel	: in  std_logic_vector(2 downto 0); -- selection
-	sign	: in  std_logic; -- 0 unsigned / signed 1
+	sel	: in  std_logic_vector(2 downto 0);	-- selection
+	sign	: in  std_logic;			-- 0 unsigned / signed 1
 	S	: out std_logic
 	);
 end comparator; 

@@ -1,6 +1,6 @@
 -- add4.vhd -- 
 -- This component is an adder with two inputs
--- output is always = input + 4
+-- both carries (input and output) are ignored 
 
 -- TODO: replace this with a better structural adder.
 
@@ -14,17 +14,17 @@ entity basicadd is
 	SIZE : integer := 32
 );
   port (
-	IN1	: in unsigned(SIZE - 1 downto 0);
-   	IN2	: in unsigned(SIZE - 1 downto 0);
+	IN1	: in  unsigned(SIZE - 1 downto 0);
+   	IN2	: in  unsigned(SIZE - 1 downto 0);
 	OUT1	: out unsigned(SIZE - 1 downto 0)
 
 	);
 end basicadd;
 
-architecture Bhe of basicadd is
+architecture bhe of basicadd is
 
 begin
 
 	OUT1 <= IN1+IN2;
 
-end Bhe;
+end bhe;
