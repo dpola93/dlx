@@ -98,7 +98,6 @@ component dlx_cu is
   MICROCODE_MEM_SIZE	:   integer := 64; -- Microcode Memory Size
   FUNC_SIZE		:   integer := 11; -- Func Field Size for R-Type Ops
   OP_CODE_SIZE		:   integer := 6; -- Op Code Size
-  -- ALU_OPC_ZE   	:   integer := 6; -- ALU Op Code Word Size
   IR_SIZE		:   integer := 32; -- Instruction Register Size  
   CW_SIZE		:   integer := 13); -- Control Word Size
  port (
@@ -426,6 +425,13 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	);
 	
 	UCU: dlx_cu
+	generic map(
+	MICROCODE_MEM_SIZE	=> 64,
+	FUNC_SIZE		=> 11,
+	OP_CODE_SIZE		=> 6,
+	IR_SIZE			=> 32,
+	CW_SIZE			=> 13
+	)
 	Port Map (
 	Clk		=> clock,
 	Rst		=> rst,
