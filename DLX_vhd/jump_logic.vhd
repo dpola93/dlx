@@ -34,13 +34,25 @@ end jump_logic;
 
 architecture struct of jump_logic is
 
-component basicadd
-	port(
-	IN1	: in unsigned(SIZE - 1 downto 0);
-   	IN2	: in unsigned(SIZE - 1 downto 0);
-	OUT1	: out unsigned(SIZE - 1 downto 0)
-	);
-end component;
+-- component basicadd
+-- 	port(
+-- 	IN1	: in unsigned(SIZE - 1 downto 0);
+--    	IN2	: in unsigned(SIZE - 1 downto 0);
+-- 	OUT1	: out unsigned(SIZE - 1 downto 0)
+-- 	);
+-- end component;
+
+component p4add
+generic (
+	N	: integer := 32;
+	logN	: integer := 5);
+Port (
+	A	: in  std_logic_vector(N-1 downto 0);
+	B	: in  std_logic_vector(N-1 downto 0);
+	Cin	: in  std_logic;
+	S	: out std_logic_vector(N-1 downto 0);
+	Cout	: out std_logic);
+end component; 
 
 component mux21
   port (
@@ -93,9 +105,9 @@ end component;
 
 
 signal ext_imm		: std_logic_vector (SIZE - 1 downto 0);
-signal sum_addr		: unsigned(SIZE - 1 downto 0);
+signal sum_addr		: std_logic_vector(SIZE - 1 downto 0);
 signal branch_sel	: std_logic;
-signal help_PC8		: unsigned(SIZE - 1 downto 0);
+signal help_PC8		: std_logic_vector(SIZE - 1 downto 0);
 signal FW_MUX_OUT	: std_logic_vector(SIZE - 1 downto 0);
 
 
@@ -106,17 +118,30 @@ EXTENDER: extender_32 port map(
 	CTRL	=> S_EXT_i,
 	SIGN	=> S_EXT_SIGN_i, -- TODO: test needed
 	OUT1	=> ext_imm);
-ADDRADD: basicadd port map(
-	IN1	=> unsigned(PC4_i), 
-	IN2	=> unsigned(ext_imm), 
-	OUT1	=> sum_addr);
+-- ADDRADD: basicadd port map(
+-- 	IN1	=> unsigned(PC4_i), 
+-- 	IN2	=> unsigned(ext_imm), 
+-- 	OUT1	=> sum_addr);
 
-help_PC8 <= unsigned(PC4_i);
+ADDER: p4add 
+	generic map (
+	N => 32,
+	logN => 5
+	)
+	port map (
+	A	=> PC4_i,
+	B	=> ext_imm,
+	Cin	=> '0',
+	S	=> sum_addr,
+	Cout	=> open
+	);
+
+help_PC8 <= PC4_i;
 
 
 MUXTARGET: mux21 port map(
-	IN0	=> std_logic_vector(sum_addr), 
-	IN1	=> std_logic_vector(help_PC8), 
+	IN0	=> sum_addr, 
+	IN1	=> help_PC8, 
 	CTRL	=> branch_sel, 
 	OUT1	=> branch_target_o);
 
@@ -128,7 +153,7 @@ ZC: zerocheck port map(
 
 MUXLINK: mux21 port map(
 	IN0	=> B_i,
-	IN1	=> std_logic_vector(help_PC8), 
+	IN1	=> help_PC8, 
 	CTRL	=> S_MUX_LINK_i, 
 	OUT1	=> B_o);
 
@@ -140,7 +165,7 @@ MUX_FWA: mux41
 	IN0	=> A_i, 
 	IN1	=> FW_X_i, 
 	IN2	=> FW_W_i, 
-	IN3	=> "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", 
+	IN3	=> "00000000000000000000000000000000", 
 	CTRL	=> S_FW_Adec_i, 
 	OUT1	=> FW_MUX_OUT
 	);
@@ -149,7 +174,7 @@ rA_o		<= IR_i(25 downto 21);
 rB_o		<= IR_i(20 downto 16);
 rC_o		<= IR_i(15 downto 11);
 A_o		<= FW_MUX_OUT;
-sum_addr_o	<= std_logic_vector(sum_addr);
+sum_addr_o	<= sum_addr;
 extended_imm	<= ext_imm;
 taken_o		<= not(branch_sel);
 
