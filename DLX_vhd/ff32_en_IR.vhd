@@ -20,7 +20,7 @@ end ff32_en_IR;
 
 architecture behavioral of ff32_en_IR is
 begin
-	process(clk)
+	process(clk,rst)
 	begin
 		if(rst='1') then
 			Q <= X"54000000";

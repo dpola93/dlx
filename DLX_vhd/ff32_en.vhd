@@ -19,7 +19,7 @@ end ff32_en;
 
 architecture behavioral of ff32_en is
 begin
-	process(clk)
+	process(clk,rst)
 	begin
 		if(rst='1') then
 			Q <= (others => '0');
