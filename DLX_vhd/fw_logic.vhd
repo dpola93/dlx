@@ -16,7 +16,7 @@ entity fw_logic is
 	rB_i		: in  std_logic_vector(4 downto 0);
 	S_mem_W		: in  std_logic; -- will the current instruction in MEM stage write to RF?
 	S_mem_LOAD	: in  std_logic; -- is the current instruction in MEM stage a LOAD?
-	S_wb_W		: in  std_logic; -- will the current instruction in WB stage write to RF?
+	S_wb_W		: in  std_logic; -- did the current instruction in WB stage write to RF?
 	S_exe_W		: in  std_logic; -- will the current instruction in EXE stage write to RF?
 	S_FWAdec	: out std_logic_vector(1 downto 0); -- this signal controls forward of A in DEC stage
 	S_FWA		: out std_logic_vector(1 downto 0);

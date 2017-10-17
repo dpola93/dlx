@@ -15,7 +15,7 @@ generic(
 databit: natural := 32;
 addrbit: natural := 5
 );
-port ( Clk: 		IN std_logic;
+port ( Clk:	IN std_logic;
 Rst: 		IN std_logic;
 ENABLE: 	IN std_logic;
 RD1: 		IN std_logic;
@@ -40,7 +40,7 @@ signal REGISTERS : REG_ARRAY;
 begin 
 process(clk)
 begin
-	if(clk = '0' and clk'event) then
+	if(clk = '1' and clk'event) then
 		if(Rst = '1') then
 			--reset synchronous behavior
 			for i in 0 to 31 loop
@@ -49,28 +49,30 @@ begin
 			out1<= (others =>'0');
 			out2<= (others =>'0');
 
-		elsif(enable = '1') then
-		--normal behavior
+		else 
+			--normal behavior
 			if (wr = '1') then
 				--write
 				if to_integer(unsigned(ADD_WR)) /= 0 then
 					REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN;
 				end if;
 			end if;
-			if(rd1 = '1') then
-				--read first
-				if(wr = '1') and (ADD_RD1 = ADD_WR) and to_integer(unsigned(ADD_WR)) /= 0 then
-					out1 <= DATAIN;
-				else
-					out1 <= REGISTERS(to_integer(unsigned(ADD_RD1)));
+			if(enable = '1') then
+				if(rd1 = '1') then
+					--read first
+					if(wr = '1') and (ADD_RD1 = ADD_WR) and to_integer(unsigned(ADD_WR)) /= 0 then
+						out1 <= DATAIN;
+					else
+						out1 <= REGISTERS(to_integer(unsigned(ADD_RD1)));
+					end if;
 				end if;
-			end if;
-			if(rd2 = '1') then
-				--read second
-				if(wr = '1') and (ADD_RD2 = ADD_WR) and to_integer(unsigned(ADD_WR)) /= 0 then
-					out2 <= DATAIN;
-				else
-					out2 <= REGISTERS(to_integer(unsigned(ADD_RD2)));
+				if(rd2 = '1') then
+					--read second
+					if(wr = '1') and (ADD_RD2 = ADD_WR) and to_integer(unsigned(ADD_WR)) /= 0 then
+						out2 <= DATAIN;
+					else
+						out2 <= REGISTERS(to_integer(unsigned(ADD_RD2)));
+					end if;
 				end if;
 			end if;
 		end if;

@@ -13,8 +13,6 @@ entity jump_logic is
 	IR_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	A_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	A_o		: out std_logic_vector(SIZE - 1 downto 0);
-	B_i		: in  std_logic_vector(SIZE - 1 downto 0);
-	B_o		: out std_logic_vector(SIZE - 1 downto 0);
 	rA_o		: out std_logic_vector(4 downto 0);
 	rB_o		: out std_logic_vector(4 downto 0);
 	rC_o		: out std_logic_vector(4 downto 0);
@@ -152,10 +150,10 @@ ZC: zerocheck port map(
 
 
 MUXLINK: mux21 port map(
-	IN0	=> B_i,
+	IN0	=> ext_imm,
 	IN1	=> help_PC8, 
 	CTRL	=> S_MUX_LINK_i, 
-	OUT1	=> B_o);
+	OUT1	=> extended_imm);
 
 MUX_FWA: mux41
 	generic map(
@@ -175,7 +173,6 @@ rB_o		<= IR_i(20 downto 16);
 rC_o		<= IR_i(15 downto 11);
 A_o		<= FW_MUX_OUT;
 sum_addr_o	<= sum_addr;
-extended_imm	<= ext_imm;
 taken_o		<= not(branch_sel);
 
 end struct;

@@ -20,6 +20,7 @@ entity execute_block is
 	S_FW_A_i	: in  std_logic_vector(1 downto 0);
 	S_FW_B_i	: in  std_logic_vector(1 downto 0);
 	muxed_dest	: out std_logic_vector(4 downto 0);
+	muxed_B		: out std_logic_vector(SIZE -1  downto 0);
 	S_MUX_DEST_i	: in  std_logic_vector(1 downto 0);
 	OP		: in  AluOp;
 	DOUT		: out std_logic_vector(SIZE - 1 downto 0);
@@ -130,5 +131,5 @@ MUX_FWB: mux41 	generic map(
 	CTRL	=> S_FW_B_i, 
 	OUT1	=> FWB2mux
 	);
-
+muxed_B <= FWB2mux;
 end struct;
