@@ -5,8 +5,15 @@ use work.myTypes.all;
 
 entity top_level is
 	port(
-	clock	: in  std_logic; 
-	rst	: in  std_logic
+	clock		: in  std_logic; 
+	rst		: in  std_logic;
+	IRAM_Addr_o	: out std_logic_vector(31 downto 0);
+	IRAM_Dout_i	: in  std_logic_vector(31 downto 0);
+	DRAM_Enable_o	: out std_logic;
+	DRAM_WR_o	: out std_logic;
+	DRAM_Din_o	: out std_logic_vector(31 downto 0);
+	DRAM_Addr_o	: out std_logic_vector(31 downto 0);
+	DRAM_Dout_i	: in  std_logic_vector(31 downto 0)
 	); 
 end top_level;
 
@@ -31,15 +38,6 @@ architecture arch of top_level is
 	rst			: in  std_logic
 	);
   end component;
-
-component IRAM
- port (
-  Rst	: in  std_logic;
-  Addr	: in  std_logic_vector(31 downto 0);
-  Dout	: out std_logic_vector(31 downto 0)
-  );
-
-end component;
 
 component fetch_regs is
  port (
@@ -103,7 +101,7 @@ component dlx_cu is
  port (
   Clk			: in  std_logic; -- clock
   Rst			: in  std_logic; -- rst:Active-Low
-  IR_IN			: in  std_logic_vector(IR_SIZE downto 0);
+  IR_IN			: in  std_logic_vector(31 downto 0);
   stall_exe_i		: in  std_logic;
   mispredict_i		: in  std_logic;
   D1_i			: in  std_logic_vector(4 downto 0);
@@ -195,21 +193,6 @@ port (
 	);
 end component;
 
-
-component DRAM
-  generic (
-	RAM_DEPTH	: integer := 4096;
-	I_SIZE		: integer := 32);
- port (
-	Clk 		: in  std_logic;
-	Rst		: in  std_logic;
-	Enable		: in  std_logic;
-	WR		: in  std_logic;
-	Din		: in  std_logic_vector(31 downto 0);
-	Addr		: in  std_logic_vector(31 downto 0);
-	Dout		: out std_logic_vector(31 downto 0)
-  );
-end component;
 
 component mem_regs 
  port (
@@ -391,11 +374,14 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 
 	);
 	
-	IMEM: IRAM port map(
-	Rst	=> rst,
-	Addr	=> dummy_PC_BUS,
-	Dout	=> dummy_FETCH_o
-	);
+--	IMEM: IRAM port map(
+--	Rst	=> rst,
+--	Addr	=> dummy_PC_BUS,
+--	Dout	=> dummy_FETCH_o
+--	);
+
+	IRAM_Addr_o	<= dummy_PC_BUS;
+	dummy_FETCH_o	<= IRAM_Dout_i;
 
 	UFEETCH_REGS: fetch_regs
 	Port Map (dummy_PC4_BUS,dummy_FETCH_o,help_NPCF,help_IR,stall_decode,clock, rst);
@@ -529,9 +515,15 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	-- TODO: check wtf is this
 	S2mem <= B2exe;
 
-	UDMEM : DRAM
-	generic map ( RAM_DEPTH => 4096, I_SIZE => 32)
-	Port Map (clock,rst,dummy_S_MEM_EN,dummy_S_MEM_W_R,S2wb,X2wb,L2wb);
+--	UDMEM : DRAM
+--	generic map ( RAM_DEPTH => 4096, I_SIZE => 32)
+--	Port Map (clock,rst,dummy_S_MEM_EN,dummy_S_MEM_W_R,S2wb,X2wb,L2wb);
+
+	DRAM_Enable_o	<= dummy_S_MEM_EN;
+	DRAM_WR_o	<= dummy_S_MEM_W_R;
+	DRAM_Din_o	<= S2wb;
+	DRAM_Addr_o	<= X2wb;
+	L2wb		<= DRAM_Dout_i;
 
 	UMEM_REGS: mem_regs
 	Port Map (W2wb,D22D3,wb2reg,D32reg,clock,rst);
