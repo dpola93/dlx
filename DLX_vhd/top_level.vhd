@@ -15,7 +15,6 @@ architecture arch of top_level is
 
   component fetch_block
     port (
-	FETCH_o			: out std_logic_vector(31 downto 0);
 	branch_target_i		: in  std_logic_vector(31 downto 0);
 	sum_addr_i		: in  std_logic_vector(31 downto 0);
 	A_i			: in  std_logic_vector(31 downto 0);
@@ -32,6 +31,15 @@ architecture arch of top_level is
 	rst			: in  std_logic
 	);
   end component;
+
+component IRAM
+ port (
+  Rst	: in  std_logic;
+  Addr	: in  std_logic_vector(31 downto 0);
+  Dout	: out std_logic_vector(31 downto 0)
+  );
+
+end component;
 
 component fetch_regs is
  port (
@@ -350,7 +358,6 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
     -- instance of DLX
 	UFETCH_BLOCK: fetch_block
 	Port Map(
-	FETCH_o			=> dummy_FETCH_o,
 	branch_target_i 	=> dummy_branch_target,
 	sum_addr_i		=> dummy_sum_addr,
 	A_i			=> dummy_A,
@@ -385,6 +392,12 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 
 	);
 	
+	IMEM: IRAM port map(
+	Rst	=> rst,
+	Addr	=> dummy_PC_BUS,
+	Dout	=> dummy_FETCH_o
+	);
+
 	UFEETCH_REGS: fetch_regs
 	Port Map (dummy_PC4_BUS,dummy_FETCH_o,help_NPCF,help_IR,stall_decode,clock, rst);
 

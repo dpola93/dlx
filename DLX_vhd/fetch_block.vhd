@@ -8,7 +8,6 @@ entity fetch_block is
 	SIZE : integer := 32
 );
  port (
-	FETCH_o :		out std_logic_vector(SIZE - 1 downto 0);
 	branch_target_i :	in  std_logic_vector(SIZE - 1 downto 0);
 	sum_addr_i :		in  std_logic_vector(SIZE - 1 downto 0);
 	A_i :			in  std_logic_vector(SIZE - 1 downto 0);
@@ -36,14 +35,6 @@ component add4
 	);
 end component;
 
-component IRAM
- port (
-  Rst	: in  std_logic;
-  Addr	: in  std_logic_vector(SIZE - 1 downto 0);
-  Dout	: out std_logic_vector(SIZE - 1 downto 0)
-  );
-
-end component;
 
 component ff32_en
 	port(
@@ -92,11 +83,6 @@ PC: ff32_en port map(
 	en	=> en_IR,
 	clk	=> clk,
 	rst	=> rst);
-
-IMEM: IRAM port map(
-	Rst	=> rst,
-	Addr	=> PC_help,
-	Dout	=> FETCH_o);
 
 PCADD: add4 port map(
 	IN1	=> unsigned(PC_help),
