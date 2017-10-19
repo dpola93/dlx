@@ -1,0 +1,122 @@
+\title{DLX }
+
+
+\documentclass[12pt]{article}
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+The goal of this project is to implement a completely functional DLX processor in VHDL, simulate it and then proceed with the design flow with synthesis and layout phases.
+DLX processor architecture was designed by John L. Hennessy and David A. Patterson and very well described and documented all over the internet.
+This project is developed for the course Microelectronic Systems taught by Prof. Mariagrazia Graziano in Politecnico di Torino.
+
+
+
+\paragraph{Outline}
+The remainder of this article is organized as follows. 
+I will first give a brief overview of the DLX architecture and my personal implementation in Section~\ref{Overview}.
+In Section~\ref{Design} will go into details regarding particular aspects of the datapath and control unit.
+Section~\ref{Design} and~\ref{Layout} are about the environment and results of design and layout phases.
+Finally, Section~\ref{Conclusions} gives the conclusions and possible future work.
+
+\section{Implmentation Overview}\label{Overview}
+DLX is a classical 5-stage pipelined processor, with fixed length instructions and in-order execution.
+Most information regarding the ISA, structure and description of operations can be found in BLABLALBLALBLAA.
+\paragraph{Instructions}
+In this version, all I-TYPE and R-TYPE operations have been implemented with the exception of: LHI, RFE, TRAP, ITLB, LB, LH, LBU, LHU, LF, LD, SB, SH, SF, SD and all MOV operations.
+The only F-TYPE instructions implemented are MULT and MULTU, but they operate on integer register instead of floating point ones.
+
+During normal conditions, all operations take exactly 5 cycles to execute, with the exception of multiplications, which require a fixed amount of 13 cycles (9 cycles are spent in the execute stage) and they're not pipelineable.
+\paragraph{Jump and branch}
+Jump and Branch instructions target address is aggressively evaluated in the decode stage in order to have less cc penalty.
+In addition to this, a 2-bit predictor scheme has been implemented. This will be discussed more in the next section.
+\paragraph{Control logic}
+The execution is regulated by an hardwired CU, in charge of producing control words for each stage of the pipeline, as well as stall signals to stop the execution when needed.
+All possible hazards have been solved through a forwarding logic, when this is not enough, a stall is sent from the control unit.
+\paragraph{Memories}
+Two separated memories for instruction and data have been included in the design, but they're actually not part of it because they are always external peripherals.
+\begin{itemize}
+\item Instruction memory is asynchronous, with 1 read port. Write is not possible.
+\item Data memory is synchronous, with 1 read port and 1 write port. Concurrent write or read is not possible.
+\end{itemize}
+\paragraph{Register file}
+Register file has 2 read port and one write port. Concurrent write and read on the same register produces a redirection of the input data to the output.
+
+\section{Design}\label{Design}
+As previously mentioned, the processor is described in VHDL. Most blocks are written in a structural approach up to very basic logic elements such as multiplexers, half adders, etc {...}
+
+\subsection{Fetch Block}
+Fetch block is in charge of correctly fetch the instruction to be executed from the memory. This block is tightly coupled with branch predictor. As can be seen from the picture, the actual decision of the next PC to drive comes from the BTB in case of normal operations.
+TARGETMUX computes the correct target pc, which is sent to the branch predictor to evaluate the misprediction signal that controls PREDMUX.
+When misprediction is triggered, PC register is stopped and keeps the previous value.
+
+\subsection{Branch Predictor}
+As previously stated, a branch predictor scheme have been applied.
+It is a 2bit saturating counter BHT, also widely known in literature as (0,2). In addition to this, there is a BTB in charge of storing the PC of the next instruction in case the branch is taken.
+The design applied is very generic, so the number of entries is easily configurable.
+
+In normal situations the lowest part of the PC is used to index the BTH, if the instruction is recognized as a taken branch, then the PC found inside the BTB is sent to the fetch block. On the successive clock cycle, when the decode block actually computed the correct behavior of the branch, the value of the BTH is updated and, if the prediction was not correct, mispredict signal is triggered.
+Also, due to the fact that mispredict signal actually cause the current operation in the fetch stage to be re-evaluated, the branch predictor automatically disables itself on the following clock cycle to avoid infinite looping.
+
+Some information regarding the operations performed on the last clock cycle need to be stored, to do so, 4 have been added, they store: prediction, prediction target, TAG and mispredict signals.
+
+\subsection{Decode Block}
+Decode block is in charge of 4 main functions:
+\begin{itemize}
+	\item Split from IR register number values rA,rB and rC used in the next stage and for forwarding.
+	\item Extend the immediate to 16/26 bits, either signed or unsigned, according to the current decoded instruction.
+	\item Compute the addition between NPCF and the offset given by the immediate value
+	\item Evaluate branch output through the zero comparator, the negation of this signal is also sent to other components in the system.
+\end{itemize}
+This component is described entirely in a structural way and is completely combinatorial.
+Link MUX
+
+\subsection{Execute Block}
+BRIEF TALK ABOUT MUXES AT INPUT
+\subsection{ALU and Multiplier}
+ALU IN GENERAL COMPARATOR, SHIFTER, LOGIC UNIT, ADDER
+ALL OPERATIONS SHARE THE SAME ADDER. DESIGN FOR AREA REDUCTION
+\subsection{Memory Block}
+NOTHING MUCH TO SAY: ADDRESS ALWAYS COMES FROM ALU, DATA ALWAYS FROM S
+MUX TO IGNORE MEMORY
+NOT ENABLED WHEN NOT NEEDED
+
+\subsection{Forwarding Logic}
+FORWARDING CASES
+WHERE ARE FORWARDING MUXES PLACED
+
+
+\subsection{Control Unit}
+HARDWIRED
+INDEXING
+MOSTLY BEHAVIORAL
+STALL HANDLING WITH BUBBLES
+CONTROL WORD SIGNAL DESCRIPTION
+
+
+
+\subsection{Stall Logic}
+LIST STALL CASES ( HAZARDS )
+STALL COMING FROM EXECUTE
+
+
+\subsection{Instruction and Data Memories}
+INSTRUCTION AND DATA AMEMORIES NOT PART OF THE DESIGN ITSELF, SIZE OF DMEM AND IMEM
+
+\section{Simulation and Test}\label{Conclusions}
+We worked hard, and achieved very little.
+
+\section{Synthesis}\label{Synthesis}
+In this section we describe the results.
+
+
+\section{Layout}\label{Layout}
+In this section we describe the results.
+
+\bibliographystyle{abbrv}
+\bibliography{main}
+
+\end{document}
+This is never printed

@@ -65,7 +65,7 @@ begin
 				when "00"	=> next_STATE <= "00";
 				when "01"	=> next_STATE <= "00";
 				when "10"	=> next_STATE <= "01";
-				when "11"	=> next_STATE <= "11";
+				when "11"	=> next_STATE <= "10";
 				when others	=> next_STATE <= "00"; -- might not be synthesizable
 			end case;
 		end if;

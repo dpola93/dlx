@@ -57,19 +57,10 @@ component mux41
 
   );
 end component;
-component mux21
- port (
- 	IN0	: in  std_logic_vector(SIZE - 1 downto 0);
-	IN1	: in  std_logic_vector(SIZE - 1 downto 0);
-	CTRL	: in  std_logic;
-	OUT1	: out std_logic_vector(SIZE - 1 downto 0)
-
-  );
-end component;
 
 signal PC_help		: std_logic_vector(SIZE - 1 downto 0);
 signal PC_BUS		: std_logic_vector(SIZE - 1 downto 0);
-signal PC_BUS_no_BTB	: std_logic_vector(SIZE - 1 downto 0);
+signal TARGET_PC	: std_logic_vector(SIZE - 1 downto 0);
 signal help_ctrl	: std_logic_vector(1 downto 0);
 signal PC4_o_uns	: unsigned(SIZE - 1 downto 0);
 signal en_IR		: std_logic;
