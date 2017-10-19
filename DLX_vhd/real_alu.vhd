@@ -1,5 +1,7 @@
 -- real_alu.vhd
-
+-- TODO: ADD MUXES AND NOT BLOCK
+-- MAKE THIS AS STRUCTURAL AS POSSIBLE
+-- THINK ABOUT A KIND OF CU TO GENERATE CONTROL SIGNALS
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -366,6 +368,7 @@ begin
  end case;
 end process;
 
+-- WTFFFFFFF????
 -- sequential process used to send the correct value to the adder
 process(Clock)
 begin
