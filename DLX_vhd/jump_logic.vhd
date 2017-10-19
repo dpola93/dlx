@@ -9,7 +9,7 @@ entity jump_logic is
 	SIZE : integer := 32
 );
   port (
-	PC4_i		: in  std_logic_vector(SIZE - 1 downto 0);
+	NPCF_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	IR_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	A_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	A_o		: out std_logic_vector(SIZE - 1 downto 0);
@@ -105,7 +105,6 @@ end component;
 signal ext_imm		: std_logic_vector (SIZE - 1 downto 0);
 signal sum_addr		: std_logic_vector(SIZE - 1 downto 0);
 signal branch_sel	: std_logic;
-signal help_PC8		: std_logic_vector(SIZE - 1 downto 0);
 signal FW_MUX_OUT	: std_logic_vector(SIZE - 1 downto 0);
 
 
@@ -114,32 +113,27 @@ begin
 EXTENDER: extender_32 port map(
 	IN1	=> IR_i, 
 	CTRL	=> S_EXT_i,
-	SIGN	=> S_EXT_SIGN_i, -- TODO: test needed
+	SIGN	=> S_EXT_SIGN_i,
 	OUT1	=> ext_imm);
--- ADDRADD: basicadd port map(
--- 	IN1	=> unsigned(PC4_i), 
--- 	IN2	=> unsigned(ext_imm), 
--- 	OUT1	=> sum_addr);
 
-ADDER: p4add 
+JUMPADDER: p4add 
 	generic map (
 	N => 32,
 	logN => 5
 	)
 	port map (
-	A	=> PC4_i,
+	A	=> NPCF_i,
 	B	=> ext_imm,
 	Cin	=> '0',
 	S	=> sum_addr,
 	Cout	=> open
 	);
 
-help_PC8 <= PC4_i;
 
 
-MUXTARGET: mux21 port map(
+BRANCHMUX: mux21 port map(
 	IN0	=> sum_addr, 
-	IN1	=> help_PC8, 
+	IN1	=> NPCF_i, 
 	CTRL	=> branch_sel, 
 	OUT1	=> branch_target_o);
 
@@ -151,7 +145,7 @@ ZC: zerocheck port map(
 
 MUXLINK: mux21 port map(
 	IN0	=> ext_imm,
-	IN1	=> help_PC8, 
+	IN1	=> NPCF_i, 
 	CTRL	=> S_MUX_LINK_i, 
 	OUT1	=> extended_imm);
 

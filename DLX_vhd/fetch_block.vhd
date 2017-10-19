@@ -94,18 +94,18 @@ MUXTARGET: mux41 port map(
 	IN2	=> sum_addr_i, 
 	IN3	=> branch_target_i, 
 	CTRL	=> S_MUX_PC_BUS_i, 
-	OUT1	=> PC_BUS_no_btb);
+	OUT1	=> TARGET_PC);
 
 MUXPREDICTION: mux41 port map(
 	IN0	=> std_logic_vector(PC4_o_uns), 
 	IN1	=> predicted_PC, 
-	IN2	=> PC_BUS_no_btb, 
-	IN3	=> PC_BUS_no_btb, 
+	IN2	=> TARGET_PC, 
+	IN3	=> TARGET_PC, 
 	CTRL	=> help_ctrl, 
 	OUT1	=> PC_BUS);
 
 help_ctrl <= mispredict_i&take_prediction_i;
 PC4_o <= std_logic_vector(PC4_o_uns);
 PC_o <= PC_help;
-PC_BUS_pre_BTB <= PC_BUS_no_btb;
-end Struct;
+PC_BUS_pre_BTB <= TARGET_PC;
+end struct;

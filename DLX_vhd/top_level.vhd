@@ -250,12 +250,11 @@ component btb is
 end component;
 
 
-signal dummy_PC_BUS		: std_logic_vector(31 downto 0);
-signal dummy_PC4_BUS		: std_logic_vector(31 downto 0);
-signal dummy_PC_BUS_pre_BTB	: std_logic_vector(31 downto 0);
-signal dummy_FETCH_o		: std_logic_vector(31 downto 0);
-signal help_IR 			: std_logic_vector(31 downto 0);
-signal help_NPCF		: std_logic_vector(31 downto 0);
+signal PC		: std_logic_vector(31 downto 0);
+signal PC4		: std_logic_vector(31 downto 0);
+signal TARGET_PC	: std_logic_vector(31 downto 0);
+signal IR 			: std_logic_vector(31 downto 0);
+signal NPCF		: std_logic_vector(31 downto 0);
 
 signal AtoComp			: std_logic_vector(31 downto 0);
 signal dummy_A			: std_logic_vector(31 downto 0);
@@ -344,11 +343,11 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	branch_target_i 	=> dummy_branch_target,
 	sum_addr_i		=> dummy_sum_addr,
 	A_i			=> dummy_A,
-	NPC4_i			=> help_NPCF,
+	NPC4_i			=> NPCF,
 	S_MUX_PC_BUS_i		=> dummy_S_MUX_PC_BUS,
-	PC_o			=> dummy_PC_BUS, 
-	PC4_o			=> dummy_PC4_BUS, --this is actually PC4 
-	PC_BUS_pre_BTB		=> dummy_PC_BUS_pre_BTB,
+	PC_o			=> PC, 
+	PC4_o			=> PC4, --this is actually PC4 
+	PC_BUS_pre_BTB		=> TARGET_PC,
 	stall_i			=> stall_fetch,
 	mispredict_i		=> mispredict,
 	take_prediction_i	=> take_prediction,
@@ -366,8 +365,8 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	clock			=> clock,
 	reset			=> rst,
 	stall_i			=> stall_btb,
-	TAG_i			=> dummy_PC_BUS(2+PRED_SIZE-1 downto 2),
-	target_PC_i		=> dummy_PC_BUS_pre_BTB,
+	TAG_i			=> PC(2+PRED_SIZE-1 downto 2),
+	target_PC_i		=> TARGET_PC,
 	was_taken_i		=> was_taken,
 	predicted_next_PC_o	=> predicted_PC,
 	taken_o			=> take_prediction,
@@ -375,22 +374,15 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 
 	);
 	
---	IMEM: IRAM port map(
---	Rst	=> rst,
---	Addr	=> dummy_PC_BUS,
---	Dout	=> dummy_FETCH_o
---	);
-
-	IRAM_Addr_o	<= dummy_PC_BUS;
-	dummy_FETCH_o	<= IRAM_Dout_i;
+	IRAM_Addr_o	<= PC;
 
 	UFEETCH_REGS: fetch_regs
-	Port Map (dummy_PC4_BUS,dummy_FETCH_o,help_NPCF,help_IR,stall_decode,clock, rst);
+	Port Map (PC4,IRAM_Dout_i,NPCF,IR,stall_decode,clock, rst);
 
 	UJUMP_LOGIC: jump_logic
 	Port Map (
-	PC4_i		=> help_NPCF,
-	IR_i		=> help_IR,
+	PC4_i		=> NPCF,
+	IR_i		=> IR,
 	A_i		=> AtoComp,
 	A_o		=> dummy_A,
 	rA_o		=> rA2reg,
@@ -420,7 +412,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	Port Map (
 	Clk		=> clock,
 	Rst		=> rst,
-	IR_IN		=> help_IR,
+	IR_IN		=> IR,
 	stall_exe_i	=> exe_stall_cu,
  	mispredict_i	=> mispredict,
 	D1_i		=> muxed_dest2exe,
@@ -534,7 +526,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	D1_i		=> muxed_dest2exe,
 	D2_i		=> D22D3,
 	D3_i		=> D32reg,
-	rAdec_i		=> help_IR(25 downto 21),
+	rAdec_i		=> IR(25 downto 21),
 	rA_i		=> rA2fw,
 	rB_i		=> rB2mux,
 	S_exe_W		=> dummy_S_RF_W_exe,
