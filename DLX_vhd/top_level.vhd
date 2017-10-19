@@ -57,8 +57,6 @@ component jump_logic is
 	IR_i		: in  std_logic_vector(31 downto 0);
 	A_i		: in  std_logic_vector(31 downto 0);
 	A_o		: out std_logic_vector(31 downto 0);
-	B_i		: in  std_logic_vector(31 downto 0);
-	B_o		: out std_logic_vector(31 downto 0);
 	rA_o		: out std_logic_vector(4 downto 0);
 	rB_o		: out std_logic_vector(4 downto 0);
 	rC_o		: out std_logic_vector(4 downto 0);
@@ -119,7 +117,7 @@ component dlx_cu is
   S_MUX_MEM		: out std_logic;
   S_MEM_EN		: out std_logic;
   S_MEM_W_R		: out std_logic;
-  S_RF_W		: out std_logic;
+  S_RF_W_wb		: out std_logic;
   S_RF_W_mem		: out std_logic;
   S_RF_W_exe		: out std_logic;
   S_MUX_ALUIN		: out std_logic;
@@ -184,6 +182,7 @@ port (
 	S_FW_A_i	: in  std_logic_vector(1 downto 0);
 	S_FW_B_i	: in  std_logic_vector(1 downto 0);
 	muxed_dest	: out std_logic_vector(4 downto 0);
+	muxed_B		: out std_logic_vector(31  downto 0);
 	S_MUX_DEST_i	: in  std_logic_vector(1 downto 0);
 	OP		: in  AluOp;
 	DOUT		: out std_logic_vector(31 downto 0);
@@ -251,12 +250,11 @@ component btb is
 end component;
 
 
-signal dummy_PC_BUS		: std_logic_vector(31 downto 0);
-signal dummy_PC4_BUS		: std_logic_vector(31 downto 0);
-signal dummy_PC_BUS_pre_BTB	: std_logic_vector(31 downto 0);
-signal dummy_FETCH_o		: std_logic_vector(31 downto 0);
-signal help_IR 			: std_logic_vector(31 downto 0);
-signal help_NPCF		: std_logic_vector(31 downto 0);
+signal PC		: std_logic_vector(31 downto 0);
+signal PC4		: std_logic_vector(31 downto 0);
+signal TARGET_PC	: std_logic_vector(31 downto 0);
+signal IR 			: std_logic_vector(31 downto 0);
+signal NPCF		: std_logic_vector(31 downto 0);
 
 signal AtoComp			: std_logic_vector(31 downto 0);
 signal dummy_A			: std_logic_vector(31 downto 0);
@@ -273,7 +271,7 @@ signal dummy_S_EQ_NEQ		: std_logic;
 signal dummy_S_MEM_W_R		: std_logic;
 signal dummy_S_MEM_EN		: std_logic;
 
-signal dummy_S_RF_W		: std_logic;
+signal dummy_S_RF_W_wb		: std_logic;
 signal dummy_S_RF_W_mem		: std_logic;
 signal dummy_S_RF_W_exe		: std_logic;
 
@@ -328,6 +326,8 @@ signal was_taken		: std_logic;
 signal was_branch		: std_logic;
 signal was_jmp			: std_logic;
 
+signal enable_regfile		: std_logic;
+
 signal mispredict		: std_logic;
 signal take_prediction		: std_logic;
 signal wrong_back_pred		: std_logic;
@@ -343,11 +343,11 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	branch_target_i 	=> dummy_branch_target,
 	sum_addr_i		=> dummy_sum_addr,
 	A_i			=> dummy_A,
-	NPC4_i			=> help_NPCF,
+	NPC4_i			=> NPCF,
 	S_MUX_PC_BUS_i		=> dummy_S_MUX_PC_BUS,
-	PC_o			=> dummy_PC_BUS, 
-	PC4_o			=> dummy_PC4_BUS, --this is actually PC4 
-	PC_BUS_pre_BTB		=> dummy_PC_BUS_pre_BTB,
+	PC_o			=> PC, 
+	PC4_o			=> PC4, --this is actually PC4 
+	PC_BUS_pre_BTB		=> TARGET_PC,
 	stall_i			=> stall_fetch,
 	mispredict_i		=> mispredict,
 	take_prediction_i	=> take_prediction,
@@ -365,8 +365,8 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	clock			=> clock,
 	reset			=> rst,
 	stall_i			=> stall_btb,
-	TAG_i			=> dummy_PC_BUS(2+PRED_SIZE-1 downto 2),
-	target_PC_i		=> dummy_PC_BUS_pre_BTB,
+	TAG_i			=> PC(2+PRED_SIZE-1 downto 2),
+	target_PC_i		=> TARGET_PC,
 	was_taken_i		=> was_taken,
 	predicted_next_PC_o	=> predicted_PC,
 	taken_o			=> take_prediction,
@@ -374,26 +374,17 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 
 	);
 	
---	IMEM: IRAM port map(
---	Rst	=> rst,
---	Addr	=> dummy_PC_BUS,
---	Dout	=> dummy_FETCH_o
---	);
-
-	IRAM_Addr_o	<= dummy_PC_BUS;
-	dummy_FETCH_o	<= IRAM_Dout_i;
+	IRAM_Addr_o	<= PC;
 
 	UFEETCH_REGS: fetch_regs
-	Port Map (dummy_PC4_BUS,dummy_FETCH_o,help_NPCF,help_IR,stall_decode,clock, rst);
+	Port Map (PC4,IRAM_Dout_i,NPCF,IR,stall_decode,clock, rst);
 
 	UJUMP_LOGIC: jump_logic
 	Port Map (
-	PC4_i		=> help_NPCF,
-	IR_i		=> help_IR,
+	PC4_i		=> NPCF,
+	IR_i		=> IR,
 	A_i		=> AtoComp,
 	A_o		=> dummy_A,
-	B_i		=> dummy_B,
-	B_o		=> help_B,
 	rA_o		=> rA2reg,
 	rB_o		=> rB2reg,
 	rC_o		=> rC2reg,
@@ -421,7 +412,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	Port Map (
 	Clk		=> clock,
 	Rst		=> rst,
-	IR_IN		=> help_IR,
+	IR_IN		=> IR,
 	stall_exe_i	=> exe_stall_cu,
  	mispredict_i	=> mispredict,
 	D1_i		=> muxed_dest2exe,
@@ -438,7 +429,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	S_MUX_MEM	=> dummy_S_MUX_MEM,
 	S_MEM_EN	=> dummy_S_MEM_EN,
  	S_MEM_W_R	=> dummy_S_MEM_W_R,
-	S_RF_W		=> dummy_S_RF_W,
+	S_RF_W_wb	=> dummy_S_RF_W_wb,
 	S_RF_W_mem	=> dummy_S_RF_W_mem,
 	S_RF_W_exe	=> dummy_S_RF_W_exe,
 	S_MUX_ALUIN 	=> dummy_S_MUX_ALUIN,
@@ -451,20 +442,20 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	ALU_OPCODE	=> dummy_OP
 	);
 
-
+	enable_regfile <= not(stall_decode);
 
 	RF: dlx_regfile
 	Port Map (
 	Clk		=> clock, 
 	Rst		=> rst,
-	ENABLE		=> '1',
+	ENABLE		=> enable_regfile,
 	RD1		=> '1',
 	RD2		=> '1',
-	WR		=> dummy_S_RF_W,
-	ADD_WR		=> D32reg,
-	ADD_RD1		=> help_IR(25 downto 21),
-	ADD_RD2		=> help_IR(20 downto 16),
-	DATAIN		=> wb2reg,
+	WR		=> dummy_S_RF_W_mem,
+	ADD_WR		=> D22D3,
+	ADD_RD1		=> IRAM_Dout_i(25 downto 21),
+	ADD_RD2		=> IRAM_Dout_i(20 downto 16),
+	DATAIN		=> W2wb,
 	OUT1		=> AtoComp,
 	OUT2		=> dummy_B
 	);
@@ -472,7 +463,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	UDECODE_REGS: decode_regs
 	Port Map (
 	A_i	=> AtoComp,
-	B_i	=> help_B,
+	B_i	=> dummy_B,
 	rA_i	=> rA2reg,
 	rB_i	=> rB2reg,
 	rC_i	=> rC2reg,
@@ -504,6 +495,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	S_FW_A_i	=> dummy_S_FWA2exe,
 	S_FW_B_i	=> dummy_S_FWB2exe,
 	muxed_dest	=> muxed_dest2exe,
+	muxed_B		=> S2mem,
 	S_MUX_DEST_i	=> dummy_S_MUX_DEST,
 	OP		=> dummy_OP,
 	DOUT		=> X2mem,
@@ -512,8 +504,6 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	Reset		=> rst
 	);
 
-	-- TODO: check wtf is this
-	S2mem <= B2exe;
 
 --	UDMEM : DRAM
 --	generic map ( RAM_DEPTH => 4096, I_SIZE => 32)
@@ -536,13 +526,13 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	D1_i		=> muxed_dest2exe,
 	D2_i		=> D22D3,
 	D3_i		=> D32reg,
-	rAdec_i		=> help_IR(25 downto 21),
+	rAdec_i		=> IR(25 downto 21),
 	rA_i		=> rA2fw,
 	rB_i		=> rB2mux,
 	S_exe_W		=> dummy_S_RF_W_exe,
 	S_mem_W		=> dummy_S_RF_W_mem,
 	S_mem_LOAD	=> dummy_S_MUX_MEM,
-	S_wb_W		=> dummy_S_RF_W,
+	S_wb_W		=> dummy_S_RF_W_wb,
 	S_FWAdec	=> dummy_S_FWAdec,
 	S_FWA		=> dummy_S_FWA2exe,
 	S_FWB		=> dummy_S_FWB2exe

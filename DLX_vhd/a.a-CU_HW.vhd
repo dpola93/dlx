@@ -39,7 +39,7 @@ entity dlx_cu is
 		S_MUX_MEM	: out std_logic;			-- Control of mux to memory address
 		S_MEM_W_R	: out std_logic;			-- Control of mem W/R
 		S_MEM_EN	: out std_logic;			-- Control mem enable
-		S_RF_W		: out std_logic;			-- Control WB enable
+		S_RF_W_wb	: out std_logic;			-- Control WB enable
 		S_RF_W_mem	: out std_logic;			-- Current op in mem is going to write on wb?
 		S_RF_W_exe	: out std_logic;			-- Current op in exe is going to write on wb?
 		S_MUX_ALUIN	: out std_logic;			-- Control ALU input ( IMM or B )
@@ -66,7 +66,7 @@ architecture dlx_cu_hw of dlx_cu is
   signal cw_mem : mem_array := ("0000000010001", -- (0X00) R type
                                 "0000000010001", -- (0X01) F type
                                 "1011000000000", -- (0X02) J
-                                "1011010110001", -- (0X03) JAL
+                                "1011011110001", -- (0X03) JAL
                                 "1101000000000", -- (0X04) BEQZ 
                                 "1101100000000", -- (0X05) BNEZ
                                 "0000000000000", -- (0X06) BFPT
@@ -264,7 +264,7 @@ STALL_L : stall_logic
   S_MUX_MEM	<= cw_m(CW_SIZE - 12);
 
   -- WB stage control signals 
-  S_RF_W	<= cw_w(CW_SIZE - 13);
+  S_RF_W_wb	<= cw_w(CW_SIZE - 13);
 
   -- RF write signal is sent to other stages to compute hazards/forwarding
   S_RF_W_mem	<= cw_m(CW_SIZE - 13);
