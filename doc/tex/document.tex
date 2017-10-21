@@ -2,13 +2,16 @@
 
 
 \documentclass[12pt]{article}
-
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage[export]{adjustbox}
+\setlength{\parindent}{0pt}
 \begin{document}
 \maketitle
 
 
 \section{Introduction}
-The goal of this project is to implement a completely functional DLX processor in VHDL, simulate it and then proceed with the design flow with synthesis and layout phases.
+The goal of this project is to implement a completely functional DLX processor in RTL VHDL, simulate it and then proceed with the design flow with synthesis and layout phases.
 DLX processor architecture was designed by John L. Hennessy and David A. Patterson and very well described and documented all over the internet.
 This project is developed for the course Microelectronic Systems taught by Prof. Mariagrazia Graziano in Politecnico di Torino.
 
@@ -43,35 +46,50 @@ Two separated memories for instruction and data have been included in the design
 \end{itemize}
 \paragraph{Register file}
 Register file has 2 read port and one write port. Concurrent write and read on the same register produces a redirection of the input data to the output.
+Due to the position of the register file and the moment in which the control world is computed, it is not possible to selectively enable or disable read ports because it is not known a priori whether the instruction needs one or two source register.
 
-\section{Design}\label{Design}
-As previously mentioned, the processor is described in VHDL. Most blocks are written in a structural approach up to very basic logic elements such as multiplexers, half adders, etc {...}
+\section{Design Architecture}\label{Design}
+As previously mentioned, the processor is described in VHDL. Most blocks are written in a structural approach up to very basic logic elements such as multiplexers, half adders, etc \ldots
+
+An overview of the processor architecture is shown in FIGUREXXX
+
+In the next sections we are going to see in details each single component.
 
 \subsection{Fetch Block}
-Fetch block is in charge of correctly fetch the instruction to be executed from the memory. This block is tightly coupled with branch predictor. As can be seen from the picture, the actual decision of the next PC to drive comes from the BTB in case of normal operations.
-TARGETMUX computes the correct target pc, which is sent to the branch predictor to evaluate the misprediction signal that controls PREDMUX.
-When misprediction is triggered, PC register is stopped and keeps the previous value.
+\begin{figure}[h!]
+	\includegraphics[center]{images/FETCH_BLOCK.eps}
+	\caption{FETCHBLOCK}
+	\label{FETCHBLOCK}
+\end{figure}
+Fetch block is in charge of correctly fetch the instruction to be executed from the memory. This block is tightly coupled with branch predictor. As can be seen in the picture, the actual decision of the next PC to drive comes from the BTB in case of normal operations.
+
+MUXTARGET computes the correct target pc, which is sent to the branch predictor to evaluate the misprediction signal that controls MUXPRED.
+When misprediction signal is triggered, the current operation in the PC is not sent to decode stage, and it is replaced by the correct one on the successive clock cycle.
 
 \subsection{Branch Predictor}
-As previously stated, a branch predictor scheme have been applied.
-It is a 2bit saturating counter BHT, also widely known in literature as (0,2). In addition to this, there is a BTB in charge of storing the PC of the next instruction in case the branch is taken.
+As previously stated, a branch predictor scheme have been applied, in particular it is a 2bit saturating counter BHT, also widely known in literature as (0,2). In addition, we have also implemented a BTB in charge of storing the PC of the next instruction in case the branch is taken.
+
 The design applied is very generic, so the number of entries is easily configurable.
 
-In normal situations the lowest part of the PC is used to index the BTH, if the instruction is recognized as a taken branch, then the PC found inside the BTB is sent to the fetch block. On the successive clock cycle, when the decode block actually computed the correct behavior of the branch, the value of the BTH is updated and, if the prediction was not correct, mispredict signal is triggered.
-Also, due to the fact that mispredict signal actually cause the current operation in the fetch stage to be re-evaluated, the branch predictor automatically disables itself on the following clock cycle to avoid infinite looping.
+In normal situations the lowest part of the PC, called TAG, is used to index the BTH, if the instruction is recognized as a taken branch, then the PC found inside the BTB is sent to the fetch block. On the successive clock cycle, when the decode block actually computed the correct behavior of the branch, the value of the BTH is updated and, if the prediction was not correct, mispredict signal is triggered.
+Also, due to the fact that mispredict signal actually cause the current operation in the fetch stage to be re-evaluated, the branch predictor automatically disables itself on the following clock cycle to avoid deadlock conditions.
 
 Some information regarding the operations performed on the last clock cycle need to be stored, to do so, 4 have been added, they store: prediction, prediction target, TAG and mispredict signals.
 
 \subsection{Decode Block}
+\begin{figure}[h!]
+	\includegraphics[center]{images/DECODE_BLOCK.eps}
+	\caption{DECODEBLOCK}
+	\label{DECODEBLOCK}
+\end{figure}
 Decode block is in charge of 4 main functions:
 \begin{itemize}
-	\item Split from IR register number values rA,rB and rC used in the next stage and for forwarding.
+	\item Split from IR register number values rA, rB and rC used in the next stage and for forwarding.
 	\item Extend the immediate to 16/26 bits, either signed or unsigned, according to the current decoded instruction.
-	\item Compute the addition between NPCF and the offset given by the immediate value
+	\item Compute the addition between NPCF and the offset given by the extended immediate value
 	\item Evaluate branch output through the zero comparator, the negation of this signal is also sent to other components in the system.
 \end{itemize}
-This component is described entirely in a structural way and is completely combinatorial.
-Link MUX
+In case of Jump operations with link ( JAL and JALR ) the immediate value is replaced by the return address by MUXLINK.
 
 \subsection{Execute Block}
 BRIEF TALK ABOUT MUXES AT INPUT
@@ -89,27 +107,55 @@ WHERE ARE FORWARDING MUXES PLACED
 
 
 \subsection{Control Unit}
+The control unit (CU) is in charge of generate and distribute control signal across the entire DLX pipeline.
+In this design, the control unit follows an Hardwired scheme, so at each IR input a kind of memory containing a control work for each instruction is looked up.
+
+When a signal needs to be used later in the execution, it is propagated trough a series of flip flops.
+
+The CU is able to correctly generate and handle stall conditions due to hazards or multi cycle operations. In general, when a stage is stalled, the same goes fol the preceding stages in the pipeline, while the successive need to continue the execution. When a stage would be empty, a BUBBLE operation is inserted: a BUBBLE has the same control word as a NOP.
 HARDWIRED
 INDEXING
 MOSTLY BEHAVIORAL
 STALL HANDLING WITH BUBBLES
 CONTROL WORD SIGNAL DESCRIPTION
-
-
+\paragraph{S\_MUX\_PC\_BUS - (1,2)}
+\paragraph{S\_EXT - (3)}
+\paragraph{S\_EXT\_SIGN - (4)}
+\paragraph{S\_EQ\_NEQ - (5)}
+\paragraph{S\_MUX\_LINK - (6)}
+\paragraph{S\_MUX\_ALUIN - (7)}
+\paragraph{S\_MUX\_DEST - (8,9)}
+\paragraph{S\_MUX\_MEM - (12)}
+\paragraph{S\_MEM\_W\_R - (11)}
+\paragraph{S\_MEM\_EN - (10)}
+\paragraph{S\_RF\_W - (13)}
 
 \subsection{Stall Logic}
 LIST STALL CASES ( HAZARDS )
-STALL COMING FROM EXECUTE
+Control Hazards: MISPREDICTION
+Data hazards: RAW only:
+MEM/EXE solved by FW
+WB/EXE solved by FW
+DEC/EXE solved by stall: Branch or Jr situation
 
+STALL COMING FROM EXECUTE
+Structural hazard: Multiplication multi cycle operation
 
 \subsection{Instruction and Data Memories}
-INSTRUCTION AND DATA AMEMORIES NOT PART OF THE DESIGN ITSELF, SIZE OF DMEM AND IMEM
+INSTRUCTION AND DATA MEMORIES NOT PART OF THE DESIGN ITSELF, SIZE OF DMEM AND IMEM
+As previously stated, both memories are not part of the design itself.
+Imem is accessed during fetch operation, no enable port because we need to fetch an operation at each clock cycle.
+Dmem accesses during MEM stage. There is an enable signal and a W/R. both read and write are synchronous during the falling edge of the clock. to move it at the rising edge need to move the control signal before, so new values are ready at the clock edge.
+
 
 \section{Simulation and Test}\label{Conclusions}
 We worked hard, and achieved very little.
 
 \section{Synthesis}\label{Synthesis}
-In this section we describe the results.
+Not simple. separated CU and datapath.
+ST 65nm library. not suitable to synthesized memories, problems on BTB due to high number of lines. reduced to 8 lines for synthesis. 
+all-flatten and compile ultra option gives extraordinary results but doesnt give informations on critical path.
+
 
 
 \section{Layout}\label{Layout}
@@ -119,4 +165,3 @@ In this section we describe the results.
 \bibliography{main}
 
 \end{document}
-This is never printed

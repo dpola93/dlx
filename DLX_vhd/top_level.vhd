@@ -53,7 +53,7 @@ end component;
 
 component jump_logic is
  port (
-	PC4_i		: in  std_logic_vector(31 downto 0);
+	NPCF_i		: in  std_logic_vector(31 downto 0);
 	IR_i		: in  std_logic_vector(31 downto 0);
 	A_i		: in  std_logic_vector(31 downto 0);
 	A_o		: out std_logic_vector(31 downto 0);
@@ -381,7 +381,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 
 	UJUMP_LOGIC: jump_logic
 	Port Map (
-	PC4_i		=> NPCF,
+	NPCF_i		=> NPCF,
 	IR_i		=> IR,
 	A_i		=> AtoComp,
 	A_o		=> dummy_A,
