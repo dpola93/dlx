@@ -1,3 +1,9 @@
+addi r1,r0,1
+addi r2,r0,2
+addi r3,r0,3
+addi r4,r0,4
+addi r5,r0,5
+addi r10,r0,10
 nop
 add r1,r10,r0	;r1 <- 10
 sll r1,r1,r4	;r1 <- 160
