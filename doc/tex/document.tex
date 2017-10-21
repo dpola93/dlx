@@ -2,6 +2,7 @@
 
 
 \documentclass[12pt]{article}
+\usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage[export]{adjustbox}
@@ -92,18 +93,85 @@ Decode block is in charge of 4 main functions:
 In case of Jump operations with link ( JAL and JALR ) the immediate value is replaced by the return address by MUXLINK.
 
 \subsection{Execute Block}
-BRIEF TALK ABOUT MUXES AT INPUT
+Execute block is third stage of the pipeline. Most of the computation done here is due to the ALU which will be explored in detail in the next section.
+
+For the moment let's forget about forwarding multiplexers, as they are going to be described later.
+
+Alu is fed with two operands: one is always A, while the other could come wither from B or IMM, depending on the type of operation. A multiplexer is then added to achieve this functionality.
+The multiplexed value is also sent directly to output, it is going to feed the Data memory input in the next stage.
+
+Another multiplexer (DESTMUX) is also used to select in which destination register the current operation is going to write. Again, there is difference between I-TYPE and R-TYPE operations, and also a special input is due to JAL and JALR instructions that have R31 as a forced destination register.
+
+ 
 \subsection{ALU and Multiplier}
-ALU IN GENERAL COMPARATOR, SHIFTER, LOGIC UNIT, ADDER
-ALL OPERATIONS SHARE THE SAME ADDER. DESIGN FOR AREA REDUCTION
+The ALU is responsible for all data manipulation in our processor.
+
+It takes as input two 32 bit operands and a special code that specify the type of operation that is going to be performed.
+The output consist in the 32 bit result and a signal that is at logic '1' during multi cycle operations.
+
+Carry out has been suppressed because in this architecture is never used.
+
+The ALU is composed of the following units:
+
+\begin{itemize}
+	\item A single shared adder
+	\item Multiplication logic
+	\item Logic Unit
+	\item Comparator
+	\item Shifter
+\end{itemize}
+
+The results coming from these units is then multiplexed to the final output.
+We are going to see in details each of them in the next sections.
+
+\subsubsection{Shared Adder}
+The adder ( used also for substractions ) is a 32-bit Pentium 4 adder.
+The adder is composed of two main block: the sparse tree is in charge of computing all carries in a parallel fashion. In our case it is a radix-2 carry-merge tree and generates every fourth carry. This design is performance oriented.
+
+The sum generator block is then based on carry select adders, which compute both results in case the carry is 0 and in case the carry is 1. These two addition are independent from the actual carry, so they can be performed in parallel. When the carry reaches the sum generator it controls a multiplexer that is used to select one of the two possible outputs.
+
+As a consequence, the delay due to carry propagation is strongly reduced.
+\subsubsection{Multiplier Logic}
+As briefly introduced, Multiplication is performed by the shared P4 adder in an iterative way.
+The entire procedure is based on the Booth's multiplier. Instead of producing all the sums in parallel, we compute one each clock cycle.
+
+The flow is as follows:
+At the first clock cycle all the Booth's encoding is done and sent in a PISO register. Actually the first value is already sent to the multiplexer to have a sum in the first cycle too.
+
+Then at each clock cycle the adder takes as input the correctly shifted input value and the result of the previous addition stored in the accumulator register.
+To have both signed and unsigned multiplication, a correction stage needs to be performed at the end, as can be seen in the picture, the last encoder takes this into account.
+
+This design should be able to reduce critical paths flowing to a parallel multiplier and saving area as well.
+\subsubsection{Logic Unit}
+The DLX architecture supports only 3 type of logical operations: AND, OR, XOR. 
+Due to this simple behavior, we decided to avoid using particular logic unit schemes.
+The three operations are executed in parallel and then a multiplexer selects the correct one. 
+As can be see in the picture, the schematic is pretty straightforward.
+
+\subsubsection{Comparator}
+From the ISA we need to implement several comparison operation: $(<, >, \leq, \geq, =, \neq)$.
+It is able to deal with both signed and unsigned numbers.
+
+It requires at input the difference between the two numbers, provided by the shared ALU (SUM), the carry out of the operation (C), the overflow bit (V) and the sign.
+
+Then zero bit (Z) is computed through nor reduction and (N) is the sign of SUM.
+
+With these values is easy to compute the possible comparisons.
+
+There might be some redundancy in the design, we left possible optimizations to the synthesizer.
+
+\subsubsection{Shifter}
+FALLO STO CAZZO DI SHIFTER MALEDETTO
+
 \subsection{Memory Block}
 NOTHING MUCH TO SAY: ADDRESS ALWAYS COMES FROM ALU, DATA ALWAYS FROM S
 MUX TO IGNORE MEMORY
 NOT ENABLED WHEN NOT NEEDED
 
 \subsection{Forwarding Logic}
-FORWARDING CASES
-WHERE ARE FORWARDING MUXES PLACED
+Forwarding Logic is the block responsible of managing forwarding in the pipeline. It is able to detect RAW hazards and control forwarding multiplexers in decode and execute stage.
+
+The computation is pretty simple, for each operation in EXE,MEM, and WB stage we save whether is going to write in the register file (S\_WB) and the destination register.
 
 
 \subsection{Control Unit}
@@ -149,7 +217,23 @@ Dmem accesses during MEM stage. There is an enable signal and a W/R. both read a
 
 
 \section{Simulation and Test}\label{Conclusions}
-We worked hard, and achieved very little.
+The simulation environment is composed as follows:
+A test bench file: tb\_top\_level instantiates the dlx and the two memories and provides clock and reset signals to all the components.
+
+Then there is a compiler Perl/Bash script that takes as input a dlx assembly code and compiles it into a memory dump ready to be loaded by both memories.
+This script, which has been provided us have a bug: when two or more consecutive operations are exactly identical, only one is translated to binary code, while the other are simply empty lines.
+
+We have also created a wave generation script (WABE\_BASIC.do) to be loaded directly into vsim that select the basic waveforms to be visualized.
+
+Testing an entire processor is not an easy task, due to the very large possible combinations of instructions.
+On the very early stages of the design, testing was mainly done block by block in a bottom up fashion. for example, for the ALU, first we tested each single component such as comparator and shifter, then we integrated them one at a time and checked it.
+
+An approach like this has been used until we reached the entire dlx block.
+Then we moved into running test programs, starting from very basic ones to test each single operation, and then trying different combinations of hazards, forwarding, multi cycle operations and branch predictions.
+
+For a final test, we ran a quicksort algorithm.
+
+  
 
 \section{Synthesis}\label{Synthesis}
 Not simple. separated CU and datapath.

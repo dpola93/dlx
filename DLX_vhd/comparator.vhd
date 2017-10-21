@@ -60,7 +60,7 @@ begin
 		LE when sel="011" else
 		E  when sel="100" else
 		NE when sel="101" else
-		'0';
+		'X';
 
 end BEHAVIORAL;
 
