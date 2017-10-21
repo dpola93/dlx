@@ -79,13 +79,12 @@ component comparator
 end component; 
 
 component shifter
-	generic (N: integer);
 	port(
-	A		: in  std_logic_vector(N-1 downto 0);
+	A		: in  std_logic_vector(31 downto 0);
 	B		: in  std_logic_vector(4 downto 0);
 	LOGIC_ARITH	: in  std_logic;	-- 1 = logic, 0 = arith
 	LEFT_RIGHT	: in  std_logic;	-- 1 = left, 0 = right
-	OUTPUT		: out std_logic_vector(N-1 downto 0)
+	OUTPUT		: out std_logic_vector(31 downto 0)
 	);
 end component;
 
@@ -233,18 +232,18 @@ begin
 
   when SLLS =>
 		out_mux_sel <= "010";
-		left_right <= '1';
-		logic_arith <= '1';
+		left_right <= '0';
+		logic_arith <= '0';
  
   when SRLS =>
 		out_mux_sel <= "010";
-		left_right <= '0';
-		logic_arith <= '1';
+		left_right <= '1';
+		logic_arith <= '0';
  
   when SRAS =>
 		out_mux_sel <= "010";
-		left_right <= '0';
-		logic_arith <= '0';
+		left_right <= '1';
+		logic_arith <= '1';
  
   when ADDS =>
 		not_control <= '0';
