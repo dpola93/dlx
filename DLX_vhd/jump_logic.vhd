@@ -48,6 +48,7 @@ Port (
 	A	: in  std_logic_vector(N-1 downto 0);
 	B	: in  std_logic_vector(N-1 downto 0);
 	Cin	: in  std_logic;
+	sign	: In  std_logic;
 	S	: out std_logic_vector(N-1 downto 0);
 	Cout	: out std_logic);
 end component; 
@@ -125,6 +126,7 @@ JUMPADDER: p4add
 	A	=> NPCF_i,
 	B	=> ext_imm,
 	Cin	=> '0',
+	sign	=> '0',
 	S	=> sum_addr,
 	Cout	=> open
 	);

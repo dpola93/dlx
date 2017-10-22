@@ -17,6 +17,7 @@ PORT(
 		B		: in  std_logic_vector (N-1 downto 0);
 		A_to_add	: out std_logic_vector (2*N-1 downto 0);
 		B_to_add	: out std_logic_vector (2*N-1 downto 0);
+		sign_to_add	: out std_logic;
 		ACC_from_add	: in  std_logic_vector (2*N-1 downto 0)
 		);
 END simple_booth_add_ext;
@@ -90,24 +91,14 @@ signal extend_vector	: std_logic_vector(N-1 downto 0);
 signal extended_A	: std_logic_vector(2*N-1 downto 0);
 signal zeros		: std_logic_vector(2*N-1 downto 0);
 
-signal A2		: std_logic_vector(2*N-1 downto 0);
-signal notA		: std_logic_vector(2*N-1 downto 0);
-signal notA2		: std_logic_vector(2*N-1 downto 0);
 
 signal A4		: std_logic_vector(2*N-1 downto 0);
-signal A8		: std_logic_vector(2*N-1 downto 0);
-signal notA4		: std_logic_vector(2*N-1 downto 0);
-signal notA8		: std_logic_vector(2*N-1 downto 0);
 
 signal A_to_mux		: std_logic_vector(2*N-1 downto 0);
 signal A2_to_mux	: std_logic_vector(2*N-1 downto 0);
-signal notA_to_mux	: std_logic_vector(2*N-1 downto 0);
-signal notA2_to_mux	: std_logic_vector(2*N-1 downto 0);
 
 signal A_to_mux_LOAD		: std_logic_vector(2*N-1 downto 0);
 signal A2_to_mux_LOAD		: std_logic_vector(2*N-1 downto 0);
-signal notA_to_mux_LOAD		: std_logic_vector(2*N-1 downto 0);
-signal notA2_to_mux_LOAD	: std_logic_vector(2*N-1 downto 0);
 
 signal mux_out_to_add	: std_logic_vector(2*N-1 downto 0);
 
@@ -155,33 +146,18 @@ piso_0 : shift generic map( N => N/2) port map(Clock,load,piso_0_in,piso_0_out);
 piso_1 : shift generic map( N => N/2) port map(Clock,load,piso_1_in,piso_1_out);
 piso_2 : shift generic map( N => N/2) port map(Clock,load,piso_2_in,piso_2_out);
 
-zeros	<= (others => '0');
-notA	<= std_logic_vector(unsigned(not(extended_A))+1);
-A2	<= extended_A(2*N-2 downto 0)&'0';
-notA2	<= notA(2*N-2 downto 0)&'0';
+extend_vector	<= (others => A(N-1) and sign);
+extended_A	<= extend_vector&A;
 
-A4 <= extended_A(2*N-3 downto 0)&"00";
-A8 <= extended_A(2*N-4 downto 0)&"000";
-notA4 <= notA(2*N-3 downto 0)&"00";
-notA8 <= notA(2*N-4 downto 0)&"000";
-
-extend_vector <= (others => A(N-1) and sign);
-
-extended_A <= extend_vector&A;
+A4		<= extended_A(2*N-3 downto 0)&"00";
+zeros		<= (others => '0');
 
 A_reg		: piso_r_2 generic map( N => 2*N) port map(Clock,load,A4,A_to_mux);
-A2_reg		: piso_r_2 generic map( N => 2*N) port map(Clock,load,A8,A2_to_mux);
-notA_reg	: piso_r_2 generic map( N => 2*N) port map(Clock,load,notA4,notA_to_mux);
-notA2_reg	: piso_r_2 generic map( N => 2*N) port map(Clock,load,notA8,notA2_to_mux);
 
 A_to_mux_LOAD <=	extended_A when count = 8 else
 			A_to_mux;
-A2_to_mux_LOAD <=	A2 when count = 8 else
-			A2_to_mux;
-notA_to_mux_LOAD <=	notA when count = 8 else
-			notA_to_mux;
-notA2_to_mux_LOAD <=	notA2 when count = 8 else
-			notA2_to_mux;
+A2_to_mux_LOAD <=	extended_A(2*N-2 downto 0)&'0' when count = 8 else
+			A_to_mux  (2*N-2 downto 0)&'0';
 
 
 
@@ -194,17 +170,18 @@ input_mux_sel(2) <= 	tot_select(0)(2) when count = 8 else
 
 mux_i : mux8to1_gen 
 	generic map (M => 2*N)
-	port map ((others => '0'), A_to_mux_LOAD, notA_to_mux_LOAD, A2_to_mux_LOAD, notA2_to_mux_LOAD, zeros, zeros, zeros, input_mux_sel, mux_out_to_add);
+	port map (zeros, zeros, zeros, zeros, A_to_mux_LOAD, A2_to_mux_LOAD, A_to_mux_LOAD, A2_to_mux_LOAD, input_mux_sel, mux_out_to_add);
 
 
 A_to_add <= accumulate;
 B_to_add <= mux_out_to_add;
+sign_to_add <= input_mux_sel(1);
 
 load	<=	'1' when count = 8 else
 		'0';
 
-next_accumulate <=	mux_out_to_add when count = 8 else
-			ACC_from_add;
+next_accumulate <=	ACC_from_add when count /= 0 else
+			(others => '0');
 
 busy	<=	'1' when count /= 8 or enable = '1' else
 		'0';
