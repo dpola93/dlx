@@ -38,6 +38,7 @@ port(
 	B		: in  std_logic_vector (N-1 downto 0);
 	A_to_add	: out std_logic_vector (2*N-1 downto 0);
 	B_to_add	: out std_logic_vector (2*N-1 downto 0);
+	final_out	: out std_logic_vector (2*N-1 downto 0);
 	sign_to_add	: out std_logic;
 	ACC_from_add	: in  std_logic_vector (2*N-1 downto 0)
 	);
@@ -101,6 +102,7 @@ signal sign_booth_to_add	: std_logic;
 signal sum_out		: std_logic_vector(DATA_SIZE-1 downto 0);
 signal comp_out		: std_logic;
 signal shift_out	: std_logic_vector(DATA_SIZE-1 downto 0);
+signal mult_out		: std_logic_vector(DATA_SIZE-1 downto 0);
 
 signal mux_A		: std_logic_vector(DATA_SIZE-1 downto 0);
 signal mux_B		: std_logic_vector(DATA_SIZE-1 downto 0);
@@ -154,6 +156,7 @@ MULT: simple_booth_add_ext
 	B		=> IN2(DATA_SIZE/2-1 downto 0),
 	A_to_add	=> A_booth_to_add,
 	B_to_add	=> B_booth_to_add,
+	final_out	=> mult_out,	
 	sign_to_add	=> sign_booth_to_add,
 	ACC_from_add	=> sum_out
   );
@@ -184,7 +187,6 @@ COMP: comparator
 	);
 
 SHIFT:	shifter
-	generic map( N => DATA_SIZE)
 	port map(
 	A		=> IN1,
 	B		=> IN2(4 downto 0),
@@ -212,6 +214,7 @@ DOUT <= sum_out				when out_mux_sel = "000" else
 	shift_out			when out_mux_sel = "010" else
 	"000"&X"0000000"&comp_out	when out_mux_sel = "011" else
 	IN2 				when out_mux_sel = "100" else
+	mult_out			when out_mux_sel = "101" else
 	(others => 'X');
 
 
@@ -326,11 +329,11 @@ begin
 		out_mux_sel <= "011";
 
   when MULTU =>
-		out_mux_sel <= "000";
+		out_mux_sel <= "101";
 		sign_to_booth <= '0';
 
   when MULTS =>
-		out_mux_sel <= "000";
+		out_mux_sel <= "101";
 		sign_to_booth <= '1';
 
   when others => out_mux_sel <= "000";
