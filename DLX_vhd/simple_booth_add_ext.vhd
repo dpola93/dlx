@@ -12,7 +12,6 @@ PORT(
 		Reset		: in  std_logic;
 		sign		: in  std_logic;
 		enable		: in  std_logic;
-		busy		: out std_logic;
 		valid		: out std_logic;
 		A		: in  std_logic_vector (N-1 downto 0);
 		B		: in  std_logic_vector (N-1 downto 0);
@@ -55,6 +54,7 @@ component piso_r_2
 	D	: in  std_logic_vector(N-1 downto 0); 
 	SO	: out std_logic_vector(N-1 downto 0)	); 
 end component;
+
   component mux8to1_gen 
 
 	generic (  M : integer ); 	
@@ -115,26 +115,19 @@ signal extended_A	: std_logic_vector(2*N-1 downto 0);
 signal zeros		: std_logic_vector(2*N-1 downto 0);
 
 signal reg_enable	: std_logic;
-signal A4		: std_logic_vector(2*N-1 downto 0);
 
 signal A_to_mux		: std_logic_vector(2*N-1 downto 0);
 signal A2_to_mux	: std_logic_vector(2*N-1 downto 0);
 
-signal A_to_mux_LOAD		: std_logic_vector(2*N-1 downto 0);
-signal A2_to_mux_LOAD		: std_logic_vector(2*N-1 downto 0);
 
 signal mux_out_to_add	: std_logic_vector(2*N-1 downto 0);
-signal muxed_mux_out_to_add	: std_logic_vector(2*N-1 downto 0);
-signal last_mux_out_to_add	: std_logic_vector(2*N-1 downto 0);
 
 signal load		: std_logic;
 signal input_mux_sel	: std_logic_vector(2 downto 0);
 signal count		: unsigned(4 downto 0);
 
 signal accumulate	: std_logic_vector(2*N-1 downto 0);
-signal latched_accumulate	: std_logic_vector(2*N-1 downto 0);
 signal next_accumulate	: std_logic_vector(2*N-1 downto 0);
-signal sum_out		: std_logic_vector(2*N-1 downto 0);
 
 signal triggered	: std_logic;
 
@@ -192,7 +185,7 @@ INPUTMUX: mux21 port map(
 	IN0	=> A_to_mux,
 	IN1	=> A2_to_mux, 
 	CTRL	=> input_mux_sel(0), 
-	OUT1	=> mux_out_to_add);
+	OUT1	=> B_to_add);
 
 ACCUMULATOR: ff32_en generic map(
 	SIZE => N*2
@@ -203,21 +196,10 @@ ACCUMULATOR: ff32_en generic map(
 	clk	=> Clock,
 	rst	=> Reset);
 
-reg_enable <= input_mux_sel(2) or nor_reduce(std_logic_vector(count) xor "01001");
-A_to_add <= accumulate;
-B_to_add <= mux_out_to_add;
-sign_to_add <= input_mux_sel(1);
+reg_enable	<= input_mux_sel(2) or nor_reduce(std_logic_vector(count) xor "01001");
+A_to_add	<= accumulate;
+sign_to_add	<= input_mux_sel(1);
 
-load	<=	'1' when count = 9 else
-		'0';
-
-next_accumulate <=	(others => '0') when count = 9 else
-			ACC_from_add;
-
-busy	<=	'1' when count /= 9 or enable = '1' else
-		'0';
-valid	<=	'1' when count = 0 else
-		'0';
 final_out <=	accumulate when input_mux_sel(2) = '0' else
 		ACC_from_add;
 
@@ -225,24 +207,40 @@ process(Reset,Clock)
 begin
 	if Reset = '1' then
 			count <= "01001";
-			triggered <= '0';
 	else
 		if Clock = '1' and Clock'event then
-			if count = 9 and enable = '1' then
-				triggered <= '1';
+			if count /= 0 and enable = '1' then
 				count <= count - 1;
 			end if;
 			if count = 0 then
 				count <= "01001";
-				triggered <= '0';
-			else 
-				if triggered = '1' then
-					count <= count - 1;
-				end if;
 			end if;
 		end if;
 	end if;
 end process;
 
-
+--load	<=	'1' when count = 9 else
+--		'0';
+--
+--next_accumulate <=	(others => '0') when count = 9 else
+--			ACC_from_add;
+--
+--valid	<=	'1' when count = 0 else
+--		'0';
+process(count,ACC_from_add)
+begin
+	if count = 0 then
+		valid		<= '1';
+		next_accumulate	<= ACC_from_add;
+		load		<= '0';
+	elsif count = 9 then
+		valid		<= '0';
+		next_accumulate	<= (others => '0');
+		load		<= '1';
+	else
+		valid		<= '0';
+		next_accumulate	<= ACC_from_add;
+		load		<= '0';
+	end if;
+end process;
 end struct;

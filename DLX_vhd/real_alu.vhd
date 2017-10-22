@@ -32,7 +32,6 @@ port(
 	Reset		: in  std_logic;
 	sign		: in  std_logic;
 	enable		: in  std_logic;
-	busy		: out std_logic;
 	valid		: out std_logic;
 	A		: in  std_logic_vector (N-1 downto 0);
 	B		: in  std_logic_vector (N-1 downto 0);
@@ -90,10 +89,8 @@ component logic_unit
 	);
 end component;
 
-signal enable2mult 	: std_logic := '0';
 signal sign_to_booth	: std_logic;
 signal enable_to_booth	: std_logic;
-signal busy_from_booth	: std_logic;
 signal valid_from_booth	: std_logic;
 signal A_booth_to_add	: std_logic_vector(DATA_SIZE-1 downto 0);
 signal B_booth_to_add	: std_logic_vector(DATA_SIZE-1 downto 0);
@@ -114,7 +111,6 @@ signal overflow		: std_logic;
 signal out_mux_sel	: std_logic_vector(2 downto 0);
 signal comp_sel		: std_logic_vector(2 downto 0);
 
-signal mux_adder_input	: std_logic;
 signal sign_to_adder	: std_logic;
 
 signal left_right	: std_logic; -- 1 = logic, 0 = arith
@@ -127,16 +123,16 @@ signal lu_out		: std_logic_vector(DATA_SIZE-1 downto 0);
 begin
 
 
-mux_A <=	IN1		when mux_adder_input = '0' else
-		A_booth_to_add	when mux_adder_input = '1' else
+mux_A <=	IN1		when enable_to_booth = '0' else
+		A_booth_to_add	when enable_to_booth = '1' else
 		(others => 'X');
 
-mux_B <=	IN2		when mux_adder_input = '0' else
-		B_booth_to_add	when mux_adder_input = '1' else
+mux_B <=	IN2		when enable_to_booth = '0' else
+		B_booth_to_add	when enable_to_booth = '1' else
 		(others => 'X');
 
-mux_sign <=	sign_to_adder		when mux_adder_input = '0' else
-		sign_booth_to_add	when mux_adder_input = '1' else
+mux_sign <=	sign_to_adder		when enable_to_booth = '0' else
+		sign_booth_to_add	when enable_to_booth = '1' else
 		'X';
 enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
 			'0';
@@ -150,7 +146,6 @@ MULT: simple_booth_add_ext
 	Reset		=> Reset,
 	sign		=> sign_to_booth,
 	enable		=> enable_to_booth,
-	busy		=> busy_from_booth,
 	valid		=> valid_from_booth,
 	A		=> IN1(DATA_SIZE/2-1 downto 0),
 	B		=> IN2(DATA_SIZE/2-1 downto 0),
@@ -206,7 +201,7 @@ LU:	logic_unit
 
 
 -- stalling while booth is in process
-stall_o <= busy_from_booth and not(valid_from_booth);
+stall_o <= enable_to_booth and not(valid_from_booth);
 
 -- TODO: MISSING A FORWARDING ON STORE REG FIX THAT ADDING A FW TO S
 DOUT <= sum_out				when out_mux_sel = "000" else
@@ -216,7 +211,6 @@ DOUT <= sum_out				when out_mux_sel = "000" else
 	IN2 				when out_mux_sel = "100" else
 	mult_out			when out_mux_sel = "101" else
 	(others => 'X');
-
 
 -- combinatorial process used to send the right data to components
 process(IN1,IN2,OP)
@@ -340,16 +334,6 @@ begin
  end case;
 end process;
 
--- WTFFFFFFF????
--- sequential process used to send the correct value to the adder
-process(Clock)
-begin
-	if busy_from_booth = '1' then 
-		mux_adder_input <= '1';
-	else 
-		mux_adder_input <= '0' ;
-	end if;
-end process;
 
 end bhe;
 
