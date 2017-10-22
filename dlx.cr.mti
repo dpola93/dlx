@@ -7,15 +7,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity tb_top_level
 -- Compiling architecture TEST of tb_top_level
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/rca.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/rca.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity rca
--- Compiling architecture behavioral of rca
-
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/a.c-IRAM.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/a.c-IRAM.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -212,15 +203,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity logic_unit
 -- Compiling architecture Bhe of logic_unit
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/alu_ctrl.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/alu_ctrl.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package myTypes
--- Compiling entity alu_ctrl
--- Compiling architecture bhe of alu_ctrl
-
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/mux41.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/mux41.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -275,15 +257,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling entity mux8to1_gen
 -- Compiling architecture behavior of mux8to1_gen
 
-} {} {}} /home/davide/Desktop/dlx/DLX_vhd/jump_logic.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/jump_logic.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity jump_logic
--- Compiling architecture struct of jump_logic
-
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/p4add/p4add.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/p4add/p4add.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -293,6 +266,15 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Loading package STD_LOGIC_UNSIGNED
 -- Compiling entity p4add
 -- Compiling architecture STRUCTURAL of p4add
+
+} {} {}} /home/davide/Desktop/dlx/DLX_vhd/jump_logic.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/jump_logic.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity jump_logic
+-- Compiling architecture struct of jump_logic
 
 } {} {}} /home/davide/Desktop/dlx/DLX_vhd/p4add/rca.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/davide/Desktop/dlx/DLX_vhd/p4add/rca.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016

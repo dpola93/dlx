@@ -84,31 +84,37 @@ begin
 		sign_to_adder <= '1';
 		comp_sel <= "100";
 		out_mux_sel <= "011";
+		sign_to_booth <= '0';
 
   when SNES =>
 		sign_to_adder <= '1';
 		comp_sel <= "101";
 		out_mux_sel <= "011";
+		sign_to_booth <= '0';
 
   when SLTS =>
 		sign_to_adder <= '1';
 		comp_sel <= "010";
 		out_mux_sel <= "011";
+		sign_to_booth <= '1';
 
   when SGTS =>
 		sign_to_adder <= '1';
 		comp_sel <= "000";
 		out_mux_sel <= "011";
+		sign_to_booth <= '1';
 
   when SLES =>
 		sign_to_adder <= '1';
 		comp_sel <= "011";
 		out_mux_sel <= "011";
+		sign_to_booth <= '1';
 
   when SGES =>
 		sign_to_adder <= '1';
 		comp_sel <= "001";
 		out_mux_sel <= "011";
+		sign_to_booth <= '1';
 
 --  UNIMPLEMENTED OPS
 --  when MOVI2SS => DOUT <= (others => '0');
@@ -123,21 +129,25 @@ begin
 		sign_to_adder <= '1';
 		comp_sel <= "010";
 		out_mux_sel <= "011";
+		sign_to_booth <= '0';
 
   when SGTUS =>
 		sign_to_adder <= '1';
 		comp_sel <= "000";
 		out_mux_sel <= "011";
+		sign_to_booth <= '0';
 
   when SLEUS =>
 		sign_to_adder <= '1';
 		comp_sel <= "011";
 		out_mux_sel <= "011";
+		sign_to_booth <= '0';
 
   when SGEUS =>
 		sign_to_adder <= '1';
 		comp_sel <= "001";
 		out_mux_sel <= "011";
+		sign_to_booth <= '0';
 
   when MULTU =>
 		out_mux_sel <= "101";

@@ -61,10 +61,22 @@ end component;
 component comparator 
 	generic (M : integer := 32);	
 	port (	
-	C	: in  std_logic; -- carry out
+	C	: in  std_logic;			-- carry out
+	V	: in  std_logic;			-- overflow
 	SUM	: in  std_logic_vector(M-1 downto 0);
-	sel	: in  std_logic_vector(2 downto 0); -- selection
-	sign	: in  std_logic; -- 0 unsigned / signed 1
+	sel	: in  std_logic_vector(2 downto 0);	-- selection
+	sign	: in  std_logic;			-- 0 unsigned / signed 1
+	S	: out std_logic
+	);
+end component; 
+
+component bhe_comparator is 
+	generic (M : integer := 32);	
+	port (	
+	A	: in  std_logic_vector(M-1 downto 0);			-- carry out
+	B	: in  std_logic_vector(M-1 downto 0);
+	sign	: in  std_logic;
+	sel	: in  std_logic_vector(2 downto 0);	-- selection
 	S	: out std_logic
 	);
 end component; 
@@ -144,8 +156,6 @@ mux_B <=	IN2		when enable_to_booth = '0' else
 mux_sign <=	sign_to_adder		when enable_to_booth = '0' else
 		sign_booth_to_add	when enable_to_booth = '1' else
 		'X';
---enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
---			'0';
 
 sign_bit_to_comp <= IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1);
 
@@ -180,13 +190,24 @@ ADDER: p4add
 	Cout	=> carry_from_adder
 	);
 
-COMP: comparator
+-- COMP: comparator
+-- 	generic map ( M => DATA_SIZE)
+-- 	port map (
+-- 	C	=> carry_from_adder,
+-- 	V	=> overflow,
+-- 	SUM	=> sum_out,
+-- 	sel	=> comp_sel,
+-- 	sign	=> sign_to_booth, --TODO: check if can use this signal, maybe rename it to avoid confusion
+-- 	S	=> comp_out
+-- );
+
+BHE_COMP: bhe_comparator
 	generic map ( M => DATA_SIZE)
 	port map (
-	C	=> carry_from_adder,
-	SUM	=> sum_out,
+	A	=> IN1,
+	B	=> IN2,
 	sel	=> comp_sel,
-	sign	=> sign_bit_to_comp, --TODO: check if can use this signal, maybe rename it to avoid confusion
+	sign	=> sign_to_booth,
 	S	=> comp_out
 	);
 
@@ -208,6 +229,8 @@ LU:	logic_unit
 	OUT1	=> lu_out
 	);
 
+
+overflow <= (IN2(DATA_SIZE-1) xnor sum_out(DATA_SIZE-1)) and (IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1)); 
 
 -- stalling while booth is in process
 stall_o <= enable_to_booth and not(valid_from_booth);
