@@ -49,7 +49,7 @@ entity dlx_cu is
 		stall_btb_o	: out std_logic;			-- Stall btb
 		was_branch_o	: out std_logic;			-- Op in decode is a branch or not?
 		was_jmp_o	: out std_logic;
-
+		ALU_WORD_o	: out std_logic_vector(12 downto 0);		-- Opcode to ALU
 		ALU_OPCODE	: out aluOp		-- Opcode to ALU
 
 );
@@ -108,6 +108,14 @@ component cw_mem is
 		OPCODE_IN	: in  std_logic_vector(OP_CODE_SIZE - 1 downto 0);	-- Instruction Register
 		CW_OUT		: out std_logic_vector(CW_SIZE - 1 downto 0)
 	);
+end component;
+
+component alu_ctrl is
+	port (
+	OP		: in  AluOp;
+	ALU_WORD	: out std_logic_vector(12 downto 0)
+	);
+
 end component;
 
 -- instantiation of stall_logic block
@@ -181,6 +189,12 @@ CWM : cw_mem
   port map(
 	OPCODE_IN	=> IR_opcode,
 	CW_OUT		=> cw_from_mem
+	);
+
+ALU_C: alu_ctrl
+	port map(
+	OP		=> aluopcode_d,
+	ALU_WORD	=> ALU_WORD_o
 	);
 
   -- stall signals for each individual stage of the pipeline

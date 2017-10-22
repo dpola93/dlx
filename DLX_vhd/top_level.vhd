@@ -127,6 +127,7 @@ component dlx_cu is
   stall_btb_o		: out std_logic;
   was_branch_o		: out std_logic;
   was_jmp_o		: out std_logic;
+  ALU_WORD_o		: out std_logic_vector(12 downto 0);		-- Opcode to ALU
   ALU_OPCODE		: out aluOp
 
 
@@ -141,12 +142,14 @@ component decode_regs is
 	rB_i	: in  std_logic_vector(4 downto 0);
 	rC_i	: in  std_logic_vector(4 downto 0);
 	IMM_i	: in  std_logic_vector(31 downto 0);
+	ALUW_i	: in  std_logic_vector(12 downto 0);
 	A_o	: out std_logic_vector(31 downto 0);
 	B_o	: out std_logic_vector(31 downto 0);
 	rA_o	: out std_logic_vector(4 downto 0);
 	rB_o	: out std_logic_vector(4 downto 0);
 	rC_o	: out std_logic_vector(4 downto 0);
 	IMM_o	: out std_logic_vector(31 downto 0);
+	ALUW_o	: out std_logic_vector(12 downto 0);
 	stall_i : in  std_logic;
 	clk 	: in  std_logic;
 	rst	: in  std_logic
@@ -185,6 +188,7 @@ port (
 	muxed_B		: out std_logic_vector(31  downto 0);
 	S_MUX_DEST_i	: in  std_logic_vector(1 downto 0);
 	OP		: in  AluOp;
+	ALUW_i		: in  std_logic_vector(12 downto 0);
 	DOUT		: out std_logic_vector(31 downto 0);
 	stall_o		: out std_logic;
 	clock		: in  std_logic;
@@ -282,6 +286,8 @@ signal dummy_S_FWAdec		: std_logic_vector(1 downto 0);
 signal dummy_S_MUX_MEM		: std_logic;
 
 signal dummy_OP			: AluOp;
+signal ALUW_dec			: std_logic_vector(12 downto 0);
+signal ALUW			: std_logic_vector(12 downto 0);
 signal help_B			: std_logic_vector(31 downto 0);
 signal help_DEST		: std_logic_vector(4 downto 0);
 signal help_IMM			: std_logic_vector(31 downto 0);
@@ -439,6 +445,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	stall_btb_o	=> stall_btb,
 	was_branch_o	=> was_branch, 
 	was_jmp_o	=> was_jmp, 
+  	ALU_WORD_o	=> ALUW_dec,
 	ALU_OPCODE	=> dummy_OP
 	);
 
@@ -468,6 +475,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	rB_i	=> rB2reg,
 	rC_i	=> rC2reg,
 	IMM_i	=> help_IMM,
+	ALUW_i	=> ALUW_dec,
 	A_o	=> A2exe,
 	B_o	=> B2exe,
 	rA_o	=> rA2fw,
@@ -475,6 +483,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	rC_o	=> rC2mux,
 	IMM_o	=> IMM2exe,
 	stall_i => stall_exe,
+	ALUW_o	=> ALUW,
 	clk	=> clock,
 	rst	=> rst
 	);
@@ -498,6 +507,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	muxed_B		=> S2mem,
 	S_MUX_DEST_i	=> dummy_S_MUX_DEST,
 	OP		=> dummy_OP,
+	ALUW_i		=> ALUW,	
 	DOUT		=> X2mem,
 	stall_o		=> exe_stall_cu,
 	clock		=> clock,

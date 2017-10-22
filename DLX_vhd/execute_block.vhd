@@ -23,6 +23,7 @@ entity execute_block is
 	muxed_B		: out std_logic_vector(SIZE -1  downto 0);
 	S_MUX_DEST_i	: in  std_logic_vector(1 downto 0);
 	OP		: in  AluOp;
+	ALUW_i		: in  std_logic_vector(12 downto 0);
 	DOUT		: out std_logic_vector(SIZE - 1 downto 0);
 	stall_o		: out std_logic;
 	Clock		: in  std_logic;
@@ -63,7 +64,8 @@ component real_alu
 	port (
 	IN1	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
 	IN2	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
-	OP	: in  AluOp;
+	--OP	: in  AluOp;
+	ALUW_i	: in  std_logic_vector(12 downto 0);
 	DOUT	: out std_logic_vector(DATA_SIZE - 1 downto 0);
 	stall_o	: out std_logic;
 	Clock	: in  std_logic;
@@ -77,7 +79,7 @@ signal FWB2alu : std_logic_vector(SIZE - 1 downto 0);
 
 begin
 
-MUXALUIN: mux21 port map(
+ALUIN_MUX: mux21 port map(
 	IN0	=> FWB2mux,
 	IN1	=> IMM_i, 
 	CTRL	=> S_MUX_ALUIN_i, 
@@ -89,7 +91,8 @@ ALU: real_alu generic map (
 	port map (
 	IN1	=> FWA2alu,
 	IN2	=> FWB2alu,
-	OP	=> OP,
+	-- OP	=> OP,
+	ALUW_i	=> ALUW_i,
 	DOUT	=> DOUT,
 	stall_o	=> stall_o,
 	Clock	=> Clock,

@@ -14,7 +14,8 @@ entity real_alu is
 	port (
 	IN1	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
 	IN2	: in  std_logic_vector(DATA_SIZE - 1 downto 0);
-	OP	: in  AluOp;
+--	OP	: in  AluOp;
+	ALUW_i	: in  std_logic_vector(12 downto 0);
 	DOUT	: out std_logic_vector(DATA_SIZE - 1 downto 0);
 	stall_o	: out std_logic;
 	Clock	: in  std_logic;
@@ -119,9 +120,19 @@ signal logic_arith	: std_logic; -- 1 = left, 0 = right
 signal lu_ctrl		: std_logic_vector(1 downto 0);
 signal lu_out		: std_logic_vector(DATA_SIZE-1 downto 0);
 
-
+signal ALU_WORD_TEST	:std_logic_vector(12 downto 0);
 begin
 
+ALU_WORD_TEST <= out_mux_sel&left_right&logic_arith&sign_to_adder&lu_ctrl&comp_sel&enable_to_booth&sign_to_booth;
+
+out_mux_sel	<= ALUW_i(12 downto 10);
+left_right	<= ALUW_i(9);
+logic_arith	<= ALUW_i(8);
+sign_to_adder	<= ALUW_i(7);
+lu_ctrl		<= ALUW_i(6 downto 5);
+comp_sel	<= ALUW_i(4 downto 2);
+enable_to_booth	<= ALUW_i(1);
+sign_to_booth	<= ALUW_i(0);
 
 mux_A <=	IN1		when enable_to_booth = '0' else
 		A_booth_to_add	when enable_to_booth = '1' else
@@ -134,8 +145,8 @@ mux_B <=	IN2		when enable_to_booth = '0' else
 mux_sign <=	sign_to_adder		when enable_to_booth = '0' else
 		sign_booth_to_add	when enable_to_booth = '1' else
 		'X';
-enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
-			'0';
+--enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
+--			'0';
 
 overflow	<= (IN2(DATA_SIZE-1) xnor sum_out(DATA_SIZE-1)) and (IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1)); 
 
@@ -213,126 +224,126 @@ DOUT <= sum_out				when out_mux_sel = "000" else
 	(others => 'X');
 
 -- combinatorial process used to send the right data to components
-process(IN1,IN2,OP)
-begin
- case OP is
-  -- when NOP we do a random LU operation, maybe change this into something smarter??
-  when NOP  =>
-		out_mux_sel <= "100";
-		sign_to_booth <= '0'; -- useless but avoids errors on simulation
-
-  when SLLS =>
-		out_mux_sel <= "010";
-		left_right <= '0';
-		logic_arith <= '0';
- 
-  when SRLS =>
-		out_mux_sel <= "010";
-		left_right <= '1';
-		logic_arith <= '0';
- 
-  when SRAS =>
-		out_mux_sel <= "010";
-		left_right <= '1';
-		logic_arith <= '1';
- 
-  when ADDS =>
-		sign_to_adder <= '0';
-		out_mux_sel <= "000";
- 
-  when ADDUS =>
-		sign_to_adder <= '0';
-		out_mux_sel <= "000";
-
-  when SUBS =>		
-		sign_to_adder <= '1';
-		out_mux_sel <= "000";
-
-  when SUBUS =>
-		sign_to_adder <= '1';
-		out_mux_sel <= "000";
-
-  when ANDS =>
-		lu_ctrl	<= "00";
-		out_mux_sel <= "001";
-
-  when ORS =>
-		lu_ctrl	<= "01";
-		out_mux_sel <= "001";
-  when XORS =>
-		lu_ctrl	<= "10";
-		out_mux_sel <= "001";
-
-  when SEQS =>
-		sign_to_adder <= '1';
-		comp_sel <= "100";
-		out_mux_sel <= "011";
-
-  when SNES =>
-		sign_to_adder <= '1';
-		comp_sel <= "101";
-		out_mux_sel <= "011";
-
-  when SLTS =>
-		sign_to_adder <= '1';
-		comp_sel <= "010";
-		out_mux_sel <= "011";
-
-  when SGTS =>
-		sign_to_adder <= '1';
-		comp_sel <= "000";
-		out_mux_sel <= "011";
-
-  when SLES =>
-		sign_to_adder <= '1';
-		comp_sel <= "011";
-		out_mux_sel <= "011";
-
-  when SGES =>
-		sign_to_adder <= '1';
-		comp_sel <= "001";
-		out_mux_sel <= "011";
-
---  UNIMPLEMENTED OPS
---  when MOVI2SS => DOUT <= (others => '0');
---  when MOVS2IS => DOUT <= (others => '0');
---  when MOVFS => DOUT <= (others => '0');
---  when MOVDS => DOUT <= (others => '0');
---  when MOVFP2IS => DOUT <= (others => '0');
---  when MOVI2FP => DOUT <= (others => '0');
---  when MOVI2TS => DOUT <= (others => '0');
---  when MOVT2IS => DOUT <= (others => '0');
-  when SLTUS =>
-		sign_to_adder <= '1';
-		comp_sel <= "010";
-		out_mux_sel <= "011";
-
-  when SGTUS =>
-		sign_to_adder <= '1';
-		comp_sel <= "000";
-		out_mux_sel <= "011";
-
-  when SLEUS =>
-		sign_to_adder <= '1';
-		comp_sel <= "011";
-		out_mux_sel <= "011";
-
-  when SGEUS =>
-		sign_to_adder <= '1';
-		comp_sel <= "001";
-		out_mux_sel <= "011";
-
-  when MULTU =>
-		out_mux_sel <= "101";
-		sign_to_booth <= '0';
-
-  when MULTS =>
-		out_mux_sel <= "101";
-		sign_to_booth <= '1';
-
-  when others => out_mux_sel <= "000";
- end case;
-end process;
+-- process(IN1,IN2,OP)
+-- begin
+--  case OP is
+--   -- when NOP we do a random LU operation, maybe change this into something smarter??
+--   when NOP  =>
+-- 		out_mux_sel <= "100";
+-- 		sign_to_booth <= '0'; -- useless but avoids errors on simulation
+-- 
+--   when SLLS =>
+-- 		out_mux_sel <= "010";
+-- 		left_right <= '0';
+-- 		logic_arith <= '0';
+--  
+--   when SRLS =>
+-- 		out_mux_sel <= "010";
+-- 		left_right <= '1';
+-- 		logic_arith <= '0';
+--  
+--   when SRAS =>
+-- 		out_mux_sel <= "010";
+-- 		left_right <= '1';
+-- 		logic_arith <= '1';
+--  
+--   when ADDS =>
+-- 		sign_to_adder <= '0';
+-- 		out_mux_sel <= "000";
+--  
+--   when ADDUS =>
+-- 		sign_to_adder <= '0';
+-- 		out_mux_sel <= "000";
+-- 
+--   when SUBS =>		
+-- 		sign_to_adder <= '1';
+-- 		out_mux_sel <= "000";
+-- 
+--   when SUBUS =>
+-- 		sign_to_adder <= '1';
+-- 		out_mux_sel <= "000";
+-- 
+--   when ANDS =>
+-- 		lu_ctrl	<= "00";
+-- 		out_mux_sel <= "001";
+-- 
+--   when ORS =>
+-- 		lu_ctrl	<= "01";
+-- 		out_mux_sel <= "001";
+--   when XORS =>
+-- 		lu_ctrl	<= "10";
+-- 		out_mux_sel <= "001";
+-- 
+--   when SEQS =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "100";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SNES =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "101";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SLTS =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "010";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SGTS =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "000";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SLES =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "011";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SGES =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "001";
+-- 		out_mux_sel <= "011";
+-- 
+-- --  UNIMPLEMENTED OPS
+-- --  when MOVI2SS => DOUT <= (others => '0');
+-- --  when MOVS2IS => DOUT <= (others => '0');
+-- --  when MOVFS => DOUT <= (others => '0');
+-- --  when MOVDS => DOUT <= (others => '0');
+-- --  when MOVFP2IS => DOUT <= (others => '0');
+-- --  when MOVI2FP => DOUT <= (others => '0');
+-- --  when MOVI2TS => DOUT <= (others => '0');
+-- --  when MOVT2IS => DOUT <= (others => '0');
+--   when SLTUS =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "010";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SGTUS =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "000";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SLEUS =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "011";
+-- 		out_mux_sel <= "011";
+-- 
+--   when SGEUS =>
+-- 		sign_to_adder <= '1';
+-- 		comp_sel <= "001";
+-- 		out_mux_sel <= "011";
+-- 
+--   when MULTU =>
+-- 		out_mux_sel <= "101";
+-- 		sign_to_booth <= '0';
+-- 
+--   when MULTS =>
+-- 		out_mux_sel <= "101";
+-- 		sign_to_booth <= '1';
+-- 
+--   when others => out_mux_sel <= "000";
+--  end case;
+-- end process;
 
 
 end bhe;

@@ -15,12 +15,14 @@ entity decode_regs is
 	rB_i	: in  std_logic_vector(4 downto 0);
 	rC_i	: in  std_logic_vector(4 downto 0);
 	IMM_i	: in  std_logic_vector(SIZE - 1 downto 0);
+	ALUW_i	: in  std_logic_vector(12 downto 0);
 	A_o	: out std_logic_vector(SIZE - 1 downto 0);
 	B_o	: out std_logic_vector(SIZE - 1 downto 0);
 	rA_o	: out std_logic_vector(4 downto 0);
 	rB_o	: out std_logic_vector(4 downto 0);
 	rC_o	: out std_logic_vector(4 downto 0);
 	IMM_o	: out std_logic_vector(SIZE - 1 downto 0);
+	ALUW_o	: out std_logic_vector(12 downto 0);
 	stall_i	: in  std_logic;
 	clk	: in  std_logic;
 	rst	: in  std_logic
@@ -112,5 +114,13 @@ IMM: ff32_en generic map(
 	clk	=> clk,
 	rst	=> rst);
 
+ALUW: ff32_en generic map(
+	SIZE => 13
+	)port map(
+	D	=> ALUW_i, 
+	Q	=> ALUW_o,
+	en	=> enable,
+	clk	=> clk,
+	rst	=> rst);
 
 end struct;
