@@ -56,7 +56,7 @@ end component;
  
         ct: carry_tree 
         generic map(N=>N,logN=>logN)
-        port map(A,new_B,Cin,carry_pro(N/4 downto 1));
+        port map(A,new_B,carry_pro(0),carry_pro(N/4 downto 1));
           
 	add: sum_gen
 	generic map(N=>N)

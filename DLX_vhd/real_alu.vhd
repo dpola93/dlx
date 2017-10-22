@@ -62,7 +62,6 @@ component comparator
 	generic (M : integer := 32);	
 	port (	
 	C	: in  std_logic; -- carry out
-	V	: in  std_logic; -- overflow
 	SUM	: in  std_logic_vector(M-1 downto 0);
 	sel	: in  std_logic_vector(2 downto 0); -- selection
 	sign	: in  std_logic; -- 0 unsigned / signed 1
@@ -108,7 +107,7 @@ signal mux_sign		: std_logic;
 
 signal carry_from_adder	: std_logic;
 signal overflow		: std_logic;
-
+signal sign_bit_to_comp	: std_logic;
 signal out_mux_sel	: std_logic_vector(2 downto 0);
 signal comp_sel		: std_logic_vector(2 downto 0);
 
@@ -148,7 +147,7 @@ mux_sign <=	sign_to_adder		when enable_to_booth = '0' else
 --enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
 --			'0';
 
-overflow	<= (IN2(DATA_SIZE-1) xnor sum_out(DATA_SIZE-1)) and (IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1)); 
+sign_bit_to_comp <= IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1);
 
 MULT: simple_booth_add_ext 
 	generic map ( N => DATA_SIZE/2)
@@ -185,10 +184,9 @@ COMP: comparator
 	generic map ( M => DATA_SIZE)
 	port map (
 	C	=> carry_from_adder,
-	V	=> overflow,
 	SUM	=> sum_out,
 	sel	=> comp_sel,
-	sign	=> sign_to_booth, --TODO: check if can use this signal, maybe rename it to avoid confusion
+	sign	=> sign_bit_to_comp, --TODO: check if can use this signal, maybe rename it to avoid confusion
 	S	=> comp_out
 	);
 
