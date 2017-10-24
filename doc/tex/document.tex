@@ -125,43 +125,97 @@ The results coming from these units is then multiplexed to the final output.
 We are going to see in details each of them in the next sections.
 
 \subsubsection{Shared Adder}
-The adder ( used also for substractions ) is a 32-bit Pentium 4 adder.
-The adder is composed of two main block: the sparse tree is in charge of computing all carries in a parallel fashion. In our case it is a radix-2 carry-merge tree and generates every fourth carry. This design is performance oriented.
+The adder/subtractor is a 32-bit Pentium 4 adder.
 
-The sum generator block is then based on carry select adders, which compute both results in case the carry is 0 and in case the carry is 1. These two addition are independent from the actual carry, so they can be performed in parallel. When the carry reaches the sum generator it controls a multiplexer that is used to select one of the two possible outputs.
+The adder is composed of two main blocks: 
+The sparse tree is in charge of computing all carries in a parallel fashion. In our case it is a radix-2 carry-merge tree and generates every fourth carry. 
 
-As a consequence, the delay due to carry propagation is strongly reduced.
+The sum generator block is then based on carry select adders, which compute both results in case the carry is 0 and in case the carry is 1. These two addition are independent from the actual carry, so they can be performed in parallel. When the carry reaches the sum generator it controls a multiplexer used to select one of the two possible outputs.
+As a consequence, the delay due to carry propagation is strongly minimized.
+
+In order to perform subtractions, a little modification has been developed. From basic computer arithmetic we know that doing a subtractions is the same as doing an addition with the second operand being 2's complemented.
+
+2's complement involves doing a not of the entire number and adding 1.
+Flipping of the bits is performed with a xor circuit placed at the input of the second operand, while the 1 addition is done trough the carry input. ( carry input would never been used in this specific architecture ). 
+
+
+
 \subsubsection{Multiplier Logic}
 As briefly introduced, Multiplication is performed by the shared P4 adder in an iterative way.
 The entire procedure is based on the Booth's multiplier. Instead of producing all the sums in parallel, we compute one each clock cycle.
 
 The flow is as follows:
-At the first clock cycle all the Booth's encoding is done and sent in a PISO register. Actually the first value is already sent to the multiplexer to have a sum in the first cycle too.
+At the first clock cycle all the Booth's encoding is done and sent in a PISO register, also value of A is saved into a register able to left shift it's content of 2 every clock cycle (multiplying by 4). Accumulator register is cleaned and set to zero.
 
 Then at each clock cycle the adder takes as input the correctly shifted input value and the result of the previous addition stored in the accumulator register.
 To have both signed and unsigned multiplication, a correction stage needs to be performed at the end, as can be seen in the picture, the last encoder takes this into account.
 
-This design should be able to reduce critical paths flowing to a parallel multiplier and saving area as well.
+This design is able to reduce critical paths flowing to a standard parallel multiplier and save area as well at the cost of a multi cycle operation. 
+
+We put a lot of effort into optimization for this part of the design. The first image shows the initial design, while the latter the final version. Please also consider that we decided to move from 9 to 10 cycles to reduce the critical path.
+A possible future improvement could be to pipeline the Booth Encoder block too to save area. 
+
 \subsubsection{Logic Unit}
 The DLX architecture supports only 3 type of logical operations: AND, OR, XOR. 
-Due to this simple behavior, we decided to avoid using particular logic unit schemes.
-The three operations are executed in parallel and then a multiplexer selects the correct one. 
+
+Due to this simple behavior, we decided to avoid using particular logic unit schemes: the three operations are executed in parallel and then a multiplexer selects the correct one. 
+
 As can be see in the picture, the schematic is pretty straightforward.
 
+
 \subsubsection{Comparator}
-From the ISA we need to implement several comparison operation: $(<, >, \leq, \geq, =, \neq)$.
-It is able to deal with both signed and unsigned numbers.
+The ISA requires to implement several comparison operation: $(<, >, \leq, \geq, =, \neq)$.
+Dealing with both signed and unsigned numbers is not easy in a comparator, because the two operations use different inputs.
 
-It requires at input the difference between the two numbers, provided by the shared ALU (SUM), the carry out of the operation (C), the overflow bit (V) and the sign.
+For a comparison the required signals are:
+\begin{itemize}
+	\item difference between the two numbers, provided by the shared ALU (SUM)
+	\item carry out of the operation (C)
+	\item overflow bit (V)
+	\item sign
+\end{itemize}
+Overflow bit is computed outside of the comparator as (IN2(31) xnor SUM(31)) and (IN1 xor IN2).
+Which basically mean that an overflow is triggered when subtrahend and result have the same sign when minuend and subtrahend have different sign.
 
-Then zero bit (Z) is computed through nor reduction and (N) is the sign of SUM.
+Zero bit (Z) is computed through nor reduction of SUM, while the sign of SUM (N) is simply the most significant bit.
 
-With these values is easy to compute the possible comparisons.
+\begin{center}
+	\begin{tabular}{ | l | l | l |}
+		\hline
+		OP & Description & Flags tested \\ \hline
+		SEQ & Equal & Z \\ \hline
+		SNE & Not equal &  not Z \\ \hline
+		SGT & Signed greater & N xnor V \\ \hline
+		SGE & Signed greater or equal & (N  xnor  V) or Z \\ \hline
+		SLT & Signed less & (N xor V) and (not Z)\\ \hline
+		SLE & Signed less or equal & N xor V \\ \hline
+		SGTU & Unsigned greater & C and (not Z) \\ \hline
+		SGEU & Unsigned greater or equal & C \\ \hline
+		SLTU & Unsigned less & not C \\ \hline
+		SLEU & Unsigned less or equal & (not C) or Z  \\ \hline
+
+	\end{tabular}
+\end{center}
 
 There might be some redundancy in the design, we left possible optimizations to the synthesizer.
 
 \subsubsection{Shifter}
-FALLO STO CAZZO DI SHIFTER MALEDETTO
+The DLX-basic shift operations are: SLL, SRL, SRLI, SRA and SRAI, actually our hardware would be able to implement also the missing ones.
+Our implementation is based on the T2 coarse-grain shifter and is organized on three different blocks:
+\begin{itemize}
+	\item Level 1: this block produces three masks according to the selection signal (00, 01 or 10).
+	shifted by 0 (mask00), 8 (mask08) and 16 bits (mask16) each. Moreover, operand A is extended
+	to 39 bits.
+	\paragraph{00 :} the operand is shifted left replacing vacant positions with 0s and extended appending
+	7 0s to the right.
+	\paragraph{01 :} the operand is shifted right replacing vacant positions with 0s and extended appending
+	7 0s to the left.
+	\paragraph{10 :} the operand is shifted right with sign extension and extended replicating the sign bit.
+	\item Level 2: A multiplexer which has as selection signal bits 3 and 4 of operand B does the selection of one of the masks produced in the first block.
+	\item Level 3: The selection is done by the 3 LSBs of B. This last block computes a fine-grained shift which produces the final result by selecting the correct 32 bits among the 39 left.
+	Please note that the values of B are complemented in case of a right shift as we want an opposite behavior.
+\end{itemize}
+
 
 \subsection{Memory Block}
 NOTHING MUCH TO SAY: ADDRESS ALWAYS COMES FROM ALU, DATA ALWAYS FROM S
@@ -176,16 +230,12 @@ The computation is pretty simple, for each operation in EXE,MEM, and WB stage we
 
 \subsection{Control Unit}
 The control unit (CU) is in charge of generate and distribute control signal across the entire DLX pipeline.
-In this design, the control unit follows an Hardwired scheme, so at each IR input a kind of memory containing a control work for each instruction is looked up.
+In this design, the control unit follows an Hardwired scheme, so at each IR input a kind of memory containing a control work for each instruction is looked up. (There is actually no memory but an hardwired logic scheme)
 
 When a signal needs to be used later in the execution, it is propagated trough a series of flip flops.
 
 The CU is able to correctly generate and handle stall conditions due to hazards or multi cycle operations. In general, when a stage is stalled, the same goes fol the preceding stages in the pipeline, while the successive need to continue the execution. When a stage would be empty, a BUBBLE operation is inserted: a BUBBLE has the same control word as a NOP.
-HARDWIRED
-INDEXING
-MOSTLY BEHAVIORAL
-STALL HANDLING WITH BUBBLES
-CONTROL WORD SIGNAL DESCRIPTION
+
 \paragraph{S\_MUX\_PC\_BUS - (1,2)}
 \paragraph{S\_EXT - (3)}
 \paragraph{S\_EXT\_SIGN - (4)}
