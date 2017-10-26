@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.23)  24 OCT 2017 02:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.23)  26 OCT 2017 23:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -202,17 +202,26 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 LaTeX Warning: No \author given.
 
-[1
+(./document.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 10.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 10.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 10.
+ [1
 
-{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 45.
+{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
+\tf@toc=\write3
+\openout3 = `document.toc'.
 
-(/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
+ [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 52.
+ (/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 45.
- [2]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 52.
 Package epstopdf Info: Source file: <images/FETCH_BLOCK.eps>
 (epstopdf)                    date: 2017-10-21 01:12:32
 (epstopdf)                    size: 14601 bytes
@@ -221,21 +230,39 @@ Package epstopdf Info: Source file: <images/FETCH_BLOCK.eps>
 (epstopdf)                    size: 9333 bytes
 (epstopdf)             Command: <repstopdf --outfile=images/FETCH_BLOCK-eps-con
 verted-to.pdf images/FETCH_BLOCK.eps>
-(epstopdf)             \includegraphics on input line 61.
+(epstopdf)             \includegraphics on input line 68.
 Package epstopdf Info: Output file is already uptodate.
 
-<images/FETCH_BLOCK-eps-converted-to.pdf, id=15, 488.82625pt x 426.59375pt>
+<images/FETCH_BLOCK-eps-converted-to.pdf, id=14, 488.82625pt x 426.59375pt>
 File: images/FETCH_BLOCK-eps-converted-to.pdf Graphic file (type pdf)
 
 <use images/FETCH_BLOCK-eps-converted-to.pdf>
 Package pdftex.def Info: images/FETCH_BLOCK-eps-converted-to.pdf used on input 
-line 61.
+line 68.
 (pdftex.def)             Requested size: 488.82504pt x 426.5927pt.
+ [3] [4 <./images/FETCH_BLOCK-eps-converted-to.pdf>]
+Package epstopdf Info: Source file: <images/BTB.eps>
+(epstopdf)                    date: 2017-10-24 20:25:50
+(epstopdf)                    size: 34267 bytes
+(epstopdf)             Output file: <images/BTB-eps-converted-to.pdf>
+(epstopdf)                    date: 2017-10-24 20:26:24
+(epstopdf)                    size: 8912 bytes
+(epstopdf)             Command: <repstopdf --outfile=images/BTB-eps-converted-t
+o.pdf images/BTB.eps>
+(epstopdf)             \includegraphics on input line 79.
+Package epstopdf Info: Output file is already uptodate.
+
+<images/BTB-eps-converted-to.pdf, id=28, 491.8375pt x 526.96875pt>
+File: images/BTB-eps-converted-to.pdf Graphic file (type pdf)
+
+<use images/BTB-eps-converted-to.pdf>
+Package pdftex.def Info: images/BTB-eps-converted-to.pdf used on input line 79.
+
+(pdftex.def)             Requested size: 491.83629pt x 526.96745pt.
 
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+LaTeX Warning: Float too large for page by 5.30022pt on input line 82.
 
-[3]
 Package epstopdf Info: Source file: <images/DECODE_BLOCK.eps>
 (epstopdf)                    date: 2017-10-21 01:13:39
 (epstopdf)                    size: 16696 bytes
@@ -244,70 +271,88 @@ Package epstopdf Info: Source file: <images/DECODE_BLOCK.eps>
 (epstopdf)                    size: 8671 bytes
 (epstopdf)             Command: <repstopdf --outfile=images/DECODE_BLOCK-eps-co
 nverted-to.pdf images/DECODE_BLOCK.eps>
-(epstopdf)             \includegraphics on input line 82.
+(epstopdf)             \includegraphics on input line 94.
 Package epstopdf Info: Output file is already uptodate.
- <images/DECODE_BLOCK-eps-converted-to.pdf, id=20, 539.01375pt x 485.815pt>
+<images/DECODE_BLOCK-eps-converted-to.pdf, id=29, 539.01375pt x 485.815pt>
 File: images/DECODE_BLOCK-eps-converted-to.pdf Graphic file (type pdf)
 
 <use images/DECODE_BLOCK-eps-converted-to.pdf>
 Package pdftex.def Info: images/DECODE_BLOCK-eps-converted-to.pdf used on input
- line 82.
+ line 94.
 (pdftex.def)             Requested size: 539.01242pt x 485.81381pt.
- [4 <./images/FETCH_BLOCK-eps-converted-to.pdf>] [5 <./images/DECODE_BLOCK-eps-
-converted-to.pdf>] [6] [7]
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 167.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 167.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 167.
 
-[8]
-Overfull \hbox (7.29747pt too wide) in paragraph at lines 177--179
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[5]
+Package epstopdf Info: Source file: <images/DLX_ALU.eps>
+(epstopdf)                    date: 2017-10-26 13:48:21
+(epstopdf)                    size: 47985 bytes
+(epstopdf)             Output file: <images/DLX_ALU-eps-converted-to.pdf>
+(epstopdf)                    date: 2017-10-26 13:48:25
+(epstopdf)                    size: 10992 bytes
+(epstopdf)             Command: <repstopdf --outfile=images/DLX_ALU-eps-convert
+ed-to.pdf images/DLX_ALU.eps>
+(epstopdf)             \includegraphics on input line 110.
+Package epstopdf Info: Output file is already uptodate.
+ <images/DLX_ALU-eps-converted-to.pdf, id=33, 715.67375pt x 775.89874pt>
+File: images/DLX_ALU-eps-converted-to.pdf Graphic file (type pdf)
+
+<use images/DLX_ALU-eps-converted-to.pdf>
+Package pdftex.def Info: images/DLX_ALU-eps-converted-to.pdf used on input line
+ 110.
+(pdftex.def)             Requested size: 715.672pt x 775.89685pt.
+
+
+LaTeX Warning: Float too large for page by 254.22961pt on input line 113.
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 151--156
+
+ []
+
+[7] [8]
+Overfull \hbox (7.29747pt too wide) in paragraph at lines 225--227
 \T1/cmr/m/n/12 Overflow bit is com-puted out-side of the com-para-tor as (IN2(3
 1) xnor SUM(31))
  []
 
-[9] [10]
-Overfull \hbox (2.7404pt too wide) in paragraph at lines 259--261
-[]\T1/cmr/m/n/12 STALL COM-ING FROM EX-E-CUTE Struc-tural haz-ard: Mul-ti-pli-c
-a-tion multi
- []
-
-[11]
-Overfull \hbox (31.32486pt too wide) in paragraph at lines 270--272
+[9] [10] [11] [12] [13]
+Overfull \hbox (31.32486pt too wide) in paragraph at lines 375--377
 \T1/cmr/m/n/12 The sim-u-la-tion en-vi-ron-ment is com-posed as fol-lows: A tes
 t bench file: tb_top_level
  []
 
-[12] (./document.bbl
+[14] (./document.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
-) [13] (./document.aux) ) 
+) [15] [16] [17 <./images/BTB-eps-converted-to.pdf>] [18 <./images/DECODE_BLOCK
+-eps-converted-to.pdf>] [19 <./images/DLX_ALU-eps-converted-to.pdf>]
+(./document.aux) ) 
 Here is how much of TeX's memory you used:
- 2479 strings out of 493054
- 35812 string characters out of 6134765
- 96416 words of memory out of 5000000
- 5958 multiletter control sequences out of 15000+600000
+ 2495 strings out of 493054
+ 36184 string characters out of 6134765
+ 97444 words of memory out of 5000000
+ 5969 multiletter control sequences out of 15000+600000
  12689 words of font info for 33 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  42i,7n,34p,424b,290s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/cm
--super/cm-super-t1.enc}</usr/local/texlive/2015/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmmi12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmr12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-su
-per/sfbx1200.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-supe
-r/sfbx1440.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/
-sfbx1728.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sf
-rm1200.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfrm
-1440.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfrm20
-74.pfb>
-Output written on document.pdf (13 pages, 152560 bytes).
+{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/cm-super/
+cm-super-t1.enc}</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfb
+x1200.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfbx1
+440.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfbx172
+8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfrm1200.
+pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pf
+b></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb>
+
+Output written on document.pdf (19 pages, 171067 bytes).
 PDF statistics:
- 96 PDF objects out of 1000 (max. 8388607)
- 67 compressed objects within 1 object stream
+ 128 PDF objects out of 1000 (max. 8388607)
+ 89 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

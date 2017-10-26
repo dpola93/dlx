@@ -47,7 +47,7 @@ type PC_array is array (integer range 0 to 2**N_LINES - 1) of std_logic_vector(S
 
 signal predict_PC	: PC_array;
 signal taken		: std_logic_vector(2**N_LINES-1 downto 0);
-signal enable		: std_logic_vector(2**N_LINES-1 downto 0);
+signal write_enable		: std_logic_vector(2**N_LINES-1 downto 0);
 
 -- help signal
 signal last_TAG			: std_logic_vector(N_LINES - 1 downto 0);
@@ -63,7 +63,7 @@ signal current_mispredict	: std_logic;
 begin
 
 pred: for i in 0 to 2**N_LINES-1 generate
-	pred_x: predictor_2 port map(clock,reset,enable(i),was_taken_i,taken(i));
+	pred_x: predictor_2 port map(clock,reset,write_enable(i),was_taken_i,taken(i));
 end generate pred; 
 
 process(reset,clock)
@@ -73,7 +73,7 @@ begin
 		last_TAG	<= (others => '0');
 		last_mispredict	<= '0';
 		last_PC		<= (others => '0');
-		enable		<= (others => '0');
+		write_enable		<= (others => '0');
 		for i in 0 to 2**N_LINES-1 loop
 			predict_PC(i) <= (others => '0');
 		end loop;
@@ -88,8 +88,8 @@ begin
 			-- update even if the prediction is correct
 			predict_PC(to_integer(unsigned(last_TAG)))	<= target_PC_i;
 			last_mispredict					<= current_mispredict;
-			enable						<= (others => '0');
-			enable(to_integer(unsigned(last_tag)))		<= '1';
+			write_enable					<= (others => '0');
+			write_enable(to_integer(unsigned(last_tag)))	<= '1';
 
 		else -- is this else really necessary??
 			last_taken	<= last_taken;

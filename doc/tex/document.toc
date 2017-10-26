@@ -1,0 +1,37 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {paragraph}{Outline}{2}
+\contentsline {section}{\numberline {2}Implmentation Overview}{2}
+\contentsline {paragraph}{Instructions}{2}
+\contentsline {paragraph}{Jump and branch}{3}
+\contentsline {paragraph}{Control logic}{3}
+\contentsline {paragraph}{Memories}{3}
+\contentsline {paragraph}{Register file}{3}
+\contentsline {section}{\numberline {3}Design Architecture}{3}
+\contentsline {subsection}{\numberline {3.1}Fetch Block}{3}
+\contentsline {subsection}{\numberline {3.2}Branch Predictor}{5}
+\contentsline {subsection}{\numberline {3.3}Decode Block}{5}
+\contentsline {subsection}{\numberline {3.4}Execute Block}{6}
+\contentsline {subsection}{\numberline {3.5}Fetch Block}{6}
+\contentsline {subsection}{\numberline {3.6}ALU and Multiplier}{6}
+\contentsline {subsubsection}{\numberline {3.6.1}Shared Adder}{7}
+\contentsline {paragraph}{Sparse tree}{7}
+\contentsline {paragraph}{Sum generator}{7}
+\contentsline {subsubsection}{\numberline {3.6.2}Multiplier Logic}{7}
+\contentsline {subsubsection}{\numberline {3.6.3}Logic Unit}{9}
+\contentsline {subsubsection}{\numberline {3.6.4}Comparator}{9}
+\contentsline {subsubsection}{\numberline {3.6.5}Shifter}{10}
+\contentsline {paragraph}{00 :}{10}
+\contentsline {paragraph}{01 :}{10}
+\contentsline {paragraph}{10 :}{11}
+\contentsline {subsection}{\numberline {3.7}Memory Block}{11}
+\contentsline {subsection}{\numberline {3.8}Forwarding Logic}{11}
+\contentsline {paragraph}{DEC}{11}
+\contentsline {paragraph}{EXE}{11}
+\contentsline {paragraph}{MEM}{12}
+\contentsline {subsection}{\numberline {3.9}Control Unit}{12}
+\contentsline {subsection}{\numberline {3.10}Stall Logic}{14}
+\contentsline {subsection}{\numberline {3.11}Instruction and Data Memories}{14}
+\contentsline {section}{\numberline {4}Simulation and Test}{15}
+\contentsline {section}{\numberline {5}Synthesis}{15}
+\contentsline {section}{\numberline {6}Layout}{15}
+\contentsline {section}{\numberline {7}Conclusions}{16}
