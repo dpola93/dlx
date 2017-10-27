@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage[export]{adjustbox}
+\usepackage[section]{placeins}
 \setlength{\parindent}{0pt}
 \begin{document}
 \maketitle
@@ -64,8 +65,8 @@ An overview of the processor architecture is shown in FIGUREXXX
 In the next sections we are going to see in details each single component.
 
 \subsection{Fetch Block}
-\begin{figure}[ht!]
-	\includegraphics[center]{images/FETCH_BLOCK.eps}
+\begin{figure}[h!]
+	\includegraphics[width=\textwidth, center]{images/FETCH_BLOCK.eps}
 	\caption{FETCHBLOCK}
 	\label{FETCHBLOCK}
 \end{figure}
@@ -75,8 +76,8 @@ MUXTARGET computes the correct target pc, which is sent to the branch predictor 
 When misprediction signal is triggered, the current operation in the PC is fetched but not sent to decode stage, and it is replaced by the correct one on the successive clock cycle.
 
 \subsection{Branch Predictor}
-\begin{figure}[ht!]
-	\includegraphics[center]{images/BTB.eps}
+\begin{figure}[h!]
+	\includegraphics[width=\textwidth, center]{images/BTB.eps}
 	\caption{BTB}
 	\label{BTB}
 \end{figure}
@@ -91,7 +92,7 @@ Some information regarding the operations performed on the last clock cycle need
 
 \subsection{Decode Block}
 \begin{figure}[h!]
-	\includegraphics[center]{images/DECODE_BLOCK.eps}
+	\includegraphics[width=\textwidth, center]{images/DECODE_BLOCK.eps}
 	\caption{DECODEBLOCK}
 	\label{DECODEBLOCK}
 \end{figure}
@@ -107,7 +108,7 @@ In case of Jump operations with link ( JAL and JALR ) the immediate value is rep
 \subsection{Execute Block}
 \subsection{Fetch Block}
 \begin{figure}[ht!]
-	\includegraphics[center]{images/DLX_ALU.eps}
+	\includegraphics[width=\textwidth, center]{images/DLX_ALU.eps}
 	\caption{ALU}
 	\label{ALU}
 \end{figure}
@@ -205,7 +206,11 @@ This is due to the asynchronous behavior of latches and the possible race condit
 
 \subsubsection{Logic Unit}
 The DLX architecture supports only 3 type of logical operations: AND, OR, XOR. 
-
+\begin{figure}[h]
+	\includegraphics[center]{images/LOGIC_UNIT.eps}
+	\caption{LU}
+	\label{LU}
+\end{figure}
 Due to this simple behavior, we decided to avoid using particular logic unit schemes: the three operations are executed in parallel and then a multiplexer selects the correct one. 
 
 As can be see in the picture, the schematic is pretty straightforward.
@@ -248,27 +253,34 @@ Zero bit (Z) is computed through nor reduction of SUM, while the sign of SUM (N)
 There might be some redundancies in the design, we left possible optimizations to the synthesizer.
 
 \subsubsection{Shifter}
+\begin{figure}[h]
+	\includegraphics[width=\textwidth, center]{images/SHIFTER.eps}
+	\caption{SHIFTER}
+	\label{SHIFTER}
+\end{figure}
 The DLX-basic shift operations are: SLL, SRL, SRLI, SRA and SRAI, actually our hardware would be able to implement also the missing ones.
 Our implementation is based on the T2 coarse-grain shifter and is organized on three different blocks:
 \begin{itemize}
 	\item Level 1: this block produces three masks according to the selection signal (00, 01 or 10).
-	shifted by 0 (mask00), 8 (mask08) and 16 bits (mask16) each. Moreover, operand A is extended
+	shifted by 0 (mask0), 8 (mask8) and 16 bits (mask16) each. Moreover, operand IN1 is extended
 	to 39 bits.
 	\paragraph{00 :} the operand is shifted left replacing vacant positions with 0s and extended appending
 	7 0s to the right.
 	\paragraph{01 :} the operand is shifted right replacing vacant positions with 0s and extended appending
 	7 0s to the left.
 	\paragraph{10 :} the operand is shifted right with sign extension and extended replicating the sign bit.
-	\item Level 2: A multiplexer which has as selection signal bits 3 and 4 of operand B does the selection of one of the masks produced in the first block.
-	\item Level 3: The selection is done by the 3 LSBs of B. This last block computes a fine-grained shift which produces the final result by selecting the correct 32 bits among the 39 left.
-	Please note that the values of B are complemented in case of a right shift as we want an opposite behavior.
+	
+	\item Level 2: A multiplexer which has as selection signal bits 3 and 4 of operand IN2 does the selection of one of the masks produced in the first block.
+	\item Level 3: The selection is done by the 3 LSBs of IN2. This last block computes a fine-grained shift which produces the final result by selecting the correct 32 bits among the 39 left.
+	Please note that the values of IN2 are complemented in case of a right shift as we want an opposite behavior.
 \end{itemize}
 
 
 \subsection{Memory Block}
-NOTHING MUCH TO SAY: ADDRESS ALWAYS COMES FROM ALU, DATA ALWAYS FROM S
-MUX TO IGNORE MEMORY
-NOT ENABLED WHEN NOT NEEDED
+This block is responsible for all memory operations.
+Here we instantiate the data memory. It takes as input some data ( from S register ) and an address (from X register).
+
+A multiplexer is needed to select whether the value passed to the next stage is the one coming from the memory or a bypass of the X value.
 
 \subsection{Forwarding Logic}
 Forwarding Logic is the block responsible of managing forwarding in the pipeline. It is able to detect RAW hazards and control forwarding multiplexers in decode and execute stage.
@@ -289,64 +301,64 @@ When a signal needs to be used later in the execution, it is propagated trough a
 
 The CU is able to correctly generate and handle stall conditions due to hazards or multi cycle operations. In general, when a stage is stalled, the same goes fol the preceding stages in the pipeline, while the successive need to continue the execution. When a stage would be empty, a BUBBLE operation is inserted: a BUBBLE has the same control word as a NOP.
 \begin{itemize}
-	\item S\_MUX\_PC\_BUS - (1,2) : Control of PCMUX in the FETCH block
+	\item \textbf{S\_MUX\_PC\_BUS - (1,2)} : Control of PCMUX in the FETCH block
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
-		\item 00 - blalbb
-		\item 00 - blalbb
+		\item 00 - Register NPC4 
+		\item 01 - Value read from A
+		\item 10 - Calculated jump address
+		\item 11 - Either A or jump address depending on BRANCHMUX
 	\end{itemize}
-	\item S\_EXT - (3) : Control of EXTENDER lenght in DEC stage
+	\item \textbf{S\_EXT - (3)} : Control of EXTENDER lenght in DEC stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - 16-bit extension
+		\item 1 - 26-bit extension
 	\end{itemize}
-	\item S\_EXT\_SIGN - (4) : Control EXTENDER sign in DEC stage
+	\item \textbf{S\_EXT\_SIGN - (4)} : Control EXTENDER sign in DEC stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - Sign-extension 
+		\item 1 - Zero-extension
 	\end{itemize}
-	\item S\_EQ\_NEQ - (5) : Control of ZERO COMPARATOR in DEC stage
+	\item \textbf{S\_EQ\_NEQ - (5)} : Control of ZERO COMPARATOR in DEC stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - Output '1' when equal zero 
+		\item 1 - Output '0' when not equal zero
 	\end{itemize}
-	\item S\_MUX\_LINK - (6) : Control of LINK MUX in DEC stage
+	\item \textbf{S\_MUX\_LINK - (6)} : Control of LINK MUX in DEC stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - No link 
+		\item 1 - NPC4 is bypassed to B
 	\end{itemize}
-	\item S\_MUX\_ALUIN - (7) : Control of ALUMUX in EXE stage
+	\item \textbf{S\_MUX\_ALUIN - (7)} : Control of ALUMUX in EXE stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - IN2 taken from B register
+		\item 1 - IN2 taken from IMM register
 	\end{itemize}
-	\item S\_MUX\_DEST - (8,9) : Control of DESTMUX in EXE stage
+	\item \textbf{S\_MUX\_DEST - (8,9)} : Control of DESTMUX in EXE stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
-		\item 00 - blalbb
-		\item 00 - blalbb
+		\item 00 - Unused 
+		\item 01 - Destination take from rC
+		\item 10 - Destination taken from rB
+		\item 11 - Destination is R31
 	\end{itemize}
-	\item S\_MEM\_EN - (10) : Memory enable in MEM stage
+	\item \textbf{S\_MEM\_EN - (10)} : Memory enable in MEM stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - Disable Data Memory 
+		\item 1 - Enable Data Memory
 	\end{itemize}
-		\item S\_MEM\_W\_R - (11) : Memory control in MEM stage
+		\item \textbf{S\_MEM\_W\_R - (11)} : Memory control in MEM stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - Read 
+		\item 1 - Write
 	\end{itemize}
-	\item S\_MUX\_MEM - (12) : Control of MEMMUX in the MEM stage
+	\item\textbf{ S\_MUX\_MEM - (12)} : Control of MEMMUX in the MEM stage
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - X bypass
+		\item 1 - Value taken from memory ouput
 	\end{itemize}
-	\item S\_RF\_W - (13) : Write back enable in WB stage ( sent to write port of REGFILE)
+	\item \textbf{S\_RF\_W - (13)} : Write back enable in WB stage ( sent to write port of REGFILE)
 	\begin{itemize}
-		\item 00 - blalbb 
-		\item 00 - blalbb
+		\item 0 - Disable write back 
+		\item 1 - Enable write back
 	\end{itemize}
 	
 \end{itemize}
@@ -358,22 +370,27 @@ Stall logic is a sub block inside the control unit in charge to distribute stall
 
 The possible stall cases are:
 \begin{itemize}
-	\item DATA HAZARD: Branches and register jump operations that need a forwarding from the previous operations: In case of a simple ALU operation, dec and fetch are stalled for a single cycle, in case of a load operation both are astalled for 2 clock cycles.
-	\item DATA HAZARD: All I-TYPE and R-TYPE operations preceded by a load (LW) instruction requires a single cycle sstall in fetch and decode stages
-	\item STRUCTURAL HAZARD: CWhen a multi cycle operation (MULT or MULTU) is in process, both fetch and decode stages are stalled
-	\item CONTROL: After a misprediction, only dec stage is stalled  
+	\item \textbf{DATA HAZARD}: Branches and register jump operations that need a forwarding from the previous operations: In case of a simple ALU operation, dec and fetch are stalled for a single cycle, in case of a load operation both are astalled for 2 clock cycles
+	\item \textbf{DATA HAZARD}: All I-TYPE and R-TYPE operations preceded by a load (LW) instruction requires a single cycle sstall in fetch and decode stages
+	\item \textbf{STRUCTURAL HAZARD}: When a multi cycle operation (MULT or MULTU) is in process, both fetch and decode stages are stalled
+	\item \textbf{CONTROL}: After a misprediction, only dec stage is stalled  
 \end{itemize}
 
 \subsection{Instruction and Data Memories}
-INSTRUCTION AND DATA MEMORIES NOT PART OF THE DESIGN ITSELF, SIZE OF DMEM AND IMEM
+
 As previously stated, both memories are not part of the design itself.
-Imem is accessed during fetch operation, no enable port because we need to fetch an operation at each clock cycle.
-Dmem accesses during MEM stage. There is an enable signal and a W/R. both read and write are synchronous during the falling edge of the clock. to move it at the rising edge need to move the control signal before, so new values are ready at the clock edge.
+Also, we will see that our design library is not suitable to synthesize such type of components.
+
+For the previous reason, we did not put much effort on the memory design.
+
+\paragraph{Instruction Memory} Accessed during fetch operation. There is no enable port because we need to fetch an operation at each clock cycle. The memory is asynchronous.
+\paragraph{Data Memory} Accessed during MEM stage. There is an enable signal and a W/R. Both read and write operations are synchronous during the falling edge of the clock.
 
 
 \section{Simulation and Test}\label{Simulation}
 The simulation environment is composed as follows:
-A test bench file: tb\_top\_level instantiates the dlx together with the two memories and provides clock and reset signals to all the components.
+
+A test bench file {tb\_top\_level} instantiates the dlx together with the two memories and provides clock and reset signals to all the components.
 
 Then there is a compiler Perl/Bash script that takes as input a dlx assembly code and compiles it into a memory dump ready to be loaded by both memories.
 This script, which has been provided us have a bug: when two or more consecutive operations are exactly identical, only one is translated to binary code, while the other are simply empty lines.

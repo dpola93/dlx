@@ -9,29 +9,31 @@
 \contentsline {section}{\numberline {3}Design Architecture}{3}
 \contentsline {subsection}{\numberline {3.1}Fetch Block}{3}
 \contentsline {subsection}{\numberline {3.2}Branch Predictor}{5}
-\contentsline {subsection}{\numberline {3.3}Decode Block}{5}
+\contentsline {subsection}{\numberline {3.3}Decode Block}{6}
 \contentsline {subsection}{\numberline {3.4}Execute Block}{6}
 \contentsline {subsection}{\numberline {3.5}Fetch Block}{6}
-\contentsline {subsection}{\numberline {3.6}ALU and Multiplier}{6}
-\contentsline {subsubsection}{\numberline {3.6.1}Shared Adder}{7}
-\contentsline {paragraph}{Sparse tree}{7}
-\contentsline {paragraph}{Sum generator}{7}
-\contentsline {subsubsection}{\numberline {3.6.2}Multiplier Logic}{7}
-\contentsline {subsubsection}{\numberline {3.6.3}Logic Unit}{9}
-\contentsline {subsubsection}{\numberline {3.6.4}Comparator}{9}
-\contentsline {subsubsection}{\numberline {3.6.5}Shifter}{10}
-\contentsline {paragraph}{00 :}{10}
-\contentsline {paragraph}{01 :}{10}
-\contentsline {paragraph}{10 :}{11}
-\contentsline {subsection}{\numberline {3.7}Memory Block}{11}
-\contentsline {subsection}{\numberline {3.8}Forwarding Logic}{11}
-\contentsline {paragraph}{DEC}{11}
-\contentsline {paragraph}{EXE}{11}
-\contentsline {paragraph}{MEM}{12}
-\contentsline {subsection}{\numberline {3.9}Control Unit}{12}
-\contentsline {subsection}{\numberline {3.10}Stall Logic}{14}
-\contentsline {subsection}{\numberline {3.11}Instruction and Data Memories}{14}
-\contentsline {section}{\numberline {4}Simulation and Test}{15}
-\contentsline {section}{\numberline {5}Synthesis}{15}
-\contentsline {section}{\numberline {6}Layout}{15}
-\contentsline {section}{\numberline {7}Conclusions}{16}
+\contentsline {subsection}{\numberline {3.6}ALU and Multiplier}{9}
+\contentsline {subsubsection}{\numberline {3.6.1}Shared Adder}{9}
+\contentsline {paragraph}{Sparse tree}{9}
+\contentsline {paragraph}{Sum generator}{10}
+\contentsline {subsubsection}{\numberline {3.6.2}Multiplier Logic}{10}
+\contentsline {subsubsection}{\numberline {3.6.3}Logic Unit}{12}
+\contentsline {subsubsection}{\numberline {3.6.4}Comparator}{12}
+\contentsline {subsubsection}{\numberline {3.6.5}Shifter}{13}
+\contentsline {paragraph}{00 :}{13}
+\contentsline {paragraph}{01 :}{13}
+\contentsline {paragraph}{10 :}{14}
+\contentsline {subsection}{\numberline {3.7}Memory Block}{15}
+\contentsline {subsection}{\numberline {3.8}Forwarding Logic}{15}
+\contentsline {paragraph}{DEC}{15}
+\contentsline {paragraph}{EXE}{15}
+\contentsline {paragraph}{MEM}{15}
+\contentsline {subsection}{\numberline {3.9}Control Unit}{16}
+\contentsline {subsection}{\numberline {3.10}Stall Logic}{18}
+\contentsline {subsection}{\numberline {3.11}Instruction and Data Memories}{18}
+\contentsline {paragraph}{Instruction Memory}{18}
+\contentsline {paragraph}{Data Memory}{18}
+\contentsline {section}{\numberline {4}Simulation and Test}{18}
+\contentsline {section}{\numberline {5}Synthesis}{19}
+\contentsline {section}{\numberline {6}Layout}{19}
+\contentsline {section}{\numberline {7}Conclusions}{20}
