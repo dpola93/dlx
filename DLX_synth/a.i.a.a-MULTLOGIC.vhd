@@ -1,3 +1,5 @@
+-- MULTIPLIER LOGIC - structural
+
 library ieee; 
 USE ieee.std_logic_1164.all; 
 use ieee.numeric_std.all;
@@ -132,7 +134,6 @@ signal next_accumulate	: std_logic_vector(2*N-1 downto 0);
 signal triggered	: std_logic;
 
 begin
--- TODO: check if this is correct!
 last_bit <= sign and B(N-1);
 
 enc_0_in <= B(1 downto 0)&'0';
@@ -195,14 +196,17 @@ ACCUMULATOR: ff32_en generic map(
 	en	=> reg_enable,
 	clk	=> Clock,
 	rst	=> Reset);
-
+--on first clock cycle need to always enable accumulator
 reg_enable	<= input_mux_sel(2) or nor_reduce(std_logic_vector(count) xor "01001");
+
 A_to_add	<= accumulate;
 sign_to_add	<= input_mux_sel(1);
 
+--last output could be either from accumulator or directly from adder
 final_out <=	accumulate when input_mux_sel(2) = '0' else
 		ACC_from_add;
 
+--sequential process for count handling
 process(Reset,Clock)
 begin
 	if Reset = '1' then
@@ -219,14 +223,7 @@ begin
 	end if;
 end process;
 
---load	<=	'1' when count = 9 else
---		'0';
---
---next_accumulate <=	(others => '0') when count = 9 else
---			ACC_from_add;
---
---valid	<=	'1' when count = 0 else
---		'0';
+--combinatorial process for signals
 process(count,ACC_from_add)
 begin
 	if count = 0 then

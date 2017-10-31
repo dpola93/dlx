@@ -10,3 +10,6 @@ assembler/*.bin
 *.swp
 *.ini
 dlx.cr.mti
+top_level.sdf
+top_level.spf
+top_level.spef

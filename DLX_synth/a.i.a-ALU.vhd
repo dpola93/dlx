@@ -131,8 +131,10 @@ signal lu_out		: std_logic_vector(DATA_SIZE-1 downto 0);
 signal ALU_WORD_TEST	:std_logic_vector(12 downto 0);
 begin
 
+-- debug signal
 ALU_WORD_TEST <= out_mux_sel&left_right&logic_arith&sign_to_adder&lu_ctrl&comp_sel&enable_to_booth&sign_to_booth;
 
+-- signals from decode aluOP
 out_mux_sel	<= ALUW_i(12 downto 10);
 left_right	<= ALUW_i(9);
 logic_arith	<= ALUW_i(8);
@@ -142,6 +144,7 @@ comp_sel	<= ALUW_i(4 downto 2);
 enable_to_booth	<= ALUW_i(1);
 sign_to_booth	<= ALUW_i(0);
 
+--muxes to adder
 mux_A <=	IN1		when enable_to_booth = '0' else
 		A_booth_to_add	when enable_to_booth = '1' else
 		(others => 'X');
@@ -154,6 +157,7 @@ mux_sign <=	sign_to_adder		when enable_to_booth = '0' else
 		sign_booth_to_add	when enable_to_booth = '1' else
 		'X';
 
+--sign bit calculation
 sign_bit_to_comp <= IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1);
 
 MULT: simple_booth_add_ext 
@@ -228,12 +232,13 @@ LU:	logic_unit
 	OUT1	=> lu_out
 	);
 
-
+-- overflow bit calculation
 overflow <= (IN2(DATA_SIZE-1) xnor sum_out(DATA_SIZE-1)) and (IN1(DATA_SIZE-1) xor IN2(DATA_SIZE-1)); 
 
 -- stalling while booth is in process
 stall_o <= enable_to_booth and not(valid_from_booth);
 
+--output mux
 DOUT <= sum_out				when out_mux_sel = "000" else
 	lu_out				when out_mux_sel = "001" else
 	shift_out			when out_mux_sel = "010" else

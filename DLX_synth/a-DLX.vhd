@@ -1,3 +1,5 @@
+-- TOP LEVEL BLOCK
+
 library IEEE;
 
 use IEEE.std_logic_1164.all;
@@ -514,10 +516,6 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	Reset		=> rst
 	);
 
-
---	UDMEM : DRAM
---	generic map ( RAM_DEPTH => 4096, I_SIZE => 32)
---	Port Map (clock,rst,dummy_S_MEM_EN,dummy_S_MEM_W_R,S2wb,X2wb,L2wb);
 
 	DRAM_Enable_o	<= dummy_S_MEM_EN;
 	DRAM_WR_o	<= dummy_S_MEM_W_R;
