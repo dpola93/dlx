@@ -48,7 +48,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{10 :}{13}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6}Memory Block}{14}
+\contentsline {subsection}{\numberline {3.6}Memory Block}{15}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.7}Forwarding Logic}{15}
 \defcounter {refsection}{0}\relax 
@@ -58,9 +58,9 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{MEM}{15}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.8}Control Unit}{15}
+\contentsline {subsection}{\numberline {3.8}Control Unit}{16}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.9}Stall Logic}{17}
+\contentsline {subsection}{\numberline {3.9}Stall Logic}{18}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.10}Instruction and Data Memories}{18}
 \defcounter {refsection}{0}\relax 

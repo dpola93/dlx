@@ -72,9 +72,9 @@ Register file has 2 read port and one write port. Concurrent write and read on t
 \section{Design Architecture}\label{Design}
 As previously mentioned, the processor is described in VHDL. Most blocks are written in a structural approach up to very basic logic elements such as multiplexers, half adders, etc \ldots
 
-An overview of the processor architecture is shown in FIGUREXXX at the end of this document.
+An overview of the processor architecture is shown in Figure \ref{FULLDLX} at the end of this document.
 
-In the next sections we are going to see in details each single component.
+In the next sections we are going to see in detail each single component.
 
 \subsection{Fetch Block}
 \begin{figure}[h!]
@@ -174,13 +174,17 @@ Flipping of the bits is performed with a xor circuit placed at the input of the 
 \subsubsection{Multiplier Logic}
 As briefly introduced, Multiplication is performed by the shared P4 adder in an iterative way.
 The entire procedure is based on the Booth's multiplier. Instead of producing all the sums in parallel, we compute one each clock cycle.
+
 To avoid using 64 bits registers to store a 32x32 multiplication, only the lowest 16-bits of the two operands are considered.
 
 The flow is as follows:
-At the first clock cycle all the Booth's encoding is done and sent in a PISO register, also value of A is saved into a register able to left shift it's content of 2 every clock cycle (multiplying by 4). Accumulator register is cleaned and set to zero.
+\begin{itemize}
+	\item At the first clock cycle all the Booth's encoding is done and sent in a PISO register, also value of A is saved into a register able to left shift it's content of 2 every clock cycle (multiplying by 4). Accumulator register is cleaned and set to zero.
+	\item Then at each clock cycle the adder takes as input the correctly shifted input value and the result of the previous addition stored in the accumulator register. When a subtraction needs to be performed, the carry input of the adder is set to '1'.
+	\item To have both signed and unsigned multiplication, a correction stage needs to be performed at the end, as can be seen in Figure \ref{ALU}, the last encoder takes this into account.
+	
+\end{itemize}
 
-Then at each clock cycle the adder takes as input the correctly shifted input value and the result of the previous addition stored in the accumulator register. When a subtraction needs to be performed, the carry input of the adder is set to '1'.
-To have both signed and unsigned multiplication, a correction stage needs to be performed at the end, as can be seen in the picture, the last encoder takes this into account.
 
 Please also note that a little modification to the booth encoding pattern has been made in order to have a direct mapping between bits and function. Have a look at Table \ref{BOOTHENC}.
 \begin{table}
@@ -202,6 +206,7 @@ Please also note that a little modification to the booth encoding pattern has be
 	\label{BOOTHENC}
 \end{center}
 \end{table}
+
 
 Bit explanation (MSB to LSB):
 \begin{itemize}
@@ -228,7 +233,7 @@ The DLX architecture supports only 3 type of logical operations: AND, OR, XOR.
 \end{figure}
 Due to this simple behavior, we decided to avoid using particular logic unit schemes: the three operations are executed in parallel and then a multiplexer selects the correct one. 
 
-As can be see in the picture, the schematic is pretty straightforward.
+As can be see in Figure \ref{LU}, the schematic is pretty straightforward.
 
 
 \subsubsection{Comparator}
@@ -248,7 +253,7 @@ Which basically mean that an overflow is triggered when subtrahend and result ha
 Zero bit (Z) is computed through nor reduction of SUM, while the sign of SUM (N) is simply the most significant bit.
 \begin{table}
 \begin{center}
-	\begin{tabular}{ | l | l | l |}
+	\begin{tabular}{ | c | l | l |}
 		\hline
 		\rowcolor{LimeGreen} OP & Description & Flags tested \\ \hline
 		SEQ & Equal & Z \\ \hline
@@ -302,7 +307,7 @@ A multiplexer is needed to select whether the value passed to the next stage is 
 \subsection{Forwarding Logic}
 FW\_LOGIC is the block responsible of managing forwarding in the pipeline. It is able to detect RAW hazards and control forwarding multiplexers in decode and execute stage.
 
-The computation is pretty simple, for each operation in EXE,MEM and WB stage we save whether is going to write in the register file (S\_WB) and the destination register.
+The computation is pretty simple, for each operation in EXE, MEM and WB stage we save whether it is going to write in the register file (S\_WB) and the destination register.
 
 Possible Forwarding paths:
 \paragraph{DEC} Branches and register jump operations (JR,JALR,BNEQ,BEQZ) require the value of A in the decode stage. There are two paths, one from X register (Just after EXE stage), and from W register (Just after MEM stage). IR(26 downto 21 is) in compared with D2 and D3 to decide if forwarding is needed or not.
@@ -372,7 +377,7 @@ The CU is able to correctly generate and handle stall conditions due to hazards 
 		\item 0 - X bypass
 		\item 1 - Value taken from memory ouput
 	\end{itemize}
-	\item \textbf{S\_RF\_W - (13)} : Write back enable in WB stage ( sent to write port of REGFILE)
+	\item \textbf{S\_RF\_W - (13)} : Write back enable in WB stage (sent to write port of Register File)
 	\begin{itemize}
 		\item 0 - Disable write back 
 		\item 1 - Enable write back
@@ -415,7 +420,8 @@ This script, which has been provided us have a bug: when two or more consecutive
 We have also created a wave generation script (WAVE\_BASIC.do) to be loaded directly into vsim that select the basic waveforms to be visualized.
 
 Testing an entire processor is not an easy task, due to the very large possible combinations of instructions.
-On the very early stages of the design, testing was mainly done block by block in a bottom up fashion. for example, for the ALU, first we tested each single component such as adder and shifter, then we integrated them one at a time and checked it.
+On the very early stages of the design, testing was mainly done block by block in a bottom up fashion.
+For example, for the ALU, first we tested each single component such as adder and shifter, then we integrated them one at a time and checked it.
 
 This approach has been used until we reached the simulation of the entire DLX block.
 
@@ -442,14 +448,15 @@ Because of this of this strategy we decided to:
 \end{itemize}
 
 The final TCL synthesis script can be found in the project folder. After some trial and error, we found a good way to have the best results from the tool.
-Execute block is characterized and synthesized alone because we think it is the critical zone in the design, both in execution and decode stages. 
-The minimum required time for this block can be pushed down to 1.05ns, but we left some margin and set it to 1.2ns
-Done with the execute block, we set it as don't touch and proceed to compile the entire processor.
-Again, we set a safe minimum clock period to 1.6 ns (625 MHz clock frequency).
 
-It's interesting to see from the final reports that the critical path does not flow through the ALU, instead it goes in the decode stage and after in the branch predictor.
+Execute block is characterized and synthesized alone because we think it is the critical zone in the design, both in execution and decode stages. 
+The minimum required time for this block can be pushed down to 1.05ns, but we left some margin and set it to 1.3ns
+
+Done with the execute block, we set it as don't touch and proceed to compile the entire processor.
+Again, we set a safe minimum clock period to 1.7 ns (588 MHz clock frequency).
 
 All the compile commands are done with compile\_ultra command and the -no\_autoungroup parameter. The no\_autoungroup gives a little worse results but at least preserves information regarding critical paths.
+
 compile\_ultra is also able to do some smart optimizations such as cutting the adder in the decode stage from 32 to 26 bits and complement some signals to have a better mapping results.
 
 \subsection{Power Optimization}
@@ -458,7 +465,7 @@ We decided to evaluate the impact of clock gating technique on our design. To do
 \begin{lstlisting}
 elaborate TOP_LEVEL -architecture ARCH -library DEFAULT
 set_clock_gating_style -sequential latch
-create_clock -name "clk" -period 1.6 clock
+create_clock -name "clk" -period 1.7 clock
 insert_clock_gating
 propagate_constraints -gate_clock
 compile_ultra -no_autoungroup
@@ -474,8 +481,8 @@ This reduced the overall dynamic power consumption by approximately 27\% as show
 	\begin{tabular}{ | c | c | c | c |}
 		\hline
 		\rowcolor{LimeGreen}Design &Total Dynamic Power [mW]\\ \hline
-		clk@1.6ns & 12.0339 \\ \hline
-		clk@1.6ns clock\_gating & 8.7435 \\ \hline
+		clk@1.7ns & 12.0339 \\ \hline
+		clk@1.7ns clock\_gating & 8.7435 \\ \hline
 	\end{tabular}
 		\caption{DLX - Clock Gating Power Reduction Evaluation}
 		\label{POWERTABLE}
@@ -497,15 +504,12 @@ It's also interesting to see the trade-off curve while changing the maximum cloc
 	\caption{DLX - Post Place\&Route Schematic from Encounter}
 	\label{FLORPLANR}
 \end{figure}
-Finally as our last step, Physical design of the entire processor has been done. We followed the same procedure as the one described in the laboratory instruction, because we don't know the Encounter tool very well.
+Finally as our last step, Physical design of the entire processor has been done. We followed the same procedure as the one described in the laboratory instruction because we don't know the Encounter tool very well.
 
-We decided to do the Floorplanning only for the non-clock-gated design with clock period of 1.6 ns.
+We decided to do the Floorplanning only for the non-clock-gated design with clock period of 1.7 ns.
+Actually at the beginning we tried with the clock-gated one but it gives problem during the clock synthesis process.
 
-Due to the large size of the design, some processes took a lot of time, for example Clock Tree Synthesis and Cell Placement.
-
-At the end we printed all the reports, luckily our design show no geometry or connectivity violations.
-Only some hold timing violations appear to be present.
-
+At the end we printed all the reports, unfortunately our design show some connectivity violations.
 
 Among all the reports, we extracted some values regarding gate count and area:
 \begin{table}
@@ -539,7 +543,7 @@ Also it would be interesting to see some numbers regarding the branch predictor,
 	\begin{figure}[!ht]
 		\includegraphics[height=1\textheight,center]{images/SCHEME_DLX_FW.eps}
 		\caption{DLX - Full Datapath Scheme}
-		\label{PPA}
+		\label{FULLDLX}
 	\end{figure}
 	\end{landscape}
 

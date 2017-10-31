@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.23)  31 OCT 2017 14:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.23)  31 OCT 2017 20:53
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -461,11 +461,7 @@ File: english.lbx 2015/10/21 v3.1 biblatex localization (PK/JW/AB)
 \@quotelevel=\count285
 \@quotereset=\count286
 
-(./document.aux
-
-LaTeX Warning: Label `PPA' multiply defined.
-
-)
+(./document.aux)
 \openout1 = `document.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
@@ -480,7 +476,8 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
 LaTeX Font Info:    ... okay on input line 23.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
 LaTeX Font Info:    ... okay on input line 23.
- (/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
+
+(/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count287
 \scratchdimen=\dimen121
@@ -588,23 +585,23 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [4 <./images/FETCH_BLOCK-eps-converted-to.pdf>] [5 <./images/BTB-eps-converted-
 to.pdf>]
 Package epstopdf Info: Source file: <images/DECODE_BLOCK.eps>
-(epstopdf)                    date: 2017-10-21 01:12:59
-(epstopdf)                    size: 16696 bytes
+(epstopdf)                    date: 2017-10-31 20:10:02
+(epstopdf)                    size: 18371 bytes
 (epstopdf)             Output file: <images/DECODE_BLOCK-eps-converted-to.pdf>
-(epstopdf)                    date: 2017-10-21 01:13:44
-(epstopdf)                    size: 8671 bytes
+(epstopdf)                    date: 2017-10-31 20:10:09
+(epstopdf)                    size: 9258 bytes
 (epstopdf)             Command: <epstopdf --outfile=images/DECODE_BLOCK-eps-con
 verted-to.pdf images/DECODE_BLOCK.eps>
 (epstopdf)             \includegraphics on input line 107.
 Package epstopdf Info: Output file is already uptodate.
 
-<images/DECODE_BLOCK-eps-converted-to.pdf, id=37, 539.01375pt x 485.815pt>
+<images/DECODE_BLOCK-eps-converted-to.pdf, id=37, 521.95pt x 496.85625pt>
 File: images/DECODE_BLOCK-eps-converted-to.pdf Graphic file (type pdf)
 
 <use images/DECODE_BLOCK-eps-converted-to.pdf>
 Package pdftex.def Info: images/DECODE_BLOCK-eps-converted-to.pdf used on input
  line 107.
-(pdftex.def)             Requested size: 390.0pt x 351.51375pt.
+(pdftex.def)             Requested size: 390.0pt x 371.25386pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -641,25 +638,26 @@ Package epstopdf Info: Source file: <images/LOGIC_UNIT.eps>
 (epstopdf)                    size: 5381 bytes
 (epstopdf)             Command: <epstopdf --outfile=images/LOGIC_UNIT-eps-conve
 rted-to.pdf images/LOGIC_UNIT.eps>
-(epstopdf)             \includegraphics on input line 225.
+(epstopdf)             \includegraphics on input line 230.
 Package epstopdf Info: Output file is already uptodate.
  <images/LOGIC_UNIT-eps-converted-to.pdf, id=66, 200.75pt x 176.66pt>
 File: images/LOGIC_UNIT-eps-converted-to.pdf Graphic file (type pdf)
 
 <use images/LOGIC_UNIT-eps-converted-to.pdf>
 Package pdftex.def Info: images/LOGIC_UNIT-eps-converted-to.pdf used on input l
-ine 225.
+ine 230.
 (pdftex.def)             Requested size: 200.7495pt x 176.65956pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [11]
-Overfull \hbox (7.29747pt too wide) in paragraph at lines 245--247
+Overfull \hbox (7.29747pt too wide) in paragraph at lines 250--252
 \T1/cmr/m/n/12 Overflow bit is com-puted out-side of the com-para-tor as (IN2(3
 1) xnor SUM(31))
  []
 
+[12 <./images/LOGIC_UNIT-eps-converted-to.pdf>]
 Package epstopdf Info: Source file: <images/SHIFTER.eps>
 (epstopdf)                    date: 2017-10-27 14:13:35
 (epstopdf)                    size: 12542 bytes
@@ -668,18 +666,18 @@ Package epstopdf Info: Source file: <images/SHIFTER.eps>
 (epstopdf)                    size: 6807 bytes
 (epstopdf)             Command: <epstopdf --outfile=images/SHIFTER-eps-converte
 d-to.pdf images/SHIFTER.eps>
-(epstopdf)             \includegraphics on input line 274.
+(epstopdf)             \includegraphics on input line 279.
 Package epstopdf Info: Output file is already uptodate.
-<images/SHIFTER-eps-converted-to.pdf, id=70, 571.13374pt x 488.82625pt>
+
+<images/SHIFTER-eps-converted-to.pdf, id=80, 571.13374pt x 488.82625pt>
 File: images/SHIFTER-eps-converted-to.pdf Graphic file (type pdf)
 
 <use images/SHIFTER-eps-converted-to.pdf>
 Package pdftex.def Info: images/SHIFTER-eps-converted-to.pdf used on input line
- 274.
+ 279.
 (pdftex.def)             Requested size: 390.0pt x 333.79971pt.
- [12 <./images/LOGIC_UNIT-eps-converted-to.pdf>] [13] [14 <./images/SHIFTER-eps
--converted-to.pdf>] [15] [16] [17]
-[18] [19] [20]
+ [13] [14 <./images/SHIFTER-eps-converted-to.pdf>] [15] [16] [17] [18] [19] [20
+]
 Package epstopdf Info: Source file: <images/PPA.eps>
 (epstopdf)                    date: 2017-10-30 15:48:45
 (epstopdf)                    size: 21601 bytes
@@ -688,14 +686,14 @@ Package epstopdf Info: Source file: <images/PPA.eps>
 (epstopdf)                    size: 10649 bytes
 (epstopdf)             Command: <epstopdf --outfile=images/PPA-eps-converted-to
 .pdf images/PPA.eps>
-(epstopdf)             \includegraphics on input line 488.
+(epstopdf)             \includegraphics on input line 495.
 Package epstopdf Info: Output file is already uptodate.
 
 <images/PPA-eps-converted-to.pdf, id=112, 429.605pt x 339.2675pt>
 File: images/PPA-eps-converted-to.pdf Graphic file (type pdf)
 
 <use images/PPA-eps-converted-to.pdf>
-Package pdftex.def Info: images/PPA-eps-converted-to.pdf used on input line 488
+Package pdftex.def Info: images/PPA-eps-converted-to.pdf used on input line 495
 .
 (pdftex.def)             Requested size: 312.00119pt x 246.3949pt.
  [21]
@@ -703,11 +701,11 @@ Package pdftex.def Info: images/PPA-eps-converted-to.pdf used on input line 488
 File: images/dlx-floorplan.jpg Graphic file (type jpg)
 
 <use images/dlx-floorplan.jpg>
-Package pdftex.def Info: images/dlx-floorplan.jpg used on input line 496.
+Package pdftex.def Info: images/dlx-floorplan.jpg used on input line 503.
 (pdftex.def)             Requested size: 312.00119pt x 302.62326pt.
  [22 <./images/PPA-eps-converted-to.pdf>]
 [23 <./images/dlx-floorplan.jpg>]
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 536.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 540.
 
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/t1cmtt.fd
@@ -724,32 +722,29 @@ Package epstopdf Info: Source file: <images/SCHEME_DLX_FW.eps>
 (epstopdf)                    size: 14128 bytes
 (epstopdf)             Command: <epstopdf --outfile=images/SCHEME_DLX_FW-eps-co
 nverted-to.pdf images/SCHEME_DLX_FW.eps>
-(epstopdf)             \includegraphics on input line 540.
+(epstopdf)             \includegraphics on input line 544.
 Package epstopdf Info: Output file is already uptodate.
 
 <images/SCHEME_DLX_FW-eps-converted-to.pdf, id=138, 1909.1325pt x 1018.80624pt>
 File: images/SCHEME_DLX_FW-eps-converted-to.pdf Graphic file (type pdf)
 <use images/SCHEME_DLX_FW-eps-converted-to.pdf>
 Package pdftex.def Info: images/SCHEME_DLX_FW-eps-converted-to.pdf used on inpu
-t line 540.
+t line 544.
 (pdftex.def)             Requested size: 730.80887pt x 390.0pt.
 
 
-LaTeX Warning: Float too large for page by 26.83276pt on input line 543.
+LaTeX Warning: Float too large for page by 26.83276pt on input line 547.
 
 [25 <./images/SCHEME_DLX_FW-eps-converted-to.pdf>] (./document.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package logreq Info: Writing requests to 'document.run.xml'.
 \openout1 = `document.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 9798 strings out of 493054
- 160292 string characters out of 6134765
- 596589 words of memory out of 5000000
- 13166 multiletter control sequences out of 15000+600000
+ 9799 strings out of 493054
+ 160301 string characters out of 6134765
+ 597559 words of memory out of 5000000
+ 13167 multiletter control sequences out of 15000+600000
  14361 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  42i,11n,48p,825b,966s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -767,7 +762,7 @@ ve/2015/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive
 /2015/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2
 015/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/201
 5/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on document.pdf (25 pages, 1259263 bytes).
+Output written on document.pdf (25 pages, 1259558 bytes).
 PDF statistics:
  192 PDF objects out of 1000 (max. 8388607)
  132 compressed objects within 2 object streams
