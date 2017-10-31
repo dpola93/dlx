@@ -21,13 +21,14 @@ component rca
    Co:	Out	std_logic);
 end component;
 
-component MUX21_GENERIC
+component mux21
    generic (
-      N : integer := 4);
-	Port (	A:	In	std_logic_vector(N-1 downto 0);
-		B:	In	std_logic_vector(N-1 downto 0);
-		S:	In	std_logic;
-		Y:	Out	std_logic_vector(N-1 downto 0));
+      SIZE : integer
+	);
+	Port (	IN0:	In	std_logic_vector(N-1 downto 0);
+		IN1:	In	std_logic_vector(N-1 downto 0);
+		CTRL:	In	std_logic;
+		OUT1:	Out	std_logic_vector(N-1 downto 0));
 end component;
 
 constant zero : std_logic := '0';
@@ -43,11 +44,13 @@ begin
 rca_nocarry : rca
    generic map (N => N) 
    port map (A,B,zero,nocarry_sum_to_mux,nocarry_carry_out); 
+
 rca_carry : rca
    generic map (N => N) 
    port map (A,B,one,carry_sum_to_mux,carry_carry_out);
-outmux : MUX21_GENERIC
-   generic map (N => N) 
+
+outmux : mux21
+   generic map (SIZE => N) 
    port map (nocarry_sum_to_mux,carry_sum_to_mux,Ci,S);
        
        

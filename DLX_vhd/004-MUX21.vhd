@@ -25,7 +25,7 @@ begin
 	case CTRL is
 		when '0'	=> OUT1 <= IN0;
 		when '1'	=> OUT1 <= IN1;
-		when others	=> OUT1 <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"; -- should never appear
+		when others	=> OUT1 <= (others => 'X'); -- should never appear
 	end case;
 	end process;
 end Bhe;

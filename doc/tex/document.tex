@@ -300,12 +300,12 @@ Here we instantiate the data memory. It takes as input some data (from S registe
 A multiplexer is needed to select whether the value passed to the next stage is the one coming from the memory or a bypass of the X value.
 
 \subsection{Forwarding Logic}
-Forwarding Logic is the block responsible of managing forwarding in the pipeline. It is able to detect RAW hazards and control forwarding multiplexers in decode and execute stage.
+FW\_LOGIC is the block responsible of managing forwarding in the pipeline. It is able to detect RAW hazards and control forwarding multiplexers in decode and execute stage.
 
 The computation is pretty simple, for each operation in EXE,MEM and WB stage we save whether is going to write in the register file (S\_WB) and the destination register.
 
 Possible Forwarding paths:
-\paragraph{DEC} Branches and register jump operations ( JR,JALR,BNEQ,BEQZ ) require the value of A in the decode stage. There are two paths, one from X register (Just after EXE stage), and from W register (Just after MEM stage). IR(26 downto 21 is) in compared with D2 and D3 to decide if forwarding is needed or not.
+\paragraph{DEC} Branches and register jump operations (JR,JALR,BNEQ,BEQZ) require the value of A in the decode stage. There are two paths, one from X register (Just after EXE stage), and from W register (Just after MEM stage). IR(26 downto 21 is) in compared with D2 and D3 to decide if forwarding is needed or not.
 \paragraph{EXE} Most R-TYPE and I-TYPE operations in the EXE stage. again we have two possible paths one from X reg and the other from W. I-TYPE operations require forwarding only for the A operand, thus only rA is compared, while R-TYPE require both operands so rB is compared too.
 \paragraph{MEM} A forwarding path in the MEM stage does not actually exist in our design because there is only one condition suitable from this purpose: when a store (SW) needs a register that is going to be written from a load (LW) in the previous clock cycle.
 We don't think this single case justifies a specific forwarding logic, so we avoided it. Please note that in any case the data taken is correct due to stall.

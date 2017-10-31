@@ -1,7 +1,4 @@
 -- real_alu.vhd
--- TODO: ADD MUXES AND NOT BLOCK
--- MAKE THIS AS STRUCTURAL AS POSSIBLE
--- THINK ABOUT A KIND OF CU TO GENERATE CONTROL SIGNALS
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -190,26 +187,28 @@ ADDER: p4add
 	Cout	=> carry_from_adder
 	);
 
--- COMP: comparator
+ COMP: comparator
+ 	generic map ( M => DATA_SIZE)
+ 	port map (
+ 	C	=> carry_from_adder,
+ 	V	=> overflow,
+ 	SUM	=> sum_out,
+ 	sel	=> comp_sel,
+ 	sign	=> sign_to_booth,
+ 	S	=> comp_out
+ );
+
+
+-- NO MORE USED, IMPROVES SPEED, INCREASES AREA
+-- BHE_COMP: bhe_comparator
 -- 	generic map ( M => DATA_SIZE)
 -- 	port map (
--- 	C	=> carry_from_adder,
--- 	V	=> overflow,
--- 	SUM	=> sum_out,
+-- 	A	=> IN1,
+-- 	B	=> IN2,
 -- 	sel	=> comp_sel,
--- 	sign	=> sign_to_booth, --TODO: check if can use this signal, maybe rename it to avoid confusion
+-- 	sign	=> sign_to_booth,
 -- 	S	=> comp_out
--- );
-
-BHE_COMP: bhe_comparator
-	generic map ( M => DATA_SIZE)
-	port map (
-	A	=> IN1,
-	B	=> IN2,
-	sel	=> comp_sel,
-	sign	=> sign_to_booth,
-	S	=> comp_out
-	);
+-- 	);
 
 SHIFT:	shifter
 	port map(
@@ -235,7 +234,6 @@ overflow <= (IN2(DATA_SIZE-1) xnor sum_out(DATA_SIZE-1)) and (IN1(DATA_SIZE-1) x
 -- stalling while booth is in process
 stall_o <= enable_to_booth and not(valid_from_booth);
 
--- TODO: MISSING A FORWARDING ON STORE REG FIX THAT ADDING A FW TO S
 DOUT <= sum_out				when out_mux_sel = "000" else
 	lu_out				when out_mux_sel = "001" else
 	shift_out			when out_mux_sel = "010" else
@@ -243,129 +241,6 @@ DOUT <= sum_out				when out_mux_sel = "000" else
 	IN2 				when out_mux_sel = "100" else
 	mult_out			when out_mux_sel = "101" else
 	(others => 'X');
-
--- combinatorial process used to send the right data to components
--- process(IN1,IN2,OP)
--- begin
---  case OP is
---   -- when NOP we do a random LU operation, maybe change this into something smarter??
---   when NOP  =>
--- 		out_mux_sel <= "100";
--- 		sign_to_booth <= '0'; -- useless but avoids errors on simulation
--- 
---   when SLLS =>
--- 		out_mux_sel <= "010";
--- 		left_right <= '0';
--- 		logic_arith <= '0';
---  
---   when SRLS =>
--- 		out_mux_sel <= "010";
--- 		left_right <= '1';
--- 		logic_arith <= '0';
---  
---   when SRAS =>
--- 		out_mux_sel <= "010";
--- 		left_right <= '1';
--- 		logic_arith <= '1';
---  
---   when ADDS =>
--- 		sign_to_adder <= '0';
--- 		out_mux_sel <= "000";
---  
---   when ADDUS =>
--- 		sign_to_adder <= '0';
--- 		out_mux_sel <= "000";
--- 
---   when SUBS =>		
--- 		sign_to_adder <= '1';
--- 		out_mux_sel <= "000";
--- 
---   when SUBUS =>
--- 		sign_to_adder <= '1';
--- 		out_mux_sel <= "000";
--- 
---   when ANDS =>
--- 		lu_ctrl	<= "00";
--- 		out_mux_sel <= "001";
--- 
---   when ORS =>
--- 		lu_ctrl	<= "01";
--- 		out_mux_sel <= "001";
---   when XORS =>
--- 		lu_ctrl	<= "10";
--- 		out_mux_sel <= "001";
--- 
---   when SEQS =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "100";
--- 		out_mux_sel <= "011";
--- 
---   when SNES =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "101";
--- 		out_mux_sel <= "011";
--- 
---   when SLTS =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "010";
--- 		out_mux_sel <= "011";
--- 
---   when SGTS =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "000";
--- 		out_mux_sel <= "011";
--- 
---   when SLES =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "011";
--- 		out_mux_sel <= "011";
--- 
---   when SGES =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "001";
--- 		out_mux_sel <= "011";
--- 
--- --  UNIMPLEMENTED OPS
--- --  when MOVI2SS => DOUT <= (others => '0');
--- --  when MOVS2IS => DOUT <= (others => '0');
--- --  when MOVFS => DOUT <= (others => '0');
--- --  when MOVDS => DOUT <= (others => '0');
--- --  when MOVFP2IS => DOUT <= (others => '0');
--- --  when MOVI2FP => DOUT <= (others => '0');
--- --  when MOVI2TS => DOUT <= (others => '0');
--- --  when MOVT2IS => DOUT <= (others => '0');
---   when SLTUS =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "010";
--- 		out_mux_sel <= "011";
--- 
---   when SGTUS =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "000";
--- 		out_mux_sel <= "011";
--- 
---   when SLEUS =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "011";
--- 		out_mux_sel <= "011";
--- 
---   when SGEUS =>
--- 		sign_to_adder <= '1';
--- 		comp_sel <= "001";
--- 		out_mux_sel <= "011";
--- 
---   when MULTU =>
--- 		out_mux_sel <= "101";
--- 		sign_to_booth <= '0';
--- 
---   when MULTS =>
--- 		out_mux_sel <= "101";
--- 		sign_to_booth <= '1';
--- 
---   when others => out_mux_sel <= "000";
---  end case;
--- end process;
-
 
 end bhe;
 

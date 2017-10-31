@@ -8,3 +8,5 @@ assembler/*.dump
 assembler/*.txt
 assembler/*.bin
 *.swp
+*.ini
+dlx.cr.mti
