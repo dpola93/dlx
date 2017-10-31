@@ -21,11 +21,49 @@
 	xleftmargin=.25in} 
 
 \begin{document}
-\maketitle
-\tableofcontents
+\begin{titlepage}
+	\centerline{
+		\includegraphics[width=3cm]{images/logopoli.eps}} 
+	\vspace{0.5cm}
+	\centerline{\LARGE Politecnico di Torino}
+	\vspace{1.5cm}
+	\centerline{\huge\sf Microelectronic Systems}
+	\vspace{1cm}
+	\centerline{\Huge\sf DLX Microprocessor: Design \& Development}
+	\bigskip
+	\centerline{\huge\sf Final Project Report}
+	\vspace{2cm}
+	\centerline{\Large Master degree in Electronics Engineering}
+	\bigskip
+	\centerline{\Large Master degree in Computer Engineering}
+	\vspace{1.5cm}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%
+	\centerline{\large Referents: Prof. Mariagrazia Graziano, Giovanna Turvani}
+	\vspace{0.75cm}
+	%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% GROUP
+	% Change the name of your group below
+	%
+	\centerline{\large Author:}
+	\bigskip
+	%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% AUTHORS
+	% Change the name of the Group participants here
+	%
+	\centerline{\large Davide Pola}
+	%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\vspace{2cm}
+	\centerline{\large \today}
+\end{titlepage}
 
+\tableofcontents
+\newpage
 \section{Introduction}
-The goal of this project is to implement an RTL completely functional DLX processor in VHDL, simulate it and then proceed with the design flow with synthesis and layout phases.
+The goal of this project is to implement a completely functional RTL DLX processor in VHDL, simulate it and then proceed with the design flow with synthesis and layout phases.
 
 DLX processor architecture was designed by John L. Hennessy and David A. Patterson\cite{Patterson:1990:CAQ:77493} and very well described and documented all over the internet.
 
@@ -37,9 +75,13 @@ This project is developed for the course Microelectronic Systems taught by Prof.
 The remainder of this article is organized as follows:
  
 I will first give a brief overview of the DLX architecture and my personal implementation in Section~\ref{Overview}.
+
 In Section~\ref{Design} will go into details regarding particular aspects of the datapath and control unit.
+
 Section~\ref{Synthesis} and~\ref{Layout} are about the environment and results of design and layout phases.
+
 Finally, Section~\ref{Conclusions} gives the conclusions and possible future work.
+
 
 \section{Implmentation Overview}\label{Overview}
 DLX is a classic 5-stage pipelined processor, with fixed length instructions and in-order execution.
@@ -49,11 +91,11 @@ In this version, all I-TYPE and R-TYPE operations have been implemented with the
 
 The only F-TYPE instructions implemented are MULT and MULTU, but they operate on integer register instead of floating point ones.
 
-During normal conditions, all operations take exactly 5 cycles to execute, with the exception of multiplications, which require a fixed amount of 14 cycles (10 cycles are spent in the execute stage) and they're not pipelineable.
+During normal conditions, all operations take exactly 5 cycles to execute, with the exception of multiplications, which require a fixed amount of 14 cycles (10 cycles are spent in the execute stage) and they are not pipelineable.
 
 \paragraph{Jump and branch}
-Jump and Branch instructions target address is aggressively evaluated in the decode stage in order to have less cc penalty.
-In addition to this, a 2-bit predictor scheme has been implemented. This will be discussed more in the next section.
+Jump and Branch instructions target address is aggressively evaluated in the decode stage in order to have less clock cycles penalty.
+In addition to this, a 2-bit branch predictor scheme has been implemented. This will be discussed more in the next section.
 
 \paragraph{Control logic}
 The execution is regulated by an hardwired CU, in charge of producing control words for each stage of the pipeline, as well as stall signals to stop the execution when needed.
@@ -167,7 +209,7 @@ As a consequence, the delay due to carry propagation is strongly minimized.
 In order to perform subtractions, a little modification has been applied. From basic computer arithmetic we know that subtracting is the same as doing an addition with the second operand being 2's complemented.
 
 2's complement involves doing a not of the entire number and adding 1.
-Flipping of the bits is performed with a xor circuit placed at the input of the second operand, while the 1 addition is done trough the carry input. ( carry input would never been used in this specific architecture ). 
+Flipping of the bits is performed with a xor circuit placed at the input of the second operand, while the 1 addition is done trough the carry input. (carry input would never been used in this architecture). 
 
 
 
@@ -217,7 +259,7 @@ Bit explanation (MSB to LSB):
 
 This design is able to reduce critical paths flowing to a standard parallel multiplier and save area as well at the cost of a multi cycle operation. 
 
-We put a lot of effort into optimization for this part of the design. The first image shows the initial design, while the latter the final version. Please also consider that we decided to move from 9 to 10 cycles to reduce the critical path.
+We put a lot of effort into optimization for this part of the design. Please also consider that we decided to move from 9 to 10 cycles to reduce the critical path.
 A possible future improvement could be to pipeline the Booth Encoder block too to save area.
 
 We have thought a lot of possible ideas to improve this design from a power-reduction point of view. Unfortunately, most of the possible improvements require latches, and these kind of components are not simple to handle, both for simulation and synthesis aspect.
@@ -247,8 +289,8 @@ For a comparison the required signals are:
 	\item overflow bit (V)
 	\item sign
 \end{itemize}
-Overflow bit is computed outside of the comparator as (IN2(31) xnor SUM(31)) and (IN1 xor IN2).
-Which basically mean that an overflow is triggered when subtrahend and result have the same sign when minuend and subtrahend have different sign.
+Overflow bit is computed outside of the comparator as (IN2(31) xnor SUM(31)) and (IN1 xor IN2),
+which basically mean that an overflow is triggered when subtrahend and result have the same sign when minuend and subtrahend have different sign.
 
 Zero bit (Z) is computed through nor reduction of SUM, while the sign of SUM (N) is simply the most significant bit.
 \begin{table}
@@ -418,7 +460,7 @@ Then there is a compiler Perl/Bash script that takes as input a DLX assembly cod
 This script, which has been provided us have a bug: when two or more consecutive operations are exactly identical, only one is translated to binary code, while the other are simply empty lines.
 
 We have also created a wave generation script (WAVE\_BASIC.do) to be loaded directly into vsim that select the basic waveforms to be visualized.
-
+\paragraph{Simulation Strategy}
 Testing an entire processor is not an easy task, due to the very large possible combinations of instructions.
 On the very early stages of the design, testing was mainly done block by block in a bottom up fashion.
 For example, for the ALU, first we tested each single component such as adder and shifter, then we integrated them one at a time and checked it.
@@ -447,6 +489,7 @@ Because of this of this strategy we decided to:
 	\item Change the structure of the microcode memory: synthesizing the control unit gave strange results at the beginning because of array usage( we still don't know why ). Moving it another block and using the case statement fixed this unwanted behavior. 
 \end{itemize}
 
+\paragraph{Synthesis Strategy}
 The final TCL synthesis script can be found in the project folder. After some trial and error, we found a good way to have the best results from the tool.
 
 Execute block is characterized and synthesized alone because we think it is the critical zone in the design, both in execution and decode stages. 
@@ -473,7 +516,7 @@ compile_ultra -no_autoungroup
 \end{minipage}
 
 
-This reduced the overall dynamic power consumption by approximately 27\% as shown in Table \ref{POWERTABLE}.
+This reduced the overall dynamic power consumption by approximately 28\% as shown in Table \ref{POWERTABLE}.
 
 	
 \begin{table}[h]
@@ -481,8 +524,8 @@ This reduced the overall dynamic power consumption by approximately 27\% as show
 	\begin{tabular}{ | c | c | c | c |}
 		\hline
 		\rowcolor{LimeGreen}Design &Total Dynamic Power [mW]\\ \hline
-		clk@1.7ns & 12.0339 \\ \hline
-		clk@1.7ns clock\_gating & 8.7435 \\ \hline
+		clk@1.7ns & 11.2982 \\ \hline
+		clk@1.7ns clock\_gating & 8.1356 \\ \hline
 	\end{tabular}
 		\caption{DLX - Clock Gating Power Reduction Evaluation}
 		\label{POWERTABLE}
@@ -517,10 +560,10 @@ Among all the reports, we extracted some values regarding gate count and area:
 	\begin{tabular}{ | c | c | c | c |}
 		\hline
 		\rowcolor{LimeGreen}   Block & Gate Count & Area($\mu m^2$)& \%\\ \hline
-		Total & 26524 & 21166.7 & 100\% \\ \hline
-		Register File & 10444 & 8334.3 & 39\% \\ \hline
-		BTB & 6401 &  5108.0 & 24\% \\ \hline
-		ALU & 4088 & 3262.2 & 15\% \\ \hline
+		Total & 25231 & 20134.9 & 100\% \\ \hline
+		Register File & 10466 & 8351.9 & 41\% \\ \hline
+		BTB & 6352 &  5068.9 & 25\% \\ \hline
+		ALU & 2867 & 2288.1 & 11\% \\ \hline
 	\end{tabular}
 	\caption{DLX - Post Place\&Route Gate Count and Area}
 	\label{AREA}
@@ -531,10 +574,10 @@ It's interesting to see that more than 60\% of the overall area is occupied by B
 
 
 \section{Conclusions}\label{Conclusions}
-This project required a incredible amount of work and taught us that microelectronic design is not so simple.
+This project required a incredible amount of work and taught us that microelectronic design is a piece of cake.
 
 As a future work, this design could be extended by including the missing instructions and adding the Floating Point part of the microprocessor. 
-Also it would be interesting to see some numbers regarding the branch predictor, in particular a tradeoff curve between size and misprediction rate with real life benchmarks.
+Also it would be interesting to see some numbers regarding the branch predictor, in particular a trad-eoff curve between size and misprediction rate with real life benchmarks.
 
 
 \printbibliography

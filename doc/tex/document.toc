@@ -8,7 +8,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Instructions}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Jump and branch}{3}
+\contentsline {paragraph}{Jump and branch}{2}
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Control logic}{3}
 \defcounter {refsection}{0}\relax 
@@ -20,7 +20,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.1}Fetch Block}{3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}Branch Predictor}{5}
+\contentsline {subsection}{\numberline {3.2}Branch Predictor}{4}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.3}Decode Block}{6}
 \defcounter {refsection}{0}\relax 
@@ -48,7 +48,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{10 :}{13}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6}Memory Block}{15}
+\contentsline {subsection}{\numberline {3.6}Memory Block}{14}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.7}Forwarding Logic}{15}
 \defcounter {refsection}{0}\relax 
@@ -58,9 +58,9 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{MEM}{15}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.8}Control Unit}{16}
+\contentsline {subsection}{\numberline {3.8}Control Unit}{15}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.9}Stall Logic}{18}
+\contentsline {subsection}{\numberline {3.9}Stall Logic}{17}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.10}Instruction and Data Memories}{18}
 \defcounter {refsection}{0}\relax 
@@ -70,7 +70,11 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4}Simulation and Test}{18}
 \defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{Simulation Strategy}{19}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5}Synthesis}{19}
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{Synthesis Strategy}{20}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {5.1}Power Optimization}{20}
 \defcounter {refsection}{0}\relax 
