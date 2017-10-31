@@ -1,0 +1,86 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : top_level
+Version: Z-2007.03-SP1
+Date   : Tue Oct 31 20:18:08 2017
+****************************************
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: UCU/cw_e_reg[5]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: UBTB/clk_gate_predict_PC_reg[0]/latch
+            (negative level-sensitive latch clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  top_level          5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  UCU/cw_e_reg[5]/CK (DFFR_X1)                            0.00       0.00 r
+  UCU/cw_e_reg[5]/Q (DFFR_X1)                             0.10       0.10 r
+  UCU/S_MUX_DEST[1] (dlx_cu_MICROCODE_MEM_SIZE64_FUNC_SIZE11_OP_CODE_SIZE6_IR_SIZE32_CW_SIZE13)
+                                                          0.00       0.10 r
+  UEXECUTE_BLOCK/S_MUX_DEST_i[1] (execute_block)          0.00       0.10 r
+  UEXECUTE_BLOCK/MUXDEST/CTRL[1] (mux41_MUX_SIZE5)        0.00       0.10 r
+  UEXECUTE_BLOCK/MUXDEST/U20/ZN (INV_X1)                  0.03       0.13 f
+  UEXECUTE_BLOCK/MUXDEST/U19/ZN (NOR2_X1)                 0.09       0.21 r
+  UEXECUTE_BLOCK/MUXDEST/U9/ZN (AOI21_X1)                 0.04       0.25 f
+  UEXECUTE_BLOCK/MUXDEST/U4/ZN (NAND2_X1)                 0.05       0.30 r
+  UEXECUTE_BLOCK/MUXDEST/OUT1[3] (mux41_MUX_SIZE5)        0.00       0.30 r
+  UEXECUTE_BLOCK/muxed_dest[3] (execute_block)            0.00       0.30 r
+  UCU/D1_i[3] (dlx_cu_MICROCODE_MEM_SIZE64_FUNC_SIZE11_OP_CODE_SIZE6_IR_SIZE32_CW_SIZE13)
+                                                          0.00       0.30 r
+  UCU/STALL_L/D1_i[3] (stall_logic_FUNC_SIZE11_OP_CODE_SIZE6)
+                                                          0.00       0.30 r
+  UCU/STALL_L/U12/ZN (INV_X1)                             0.03       0.33 f
+  UCU/STALL_L/U11/ZN (OAI22_X1)                           0.05       0.39 r
+  UCU/STALL_L/U10/ZN (AOI221_X1)                          0.03       0.42 f
+  UCU/STALL_L/U5/ZN (NAND4_X1)                            0.04       0.45 r
+  UCU/STALL_L/U4/ZN (OAI211_X1)                           0.06       0.52 f
+  UCU/STALL_L/stall_btb_o (stall_logic_FUNC_SIZE11_OP_CODE_SIZE6)
+                                                          0.00       0.52 f
+  UCU/U7/ZN (OR2_X1)                                      0.08       0.59 f
+  UCU/stall_btb_o (dlx_cu_MICROCODE_MEM_SIZE64_FUNC_SIZE11_OP_CODE_SIZE6_IR_SIZE32_CW_SIZE13)
+                                                          0.00       0.59 f
+  UBTB/stall_i (btb_N_LINES4_SIZE32)                      0.00       0.59 f
+  UBTB/U475/ZN (INV_X1)                                   0.09       0.69 r
+  UBTB/U438/ZN (AND2_X1)                                  0.06       0.75 r
+  UBTB/clk_gate_predict_PC_reg[0]/EN (SNPS_CLOCK_GATE_HIGH_btb_N_LINES4_SIZE32_16)
+                                                          0.00       0.75 r
+  UBTB/clk_gate_predict_PC_reg[0]/latch/D (DLL_X1)        0.01       0.75 r
+  data arrival time                                                  0.75
+
+  clock clk (fall edge)                                   1.75       1.75
+  clock network delay (ideal)                             0.00       1.75
+  UBTB/clk_gate_predict_PC_reg[0]/latch/GN (DLL_X1)       0.00       1.75 f
+  time borrowed from endpoint                             0.00       1.75
+  data required time                                                 1.75
+  --------------------------------------------------------------------------
+  data required time                                                 1.75
+  data arrival time                                                 -0.75
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.00
+
+  Time Borrowing Information
+  --------------------------------------------------------------
+  clk pulse width                                         1.75   
+  library setup time                                     -0.03   
+  --------------------------------------------------------------
+  max time borrow                                         1.72   
+  actual time borrow                                      0.00   
+  --------------------------------------------------------------
+
+
+1

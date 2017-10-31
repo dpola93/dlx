@@ -1,0 +1,100 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : top_level
+Version: Z-2007.03-SP1
+Date   : Tue Oct 31 19:28:21 2017
+****************************************
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: UEXECUTE_REGS/D2/Q_reg[1]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: UFETCH_BLOCK/PC/Q_reg[11]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  top_level          5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  UEXECUTE_REGS/D2/Q_reg[1]/CK (DFFR_X1)                  0.00       0.00 r
+  UEXECUTE_REGS/D2/Q_reg[1]/Q (DFFR_X1)                   0.11       0.11 r
+  UEXECUTE_REGS/D2/Q[1] (ff32_en_SIZE5_1)                 0.00       0.11 r
+  UEXECUTE_REGS/D2_o[1] (execute_regs)                    0.00       0.11 r
+  UFW_LOGIC/D2_i[1] (fw_logic)                            0.00       0.11 r
+  UFW_LOGIC/U39/ZN (INV_X1)                               0.04       0.14 f
+  UFW_LOGIC/U78/ZN (AOI22_X1)                             0.06       0.20 r
+  UFW_LOGIC/U79/ZN (OAI211_X1)                            0.04       0.25 f
+  UFW_LOGIC/U41/ZN (NOR4_X1)                              0.08       0.32 r
+  UFW_LOGIC/U13/Z (BUF_X1)                                0.06       0.38 r
+  UFW_LOGIC/U15/ZN (NOR2_X1)                              0.04       0.41 f
+  UFW_LOGIC/S_FWAdec[1] (fw_logic)                        0.00       0.41 f
+  UJUMP_LOGIC/S_FW_Adec_i[1] (jump_logic)                 0.00       0.41 f
+  UJUMP_LOGIC/MUX_FWA/CTRL[1] (mux41_MUX_SIZE32_0)        0.00       0.41 f
+  UJUMP_LOGIC/MUX_FWA/U23/ZN (NOR2_X2)                    0.09       0.50 r
+  UJUMP_LOGIC/MUX_FWA/U15/Z (BUF_X1)                      0.11       0.61 r
+  UJUMP_LOGIC/MUX_FWA/U65/ZN (AOI22_X1)                   0.05       0.66 f
+  UJUMP_LOGIC/MUX_FWA/U66/ZN (NAND2_X1)                   0.04       0.70 r
+  UJUMP_LOGIC/MUX_FWA/OUT1[17] (mux41_MUX_SIZE32_0)       0.00       0.70 r
+  UJUMP_LOGIC/ZC/IN0[17] (zerocheck)                      0.00       0.70 r
+  UJUMP_LOGIC/ZC/U7/ZN (INV_X1)                           0.02       0.73 f
+  UJUMP_LOGIC/ZC/U17/ZN (NAND3_X1)                        0.03       0.76 r
+  UJUMP_LOGIC/ZC/U20/ZN (NOR2_X1)                         0.02       0.78 f
+  UJUMP_LOGIC/ZC/U16/ZN (NAND3_X1)                        0.03       0.81 r
+  UJUMP_LOGIC/ZC/U10/ZN (NOR2_X1)                         0.02       0.83 f
+  UJUMP_LOGIC/ZC/U9/ZN (XNOR2_X1)                         0.07       0.91 r
+  UJUMP_LOGIC/ZC/OUT1 (zerocheck)                         0.00       0.91 r
+  UJUMP_LOGIC/BRANCHMUX/CTRL (mux21_0)                    0.00       0.91 r
+  UJUMP_LOGIC/BRANCHMUX/U9/Z (BUF_X2)                     0.08       0.99 r
+  UJUMP_LOGIC/BRANCHMUX/U2/Z (MUX2_X1)                    0.09       1.08 f
+  UJUMP_LOGIC/BRANCHMUX/OUT1[8] (mux21_0)                 0.00       1.08 f
+  UJUMP_LOGIC/branch_target_o[8] (jump_logic)             0.00       1.08 f
+  UFETCH_BLOCK/branch_target_i[8] (fetch_block)           0.00       1.08 f
+  UFETCH_BLOCK/MUXTARGET/IN3[8] (mux41_0)                 0.00       1.08 f
+  UFETCH_BLOCK/MUXTARGET/U1/ZN (AOI22_X1)                 0.05       1.13 r
+  UFETCH_BLOCK/MUXTARGET/U3/ZN (NAND2_X1)                 0.11       1.24 f
+  UFETCH_BLOCK/MUXTARGET/OUT1[8] (mux41_0)                0.00       1.24 f
+  UFETCH_BLOCK/PC_BUS_pre_BTB[8] (fetch_block)            0.00       1.24 f
+  UBTB/target_PC_i[8] (btb_N_LINES4_SIZE32)               0.00       1.24 f
+  UBTB/U519/ZN (AOI22_X1)                                 0.10       1.33 r
+  UBTB/U504/ZN (NAND3_X1)                                 0.04       1.37 f
+  UBTB/U540/ZN (NOR2_X1)                                  0.04       1.41 r
+  UBTB/U521/ZN (NAND4_X1)                                 0.04       1.45 f
+  UBTB/U433/ZN (NOR2_X1)                                  0.04       1.49 r
+  UBTB/U432/ZN (AOI21_X1)                                 0.05       1.54 f
+  UBTB/mispredict_o (btb_N_LINES4_SIZE32)                 0.00       1.54 f
+  UFETCH_BLOCK/mispredict_i (fetch_block)                 0.00       1.54 f
+  UFETCH_BLOCK/MUXPREDICTION/CTRL[1] (mux41_1)            0.00       1.54 f
+  UFETCH_BLOCK/MUXPREDICTION/U118/ZN (NOR2_X1)            0.07       1.61 r
+  UFETCH_BLOCK/MUXPREDICTION/U25/Z (BUF_X1)               0.08       1.68 r
+  UFETCH_BLOCK/MUXPREDICTION/U101/ZN (NAND2_X1)           0.04       1.72 f
+  UFETCH_BLOCK/MUXPREDICTION/U99/ZN (NAND3_X1)            0.03       1.76 r
+  UFETCH_BLOCK/MUXPREDICTION/OUT1[11] (mux41_1)           0.00       1.76 r
+  UFETCH_BLOCK/PC/D[11] (ff32_en_0)                       0.00       1.76 r
+  UFETCH_BLOCK/PC/Q_reg[11]/D (DFFR_X1)                   0.01       1.77 r
+  data arrival time                                                  1.77
+
+  clock clk (rise edge)                                   1.80       1.80
+  clock network delay (ideal)                             0.00       1.80
+  UFETCH_BLOCK/PC/Q_reg[11]/CK (DFFR_X1)                  0.00       1.80 r
+  library setup time                                     -0.03       1.77
+  data required time                                                 1.77
+  --------------------------------------------------------------------------
+  data required time                                                 1.77
+  data arrival time                                                 -1.77
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1

@@ -1,0 +1,106 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : top_level
+Version: Z-2007.03-SP1
+Date   : Tue Oct 31 19:38:39 2017
+****************************************
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: UEXECUTE_REGS/D2/Q_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: UFETCH_BLOCK/PC/Q_reg[29]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  top_level          5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  UEXECUTE_REGS/D2/Q_reg[0]/CK (DFFR_X1)                  0.00       0.00 r
+  UEXECUTE_REGS/D2/Q_reg[0]/Q (DFFR_X1)                   0.14       0.14 r
+  UEXECUTE_REGS/D2/Q[0] (ff32_en_SIZE5_1)                 0.00       0.14 r
+  UEXECUTE_REGS/D2_o[0] (execute_regs)                    0.00       0.14 r
+  UFW_LOGIC/D2_i[0] (fw_logic)                            0.00       0.14 r
+  UFW_LOGIC/U46/ZN (INV_X1)                               0.06       0.20 f
+  UFW_LOGIC/U67/ZN (AOI22_X1)                             0.07       0.26 r
+  UFW_LOGIC/U66/ZN (NAND4_X1)                             0.05       0.31 f
+  UFW_LOGIC/U25/ZN (NOR2_X1)                              0.07       0.38 r
+  UFW_LOGIC/U15/ZN (NOR2_X1)                              0.04       0.42 f
+  UFW_LOGIC/S_FWAdec[1] (fw_logic)                        0.00       0.42 f
+  UJUMP_LOGIC/S_FW_Adec_i[1] (jump_logic)                 0.00       0.42 f
+  UJUMP_LOGIC/MUX_FWA/CTRL[1] (mux41_MUX_SIZE32_0)        0.00       0.42 f
+  UJUMP_LOGIC/MUX_FWA/U101/ZN (INV_X1)                    0.04       0.45 r
+  UJUMP_LOGIC/MUX_FWA/U11/ZN (NOR2_X1)                    0.03       0.48 f
+  UJUMP_LOGIC/MUX_FWA/U5/Z (BUF_X1)                       0.08       0.56 f
+  UJUMP_LOGIC/MUX_FWA/U1/ZN (AOI222_X1)                   0.09       0.65 r
+  UJUMP_LOGIC/MUX_FWA/U2/ZN (INV_X1)                      0.03       0.68 f
+  UJUMP_LOGIC/MUX_FWA/OUT1[6] (mux41_MUX_SIZE32_0)        0.00       0.68 f
+  UJUMP_LOGIC/ZC/IN0[6] (zerocheck)                       0.00       0.68 f
+  UJUMP_LOGIC/ZC/U11/ZN (NOR2_X1)                         0.05       0.73 r
+  UJUMP_LOGIC/ZC/U12/ZN (NAND4_X1)                        0.04       0.77 f
+  UJUMP_LOGIC/ZC/U3/ZN (NOR2_X1)                          0.04       0.81 r
+  UJUMP_LOGIC/ZC/U4/ZN (NAND2_X1)                         0.03       0.84 f
+  UJUMP_LOGIC/ZC/U2/ZN (XNOR2_X2)                         0.09       0.93 r
+  UJUMP_LOGIC/ZC/OUT1 (zerocheck)                         0.00       0.93 r
+  UJUMP_LOGIC/BRANCHMUX/CTRL (mux21_0)                    0.00       0.93 r
+  UJUMP_LOGIC/BRANCHMUX/U22/Z (BUF_X4)                    0.09       1.02 r
+  UJUMP_LOGIC/BRANCHMUX/U1/Z (MUX2_X1)                    0.09       1.11 f
+  UJUMP_LOGIC/BRANCHMUX/OUT1[9] (mux21_0)                 0.00       1.11 f
+  UJUMP_LOGIC/branch_target_o[9] (jump_logic)             0.00       1.11 f
+  UFETCH_BLOCK/branch_target_i[9] (fetch_block)           0.00       1.11 f
+  UFETCH_BLOCK/MUXTARGET/IN3[9] (mux41_0)                 0.00       1.11 f
+  UFETCH_BLOCK/MUXTARGET/U138/ZN (NAND2_X1)               0.03       1.14 r
+  UFETCH_BLOCK/MUXTARGET/U25/ZN (NAND3_X1)                0.14       1.28 f
+  UFETCH_BLOCK/MUXTARGET/OUT1[9] (mux41_0)                0.00       1.28 f
+  UFETCH_BLOCK/PC_BUS_pre_BTB[9] (fetch_block)            0.00       1.28 f
+  UBTB/target_PC_i[9] (btb_N_LINES4_SIZE32)               0.00       1.28 f
+  UBTB/U522/ZN (NAND2_X1)                                 0.07       1.34 r
+  UBTB/U533/ZN (OAI21_X1)                                 0.04       1.38 f
+  UBTB/U491/ZN (NOR4_X1)                                  0.10       1.48 r
+  UBTB/U542/ZN (NAND4_X1)                                 0.05       1.53 f
+  UBTB/U543/ZN (NOR3_X1)                                  0.05       1.58 r
+  UBTB/U544/ZN (OAI211_X1)                                0.04       1.62 f
+  UBTB/U545/ZN (NOR3_X1)                                  0.06       1.68 r
+  UBTB/U546/ZN (OAI21_X1)                                 0.04       1.72 f
+  UBTB/U547/ZN (NOR2_X1)                                  0.04       1.76 r
+  UBTB/U548/ZN (OAI211_X1)                                0.04       1.80 f
+  UBTB/U426/ZN (NOR2_X1)                                  0.05       1.85 r
+  UBTB/U425/ZN (AOI21_X1)                                 0.05       1.89 f
+  UBTB/mispredict_o (btb_N_LINES4_SIZE32)                 0.00       1.89 f
+  UFETCH_BLOCK/mispredict_i (fetch_block)                 0.00       1.89 f
+  UFETCH_BLOCK/MUXPREDICTION/CTRL[1] (mux41_1)            0.00       1.89 f
+  UFETCH_BLOCK/MUXPREDICTION/U101/ZN (INV_X1)             0.04       1.94 r
+  UFETCH_BLOCK/MUXPREDICTION/U29/ZN (NOR2_X1)             0.03       1.96 f
+  UFETCH_BLOCK/MUXPREDICTION/U20/Z (BUF_X2)               0.07       2.04 f
+  UFETCH_BLOCK/MUXPREDICTION/U4/ZN (AOI22_X1)             0.08       2.12 r
+  UFETCH_BLOCK/MUXPREDICTION/U16/ZN (NAND2_X1)            0.03       2.15 f
+  UFETCH_BLOCK/MUXPREDICTION/OUT1[29] (mux41_1)           0.00       2.15 f
+  UFETCH_BLOCK/PC/D[29] (ff32_en_0)                       0.00       2.15 f
+  UFETCH_BLOCK/PC/Q_reg[29]/D (DFFR_X1)                   0.01       2.16 f
+  data arrival time                                                  2.16
+
+  clock clk (rise edge)                                   2.20       2.20
+  clock network delay (ideal)                             0.00       2.20
+  UFETCH_BLOCK/PC/Q_reg[29]/CK (DFFR_X1)                  0.00       2.20 r
+  library setup time                                     -0.04       2.16
+  data required time                                                 2.16
+  --------------------------------------------------------------------------
+  data required time                                                 2.16
+  data arrival time                                                 -2.16
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1

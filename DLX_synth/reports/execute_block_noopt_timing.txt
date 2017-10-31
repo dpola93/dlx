@@ -1,0 +1,109 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'execute_block' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : execute_block
+Version: Z-2007.03-SP1
+Date   : Tue Oct 31 21:23:59 2017
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: S_FW_B_i[1]
+              (input port)
+  Endpoint: DOUT[0] (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  S_FW_B_i[1]        5K_hvratio_1_1        NangateOpenCellLibrary
+  execute_block      5K_hvratio_1_1        NangateOpenCellLibrary
+  muxed_B[0]         5K_hvratio_1_1        NangateOpenCellLibrary
+  DOUT[0]            5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  input external delay                                    0.03       0.03 f
+  S_FW_B_i[1] (in)                                        0.00       0.03 f
+  MUX_FWB/CTRL[1] (mux41_MUX_SIZE32_1)                    0.00       0.03 f
+  MUX_FWB/U68/ZN (INV_X1)                                 0.04       0.07 r
+  MUX_FWB/U2/ZN (NOR2_X4)                                 0.09       0.15 f
+  MUX_FWB/U67/ZN (AOI222_X1)                              0.13       0.28 r
+  MUX_FWB/U66/ZN (INV_X1)                                 0.02       0.30 f
+  MUX_FWB/OUT1[0] (mux41_MUX_SIZE32_1)                    0.00       0.30 f
+  ALUIN_MUX/IN0[0] (mux21_0)                              0.00       0.30 f
+  ALUIN_MUX/U32/Z (MUX2_X1)                               0.10       0.40 f
+  ALUIN_MUX/OUT1[0] (mux21_0)                             0.00       0.40 f
+  ALU/IN2[0] (real_alu_DATA_SIZE32)                       0.00       0.40 f
+  ALU/U44/Z (MUX2_X1)                                     0.08       0.48 f
+  ALU/ADDER/B[0] (p4add_N32_logN5)                        0.00       0.48 f
+  ALU/ADDER/xor32/A[0] (xor_gen_N32)                      0.00       0.48 f
+  ALU/ADDER/xor32/U32/Z (XOR2_X1)                         0.09       0.57 f
+  ALU/ADDER/xor32/S[0] (xor_gen_N32)                      0.00       0.57 f
+  ALU/ADDER/ct/B[0] (carry_tree_N32_logN5)                0.00       0.57 f
+  ALU/ADDER/ct/pg_net_0_MAGIC/b (pg_net_1)                0.00       0.57 f
+  ALU/ADDER/ct/pg_net_0_MAGIC/U1/Z (XOR2_X1)              0.09       0.67 f
+  ALU/ADDER/ct/pg_net_0_MAGIC/p_out (pg_net_1)            0.00       0.67 f
+  ALU/ADDER/ct/xG_0_0_MAGIC/p (g_0)                       0.00       0.67 f
+  ALU/ADDER/ct/xG_0_0_MAGIC/U2/ZN (AOI21_X1)              0.05       0.71 r
+  ALU/ADDER/ct/xG_0_0_MAGIC/U1/ZN (INV_X1)                0.02       0.73 f
+  ALU/ADDER/ct/xG_0_0_MAGIC/g_out (g_0)                   0.00       0.73 f
+  ALU/ADDER/ct/xG_1_0/g_prec (g_9)                        0.00       0.73 f
+  ALU/ADDER/ct/xG_1_0/U2/ZN (AOI21_X1)                    0.04       0.78 r
+  ALU/ADDER/ct/xG_1_0/U1/ZN (INV_X1)                      0.02       0.80 f
+  ALU/ADDER/ct/xG_1_0/g_out (g_9)                         0.00       0.80 f
+  ALU/ADDER/ct/xG_2_0/g_prec (g_8)                        0.00       0.80 f
+  ALU/ADDER/ct/xG_2_0/U2/ZN (AOI21_X1)                    0.04       0.85 r
+  ALU/ADDER/ct/xG_2_0/U1/ZN (INV_X1)                      0.04       0.88 f
+  ALU/ADDER/ct/xG_2_0/g_out (g_8)                         0.00       0.88 f
+  ALU/ADDER/ct/xG_3_1/g_prec (g_7)                        0.00       0.88 f
+  ALU/ADDER/ct/xG_3_1/U2/ZN (AOI21_X1)                    0.05       0.94 r
+  ALU/ADDER/ct/xG_3_1/U1/ZN (INV_X1)                      0.04       0.98 f
+  ALU/ADDER/ct/xG_3_1/g_out (g_7)                         0.00       0.98 f
+  ALU/ADDER/ct/xG_4_3/g_prec (g_5)                        0.00       0.98 f
+  ALU/ADDER/ct/xG_4_3/U2/ZN (AOI21_X1)                    0.05       1.03 r
+  ALU/ADDER/ct/xG_4_3/U1/ZN (INV_X1)                      0.05       1.08 f
+  ALU/ADDER/ct/xG_4_3/g_out (g_5)                         0.00       1.08 f
+  ALU/ADDER/ct/xG_5_6/g_prec (g_2)                        0.00       1.08 f
+  ALU/ADDER/ct/xG_5_6/U2/ZN (AOI21_X1)                    0.06       1.14 r
+  ALU/ADDER/ct/xG_5_6/U1/ZN (INV_X1)                      0.04       1.18 f
+  ALU/ADDER/ct/xG_5_6/g_out (g_2)                         0.00       1.18 f
+  ALU/ADDER/ct/Cout[6] (carry_tree_N32_logN5)             0.00       1.18 f
+  ALU/ADDER/add/Cin[7] (sum_gen_N32)                      0.00       1.18 f
+  ALU/ADDER/add/csel_N_7/Ci (carry_sel_gen_N4_1)          0.00       1.18 f
+  ALU/ADDER/add/csel_N_7/outmux/CTRL (mux21_SIZE4_1)      0.00       1.18 f
+  ALU/ADDER/add/csel_N_7/outmux/U1/Z (MUX2_X1)            0.08       1.26 f
+  ALU/ADDER/add/csel_N_7/outmux/OUT1[3] (mux21_SIZE4_1)
+                                                          0.00       1.26 f
+  ALU/ADDER/add/csel_N_7/S[3] (carry_sel_gen_N4_1)        0.00       1.26 f
+  ALU/ADDER/add/S[31] (sum_gen_N32)                       0.00       1.26 f
+  ALU/ADDER/S[31] (p4add_N32_logN5)                       0.00       1.26 f
+  ALU/COMP/SUM[31] (comparator_M32)                       0.00       1.26 f
+  ALU/COMP/U19/ZN (NOR4_X1)                               0.10       1.36 r
+  ALU/COMP/U17/ZN (NAND4_X1)                              0.05       1.41 f
+  ALU/COMP/U11/ZN (NOR2_X1)                               0.06       1.47 r
+  ALU/COMP/U10/Z (XOR2_X1)                                0.08       1.55 r
+  ALU/COMP/U9/ZN (INV_X1)                                 0.02       1.58 f
+  ALU/COMP/U8/ZN (OAI21_X1)                               0.03       1.61 r
+  ALU/COMP/U7/ZN (AOI22_X1)                               0.03       1.64 f
+  ALU/COMP/U5/Z (MUX2_X1)                                 0.07       1.70 f
+  ALU/COMP/U1/Z (MUX2_X1)                                 0.07       1.77 f
+  ALU/COMP/S (comparator_M32)                             0.00       1.77 f
+  ALU/U177/ZN (AOI22_X1)                                  0.05       1.83 r
+  ALU/U171/ZN (OAI211_X1)                                 0.04       1.87 f
+  ALU/DOUT[0] (real_alu_DATA_SIZE32)                      0.00       1.87 f
+  DOUT[0] (out)                                           0.00       1.87 f
+  data arrival time                                                  1.87
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

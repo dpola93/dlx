@@ -1,0 +1,34 @@
+Gate area 0.7980 um^2
+Level 0 Module top_level                                Gates=     25231 Cells=   10665 Area=   20134.9 um^2
+Level 1 Module UFETCH_BLOCK                             Gates=740        Cells=430      Area=     591.1 um^2
+Level 2 Module UFETCH_BLOCK/PC                          Gates=290        Cells=99       Area=     232.0 um^2
+Level 2 Module UFETCH_BLOCK/MUXTARGET                   Gates=203        Cells=168      Area=     162.3 um^2
+Level 2 Module UFETCH_BLOCK/MUXPREDICTION               Gates=148        Cells=103      Area=     118.1 um^2
+Level 1 Module UBTB                                     Gates=6352       Cells=2378     Area=    5068.9 um^2
+Level 1 Module UFEETCH_REGS                             Gates=789        Cells=404      Area=     629.9 um^2
+Level 2 Module UFEETCH_REGS/NPCF                        Gates=289        Cells=97       Area=     230.6 um^2
+Level 2 Module UFEETCH_REGS/IR                          Gates=497        Cells=305      Area=     396.6 um^2
+Level 1 Module UJUMP_LOGIC                              Gates=929        Cells=617      Area=     741.3 um^2
+Level 2 Module UJUMP_LOGIC/JUMPADDER                    Gates=576        Cells=374      Area=     460.2 um^2
+Level 3 Module UJUMP_LOGIC/JUMPADDER/ct                 Gates=181        Cells=136      Area=     144.7 um^2
+Level 3 Module UJUMP_LOGIC/JUMPADDER/add                Gates=395        Cells=238      Area=     315.5 um^2
+Level 2 Module UJUMP_LOGIC/MUX_FWA                      Gates=139        Cells=116      Area=     111.5 um^2
+Level 1 Module UCU                                      Gates=312        Cells=180      Area=     249.0 um^2
+Level 1 Module RF                                       Gates=10466      Cells=3877     Area=    8351.9 um^2
+Level 1 Module UDECODE_REGS                             Gates=1129       Cells=382      Area=     900.9 um^2
+Level 1 Module UEXECUTE_REGS                            Gates=466        Cells=76       Area=     371.9 um^2
+Level 1 Module UEXECUTE_BLOCK                           Gates=3203       Cells=1887     Area=    2556.3 um^2
+Level 2 Module UEXECUTE_BLOCK/ALU                       Gates=2867       Cells=1673     Area=    2288.1 um^2
+Level 3 Module UEXECUTE_BLOCK/ALU/MULT                  Gates=1066       Cells=422      Area=     850.7 um^2
+Level 3 Module UEXECUTE_BLOCK/ALU/ADDER                 Gates=723        Cells=473      Area=     577.0 um^2
+Level 4 Module UEXECUTE_BLOCK/ALU/ADDER/ct              Gates=227        Cells=177      Area=     181.4 um^2
+Level 4 Module UEXECUTE_BLOCK/ALU/ADDER/add             Gates=426        Cells=256      Area=     340.5 um^2
+Level 3 Module UEXECUTE_BLOCK/ALU/SHIFT                 Gates=510        Cells=397      Area=     407.0 um^2
+Level 4 Module UEXECUTE_BLOCK/ALU/SHIFT/IL              Gates=151        Cells=157      Area=     121.0 um^2
+Level 4 Module UEXECUTE_BLOCK/ALU/SHIFT/IIL             Gates=135        Cells=81       Area=     107.7 um^2
+Level 4 Module UEXECUTE_BLOCK/ALU/SHIFT/IIIL            Gates=213        Cells=150      Area=     170.0 um^2
+Level 3 Module UEXECUTE_BLOCK/ALU/LU                    Gates=132        Cells=99       Area=     105.6 um^2
+Level 2 Module UEXECUTE_BLOCK/MUX_FWA                   Gates=116        Cells=72       Area=      92.8 um^2
+Level 2 Module UEXECUTE_BLOCK/MUX_FWB                   Gates=128        Cells=92       Area=     102.1 um^2
+Level 1 Module UMEM_REGS                                Gates=342        Cells=134      Area=     273.4 um^2
+Level 2 Module UMEM_REGS/W                              Gates=306        Cells=124      Area=     244.2 um^2

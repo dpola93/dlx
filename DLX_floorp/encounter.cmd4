@@ -1,0 +1,75 @@
+init_design
+getIoFlowFlag
+setIoFlowFlag 0
+floorPlan -coreMarginsBy die -site FreePDK45_38x28_10R_NP_162NW_34O -r 0.99531962794 0.7 4.0 4.0 4.0 4.0
+uiSetTool select
+getIoFlowFlag
+fit
+set sprCreateIeRingNets {}
+set sprCreateIeRingLayers {}
+set sprCreateIeRingWidth 1.0
+set sprCreateIeRingSpacing 1.0
+set sprCreateIeRingOffset 1.0
+set sprCreateIeRingThreshold 1.0
+set sprCreateIeRingJogDistance 1.0
+addRing -stacked_via_top_layer metal10 -around core -jog_distance 0.095 -threshold 0.095 -nets {gnd vdd} -stacked_via_bottom_layer metal1 -layer {bottom metal9 top metal9 right metal10 left metal10} -width 0.8 -spacing 0.8 -offset 0.095
+set sprCreateIeStripeNets {}
+set sprCreateIeStripeLayers {}
+set sprCreateIeStripeWidth 10.0
+set sprCreateIeStripeSpacing 2.0
+set sprCreateIeStripeThreshold 1.0
+addStripe -block_ring_top_layer_limit metal10 -max_same_layer_jog_length 1.6 -padcore_ring_bottom_layer_limit metal9 -set_to_set_distance 20 -stacked_via_top_layer metal10 -padcore_ring_top_layer_limit metal10 -spacing 0.8 -xleft_offset 15 -merge_stripes_value 0.095 -layer metal10 -block_ring_bottom_layer_limit metal9 -width 0.8 -nets {} -stacked_via_bottom_layer metal1
+addStripe -block_ring_top_layer_limit metal10 -max_same_layer_jog_length 1.6 -padcore_ring_bottom_layer_limit metal9 -set_to_set_distance 20 -stacked_via_top_layer metal10 -padcore_ring_top_layer_limit metal10 -spacing 0.8 -xleft_offset 15 -merge_stripes_value 0.095 -layer metal10 -block_ring_bottom_layer_limit metal9 -width 0.8 -nets {gnd vdd} -stacked_via_bottom_layer metal1
+addStripe -block_ring_top_layer_limit metal10 -max_same_layer_jog_length 1.6 -padcore_ring_bottom_layer_limit metal9 -set_to_set_distance 20 -stacked_via_top_layer metal10 -padcore_ring_top_layer_limit metal10 -spacing 0.8 -xleft_offset 15 -merge_stripes_value 0.095 -layer metal10 -block_ring_bottom_layer_limit metal9 -width 0.8 -nets {gnd vdd} -stacked_via_bottom_layer metal1
+sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { metal1 metal10 } -blockPinTarget { nearestRingStripe nearestTarget } -padPinPortConnect { allPort oneGeom } -stripeSCpinTarget { blockring padring ring stripe ringpin blockpin } -checkAlignedSecondaryPin 1 -blockPin useLef -allowJogging 1 -crossoverViaBottomLayer metal1 -allowLayerChange 1 -targetViaTopLayer metal10 -crossoverViaTopLayer metal10 -targetViaBottomLayer metal1 -nets { gnd vdd }
+setPlaceMode -fp false
+placeDesign -prePlaceOpt
+selectWire 140.7800 1.5650 141.5800 174.5550 10 vdd
+setOptMode -fixCap true -fixTran true -fixFanoutLoad false
+optDesign -preCTS
+deselectAll
+selectWire 108.6450 95.4800 108.7850 127.1200 4 RF/n1728
+deselectAll
+createClockTreeSpec -bufferList {CLKBUF_X1 CLKBUF_X2 CLKBUF_X3} -file Clock.ctstch
+createClockTreeSpec -bufferList {CLKBUF_X1 CLKBUF_X2 CLKBUF_X3} -file Clock.ctstch
+clockDesign -specFile Clock.ctstch -outDir clock_report -fixedInstBeforeCTS
+setOptMode -fixCap true -fixTran true -fixFanoutLoad false
+optDesign -postCTS
+optDesign -postCTS -hold
+getFillerMode -quiet
+addFiller -cell FILLCELL_X8 FILLCELL_X4 FILLCELL_X32 FILLCELL_X2 FILLCELL_X16 FILLCELL_X1 -prefix FILLER
+trialRoute -maxRouteLayer 10
+setDrawView place
+setNanoRouteMode -quiet -timingEngine {}
+setNanoRouteMode -quiet -routeWithSiPostRouteFix 0
+setNanoRouteMode -quiet -routeTopRoutingLayer default
+setNanoRouteMode -quiet -routeBottomRoutingLayer default
+setNanoRouteMode -quiet -drouteEndIteration default
+setNanoRouteMode -quiet -routeWithTimingDriven false
+setNanoRouteMode -quiet -routeWithSiDriven false
+routeDesign -globalDetail
+setAnalysisMode -analysisType onChipVariation
+setOptMode -fixCap true -fixTran true -fixFanoutLoad false
+optDesign -postRoute
+optDesign -postRoute -hold
+saveDesign top_level.enc
+set_analysis_view -setup {default} -hold {default}
+rcOut -setload top_level.setload -rc_corner standard
+rcOut -setres top_level.setres -rc_corner standard
+rcOut -spf top_level.spf -rc_corner standard
+rcOut -spef top_level.spef -rc_corner standard
+redirect -quiet {set honorDomain [getAnalysisMode -honorClockDomains]} > /dev/null
+timeDesign -postRoute -pathReports -drvReports -slackReports -numPaths 50 -prefix top_level_postRoute -outDir timingReports
+redirect -quiet {set honorDomain [getAnalysisMode -honorClockDomains]} > /dev/null
+timeDesign -postRoute -hold -pathReports -slackReports -numPaths 50 -prefix top_level_postRoute -outDir timingReports
+redirect -quiet {set honorDomain [getAnalysisMode -honorClockDomains]} > /dev/null
+timeDesign -postRoute -hold -pathReports -slackReports -numPaths 50 -prefix top_level_postRoute -outDir timingReports
+verifyConnectivity -type all -error 1000 -warning 50
+setVerifyGeometryMode -area { 0 0 0 0 } -minWidth true -minSpacing true -minArea true -sameNet true -short true -overlap true -offRGrid false -offMGrid true -mergedMGridCheck true -minHole true -implantCheck true -minimumCut true -minStep true -viaEnclosure true -antenna false -insuffMetalOverlap true -pinInBlkg false -diffCellViol true -sameCellViol false -padFillerCellsOverlap true -routingBlkgPinOverlap true -routingCellBlkgOverlap true -regRoutingOnly false -stackedViasOnRegNet false -wireExt true -useNonDefaultSpacing false -maxWidth true -maxNonPrefLength -1 -error 1000 -warning 50
+verifyGeometry
+setVerifyGeometryMode -area { 0 0 0 0 }
+reportGateCount -level 5 -limit 100 -outfile top_level.gateCount
+saveNetlist top_level.v
+all_hold_analysis_views 
+all_setup_analysis_views 
+write_sdf  -ideal_clock_network top_level.sdf

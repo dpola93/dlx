@@ -1,0 +1,42 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'top_level' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : top_level
+Version: Z-2007.03-SP1
+Date   : Tue Oct 31 21:27:03 2017
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: UFETCH_BLOCK/PC/Q_reg[2]
+              (rising edge-triggered flip-flop)
+  Endpoint: IRAM_Addr_o[2]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  top_level          5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  UFETCH_BLOCK/PC/Q_reg[2]/CK (DFFR_X1)                   0.00 #     0.00 r
+  UFETCH_BLOCK/PC/Q_reg[2]/Q (DFFR_X1)                    0.13       0.13 r
+  UFETCH_BLOCK/PC/Q[2] (ff32_en_0)                        0.00       0.13 r
+  UFETCH_BLOCK/PC_o[2] (fetch_block)                      0.00       0.13 r
+  IRAM_Addr_o[2] (out)                                    0.01       0.14 r
+  data arrival time                                                  0.14
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

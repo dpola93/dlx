@@ -1,0 +1,145 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'top_level' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : top_level
+Version: Z-2007.03-SP1
+Date   : Tue Oct 31 21:30:00 2017
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: UDECODE_REGS/rB/Q_reg[2]
+              (rising edge-triggered flip-flop clocked by CLK)
+  Endpoint: UEXECUTE_REGS/X/Q_reg[0]
+            (rising edge-triggered flip-flop clocked by CLK)
+  Path Group: CLK
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  top_level          5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock CLK (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  UDECODE_REGS/rB/Q_reg[2]/CK (DFFR_X1)                   0.00 #     0.00 r
+  UDECODE_REGS/rB/Q_reg[2]/Q (DFFR_X1)                    0.10       0.10 f
+  UDECODE_REGS/rB/Q[2] (ff32_en_SIZE5_3)                  0.00       0.10 f
+  UDECODE_REGS/rB_o[2] (decode_regs)                      0.00       0.10 f
+  UFW_LOGIC/rB_i[2] (fw_logic)                            0.00       0.10 f
+  UFW_LOGIC/U53/Z (XOR2_X1)                               0.08       0.18 f
+  UFW_LOGIC/U44/ZN (OR2_X1)                               0.06       0.23 f
+  UFW_LOGIC/U43/ZN (NOR3_X1)                              0.07       0.30 r
+  UFW_LOGIC/U49/ZN (NOR2_X1)                              0.03       0.33 f
+  UFW_LOGIC/S_FWB[1] (fw_logic)                           0.00       0.33 f
+  UEXECUTE_BLOCK/S_FW_B_i[1] (execute_block)              0.00       0.33 f
+  UEXECUTE_BLOCK/MUX_FWB/CTRL[1] (mux41_MUX_SIZE32_1)     0.00       0.33 f
+  UEXECUTE_BLOCK/MUX_FWB/U63/ZN (INV_X1)                  0.03       0.36 r
+  UEXECUTE_BLOCK/MUX_FWB/U57/ZN (NOR2_X1)                 0.03       0.39 f
+  UEXECUTE_BLOCK/MUX_FWB/U29/Z (BUF_X1)                   0.06       0.46 f
+  UEXECUTE_BLOCK/MUX_FWB/U68/ZN (AOI222_X1)               0.11       0.57 r
+  UEXECUTE_BLOCK/MUX_FWB/U37/ZN (INV_X1)                  0.03       0.60 f
+  UEXECUTE_BLOCK/MUX_FWB/OUT1[16] (mux41_MUX_SIZE32_1)
+                                                          0.00       0.60 f
+  UEXECUTE_BLOCK/ALUIN_MUX/IN0[16] (mux21_0)              0.00       0.60 f
+  UEXECUTE_BLOCK/ALUIN_MUX/U10/Z (MUX2_X2)                0.08       0.67 f
+  UEXECUTE_BLOCK/ALUIN_MUX/OUT1[16] (mux21_0)             0.00       0.67 f
+  UEXECUTE_BLOCK/ALU/IN2[16] (real_alu_DATA_SIZE32)       0.00       0.67 f
+  UEXECUTE_BLOCK/ALU/U231/ZN (NAND2_X1)                   0.03       0.71 r
+  UEXECUTE_BLOCK/ALU/U232/ZN (NAND2_X1)                   0.03       0.74 f
+  UEXECUTE_BLOCK/ALU/ADDER/B[16] (p4add_N32_logN5_1)      0.00       0.74 f
+  UEXECUTE_BLOCK/ALU/ADDER/xor32/A[16] (xor_gen_N32_1)
+                                                          0.00       0.74 f
+  UEXECUTE_BLOCK/ALU/ADDER/xor32/U15/Z (XOR2_X1)          0.10       0.84 r
+  UEXECUTE_BLOCK/ALU/ADDER/xor32/S[16] (xor_gen_N32_1)
+                                                          0.00       0.84 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/B[16] (carry_tree_N32_logN5_1)
+                                                          0.00       0.84 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/pg_net_x_16/b (pg_net_17)
+                                                          0.00       0.84 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/pg_net_x_16/U1/ZN (AND2_X1)
+                                                          0.06       0.90 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/pg_net_x_16/g_out (pg_net_17)
+                                                          0.00       0.90 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_1_8/g_prec (pg_20)      0.00       0.90 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_1_8/U3/ZN (NAND2_X1)
+                                                          0.03       0.93 f
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_1_8/U4/ZN (NAND2_X1)
+                                                          0.03       0.95 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_1_8/g_out (pg_20)       0.00       0.95 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_2_4/g_prec (pg_9)       0.00       0.95 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_2_4/U2/ZN (NAND2_X1)
+                                                          0.02       0.98 f
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_2_4/U3/ZN (NAND2_X1)
+                                                          0.03       1.01 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_2_4/g_out (pg_9)        0.00       1.01 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_3_5/g_prec (pg_4)       0.00       1.01 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_3_5/U2/ZN (NAND2_X1)
+                                                          0.03       1.04 f
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_3_5/U3/ZN (NAND2_X1)
+                                                          0.03       1.07 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_3_5/g_out (pg_4)        0.00       1.07 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_4_6/g_prec (pg_2)       0.00       1.07 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_4_6/U3/ZN (NAND2_X1)
+                                                          0.03       1.09 f
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_4_6/U4/ZN (NAND2_X1)
+                                                          0.03       1.12 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xPG_4_6/g_out (pg_2)        0.00       1.12 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xG_5_6/g (g_2)              0.00       1.12 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xG_5_6/U2/ZN (AOI21_X1)     0.02       1.15 f
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xG_5_6/U1/ZN (INV_X1)       0.04       1.19 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/xG_5_6/g_out (g_2)          0.00       1.19 r
+  UEXECUTE_BLOCK/ALU/ADDER/ct/Cout[6] (carry_tree_N32_logN5_1)
+                                                          0.00       1.19 r
+  UEXECUTE_BLOCK/ALU/ADDER/add/Cin[7] (sum_gen_N32_1)     0.00       1.19 r
+  UEXECUTE_BLOCK/ALU/ADDER/add/csel_N_7/Ci (carry_sel_gen_N4_1)
+                                                          0.00       1.19 r
+  UEXECUTE_BLOCK/ALU/ADDER/add/csel_N_7/outmux/CTRL (mux21_SIZE4_1)
+                                                          0.00       1.19 r
+  UEXECUTE_BLOCK/ALU/ADDER/add/csel_N_7/outmux/U4/Z (MUX2_X1)
+                                                          0.08       1.27 f
+  UEXECUTE_BLOCK/ALU/ADDER/add/csel_N_7/outmux/OUT1[1] (mux21_SIZE4_1)
+                                                          0.00       1.27 f
+  UEXECUTE_BLOCK/ALU/ADDER/add/csel_N_7/S[1] (carry_sel_gen_N4_1)
+                                                          0.00       1.27 f
+  UEXECUTE_BLOCK/ALU/ADDER/add/S[29] (sum_gen_N32_1)      0.00       1.27 f
+  UEXECUTE_BLOCK/ALU/ADDER/S[29] (p4add_N32_logN5_1)      0.00       1.27 f
+  UEXECUTE_BLOCK/ALU/COMP/SUM[29] (comparator_M32)        0.00       1.27 f
+  UEXECUTE_BLOCK/ALU/COMP/U23/ZN (NOR4_X1)                0.08       1.36 r
+  UEXECUTE_BLOCK/ALU/COMP/U11/ZN (AND4_X1)                0.07       1.43 r
+  UEXECUTE_BLOCK/ALU/COMP/U10/ZN (AND2_X1)                0.04       1.47 r
+  UEXECUTE_BLOCK/ALU/COMP/U16/ZN (XNOR2_X1)               0.03       1.50 f
+  UEXECUTE_BLOCK/ALU/COMP/U28/ZN (AOI22_X1)               0.05       1.56 r
+  UEXECUTE_BLOCK/ALU/COMP/U21/ZN (NAND2_X1)               0.03       1.59 f
+  UEXECUTE_BLOCK/ALU/COMP/S (comparator_M32)              0.00       1.59 f
+  UEXECUTE_BLOCK/ALU/U259/ZN (OAI22_X1)                   0.04       1.63 r
+  UEXECUTE_BLOCK/ALU/U207/ZN (INV_X1)                     0.02       1.65 f
+  UEXECUTE_BLOCK/ALU/DOUT[0] (real_alu_DATA_SIZE32)       0.00       1.65 f
+  UEXECUTE_BLOCK/DOUT[0] (execute_block)                  0.00       1.65 f
+  UEXECUTE_REGS/X_i[0] (execute_regs)                     0.00       1.65 f
+  UEXECUTE_REGS/X/D[0] (ff32_en_SIZE32_3)                 0.00       1.65 f
+  UEXECUTE_REGS/X/Q_reg[0]/D (DFFR_X1)                    0.01       1.66 f
+  data arrival time                                                  1.66
+
+  clock CLK (rise edge)                                   1.70       1.70
+  clock network delay (ideal)                             0.00       1.70
+  UEXECUTE_REGS/X/Q_reg[0]/CK (DFFR_X1)                   0.00       1.70 r
+  library setup time                                     -0.04       1.66
+  data required time                                                 1.66
+  --------------------------------------------------------------------------
+  data required time                                                 1.66
+  data arrival time                                                 -1.66
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1
