@@ -1,39 +1,79 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1}Introduction}{2}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Outline}{2}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2}Implmentation Overview}{2}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Instructions}{2}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Jump and branch}{3}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Control logic}{3}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Memories}{3}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Register file}{3}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3}Design Architecture}{3}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.1}Fetch Block}{3}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.2}Branch Predictor}{5}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.3}Decode Block}{6}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.4}Execute Block}{6}
-\contentsline {subsection}{\numberline {3.5}Fetch Block}{6}
-\contentsline {subsection}{\numberline {3.6}ALU and Multiplier}{9}
-\contentsline {subsubsection}{\numberline {3.6.1}Shared Adder}{9}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.5}ALU and Multiplier}{8}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.5.1}Shared Adder}{9}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Sparse tree}{9}
-\contentsline {paragraph}{Sum generator}{10}
-\contentsline {subsubsection}{\numberline {3.6.2}Multiplier Logic}{10}
-\contentsline {subsubsection}{\numberline {3.6.3}Logic Unit}{12}
-\contentsline {subsubsection}{\numberline {3.6.4}Comparator}{12}
-\contentsline {subsubsection}{\numberline {3.6.5}Shifter}{13}
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{Sum generator}{9}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.5.2}Multiplier Logic}{10}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.5.3}Logic Unit}{11}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.5.4}Comparator}{12}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.5.5}Shifter}{13}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{00 :}{13}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{01 :}{13}
-\contentsline {paragraph}{10 :}{14}
-\contentsline {subsection}{\numberline {3.7}Memory Block}{15}
-\contentsline {subsection}{\numberline {3.8}Forwarding Logic}{15}
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{10 :}{13}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.6}Memory Block}{14}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.7}Forwarding Logic}{15}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{DEC}{15}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{EXE}{15}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{MEM}{15}
-\contentsline {subsection}{\numberline {3.9}Control Unit}{16}
-\contentsline {subsection}{\numberline {3.10}Stall Logic}{18}
-\contentsline {subsection}{\numberline {3.11}Instruction and Data Memories}{18}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.8}Control Unit}{15}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.9}Stall Logic}{17}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.10}Instruction and Data Memories}{18}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Instruction Memory}{18}
+\defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{Data Memory}{18}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4}Simulation and Test}{18}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5}Synthesis}{19}
-\contentsline {section}{\numberline {6}Layout}{19}
-\contentsline {section}{\numberline {7}Conclusions}{20}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.1}Power Optimization}{20}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}Layout}{22}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7}Conclusions}{24}

@@ -1,3 +1,69 @@
-\begin{thebibliography}{}
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.5 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
 
-\end{thebibliography}
+
+\refsection{0}
+  \sortlist{nty}{nty}
+    \entry{ISA}{online}{}
+      \field{sortinit}{D}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labeltitlesource}{title}
+      \field{title}{DLX Instruction Set}
+      \verb{url}
+      \verb http://web.cs.iastate.edu/~prabhu/Tutorial/PIPELINE/DLXinstrSet.html
+      \endverb
+      \warn{\item Datamodel: Entry 'ISA' (document.bib): Invalid format 'date' of date field 'date' - ignoring}
+    \endentry
+    \entry{MGLECTURENOTES}{book}{}
+      \name{author}{1}{}{%
+        {{hash=44701f43668797274f40ed836a7b2f36}{Graziano}{G\bibinitperiod}{Mariagrazia}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{44701f43668797274f40ed836a7b2f36}
+      \strng{fullhash}{44701f43668797274f40ed836a7b2f36}
+      \field{sortinit}{G}
+      \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Microelectornic Systems Lecture Notes}
+      \field{year}{2013}
+    \endentry
+    \entry{Patterson:1990:CAQ:77493}{book}{}
+      \name{author}{2}{}{%
+        {{hash=165ddeb6402743c450e450cdc7bbb9ff}{Patterson}{P\bibinitperiod}{David\bibnamedelima A.}{D\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=89e7b67bc85a6cc1993943090af1bcce}{Hennessy}{H\bibinitperiod}{John\bibnamedelima L.}{J\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {San Francisco, CA, USA}%
+      }
+      \list{publisher}{1}{%
+        {Morgan Kaufmann Publishers Inc.}%
+      }
+      \strng{namehash}{56a55fe60947b3d363aa9b0c04ab2490}
+      \strng{fullhash}{56a55fe60947b3d363aa9b0c04ab2490}
+      \field{sortinit}{P}
+      \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{1-55880-069-8}
+      \field{title}{Computer Architecture: A Quantitative Approach}
+      \field{year}{1990}
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+
