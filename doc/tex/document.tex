@@ -53,7 +53,7 @@
 	% AUTHORS
 	% Change the name of the Group participants here
 	%
-	\centerline{\large Davide Pola}
+	\centerline{\large Davide Pola - Usman Jamal}
 	%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\vspace{2cm}
@@ -74,7 +74,7 @@ This project is developed for the course Microelectronic Systems taught by Prof.
 \paragraph{Outline}
 The remainder of this article is organized as follows:
  
-I will first give a brief overview of the DLX architecture and my personal implementation in Section~\ref{Overview}.
+We will first give a brief overview of the DLX architecture and our personal implementation in Section~\ref{Overview}.
 
 In Section~\ref{Design} will go into details regarding particular aspects of the datapath and control unit.
 
@@ -109,7 +109,7 @@ Two separated memories for instruction and data have been included in the design
 \end{itemize}
 
 \paragraph{Register file}
-Register file has 2 read port and one write port. Concurrent write and read on the same register produces a redirection of the input data to the output.
+Register file has 2 read ports and one write port. Concurrent write and read on the same register produces a redirection of the input data to the output.
 
 \section{Design Architecture}\label{Design}
 As previously mentioned, the processor is described in VHDL. Most blocks are written in a structural approach up to very basic logic elements such as multiplexers, half adders, etc \ldots
@@ -140,6 +140,7 @@ As previously stated, a branch predictor scheme has been applied, in particular 
 The design applied is very generic, so the number of entries is easily configurable.
 
 In normal situations the lowest part of the PC, called TAG, is used to index the BTH, if the instruction is recognized as a taken branch, then the PC found inside the BTB is sent to the fetch block. On the successive clock cycle, when the decode block actually computed the correct behavior of the branch, the value of the BTH is updated and, if the prediction was not correct, mispredict signal is triggered.
+
 Also, due to the fact that mispredict signal actually cause the current operation in the fetch stage to be re-evaluated, the branch predictor automatically disables itself on the following clock cycle to avoid possible deadlock conditions.
 
 Some information regarding the operations performed on the last clock cycle need to be stored, to do so, 4 have been added, they store: prediction, prediction target, TAG and mispredict signals.
@@ -157,7 +158,7 @@ Decode block is in charge of 4 main functions:
 	\item Compute the addition between NPCF and the offset given by the extended immediate value
 	\item Evaluate branch output through the zero comparator, the negation of this signal is also sent to other components in the system.
 \end{itemize}
-In case of Jump operations with link ( JAL and JALR ) the immediate value is replaced by the return address by MUXLINK.
+In case of Jump operations with link (JAL and JALR) the immediate value is replaced by the return address by MUXLINK.
 
 \subsection{Execute Block}
 \begin{figure}[ht!]
@@ -169,7 +170,7 @@ Execute block is third stage of the pipeline. Most of the computation done here 
 
 For the moment let's also forget about forwarding multiplexers, as they are going to be described later.
 
-ALU is fed with two operands: one is always A, while the other could come wither from B or IMM, depending on the type of operation. A multiplexer is then added to achieve this functionality.
+ALU is fed with two operands: one is always A, while the other could come either from B or IMM, depending on the type of operation. A multiplexer is then added to achieve this functionality.
 The multiplexed value is also sent directly to output, it is going to feed the Data memory input in the next stage.
 
 Another multiplexer (DESTMUX) is also used to select in which destination register the current operation is going to write. Again, there is difference between I-TYPE and R-TYPE operations, and also a special input is due to JAL and JALR instructions that have R31 as a forced destination register.
@@ -569,15 +570,15 @@ Among all the reports, we extracted some values regarding gate count and area:
 	\label{AREA}
 \end{center}
 \end{table}
-It's interesting to see that more than 60\% of the overall area is occupied by BTB and Register File.
+It's interesting to see that more than two third of the overall area is occupied by BTB and Register File.
 
 
 
 \section{Conclusions}\label{Conclusions}
-This project required a incredible amount of work and taught us that microelectronic design is a piece of cake.
+This project required an incredible amount of work and taught us that microelectronic design is not a piece of cake.
 
 As a future work, this design could be extended by including the missing instructions and adding the Floating Point part of the microprocessor. 
-Also it would be interesting to see some numbers regarding the branch predictor, in particular a trad-eoff curve between size and misprediction rate with real life benchmarks.
+Also it would be interesting to see some numbers regarding the branch predictor, in particular a trade-off curve between size and misprediction rate with real life benchmarks.
 
 
 \printbibliography
