@@ -182,6 +182,7 @@ port (
 	S_MUX_ALUIN_i	: in  std_logic;
 	FW_X_i		: in  std_logic_vector(31 downto 0);
 	FW_W_i		: in  std_logic_vector(31 downto 0);
+	FW_4_i		: in  std_logic_vector(31 downto 0);
 	S_FW_A_i	: in  std_logic_vector(1 downto 0);
 	S_FW_B_i	: in  std_logic_vector(1 downto 0);
 	muxed_dest	: out std_logic_vector(4 downto 0);
@@ -203,6 +204,7 @@ component mem_regs
 	D3_i		: in  std_logic_vector(4 downto 0);
 	W_o		: out std_logic_vector(31 downto 0);
 	D3_o		: out std_logic_vector(4 downto 0);
+	FW_4_o		: out std_logic_vector(31 downto 0);
 	clk		: in  std_logic;
 	rst		: in  std_logic
 	);
@@ -219,6 +221,8 @@ end component;
 
 component fw_logic is
  port (
+	clock		: in  std_logic;
+	reset		: in  std_logic;
 	D1_i		: in  std_logic_vector(4 downto 0); -- taken from output of destination mux in EXE stage
 	rAdec_i 	: in  std_logic_vector(4 downto 0); -- taken from IR directly in DEC stage
 	D2_i		: in  std_logic_vector(4 downto 0);
@@ -338,6 +342,8 @@ signal mispredict		: std_logic;
 signal take_prediction		: std_logic;
 signal wrong_back_pred		: std_logic;
 signal predicted_PC		: std_logic_vector(31 downto 0);
+
+signal FW4		: std_logic_vector(31 downto 0);
 
 begin
 
@@ -501,6 +507,7 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	S_MUX_ALUIN_i	=> dummy_S_MUX_ALUIN,
 	FW_X_i		=> X2wb,
 	FW_W_i		=> wb2reg,
+	FW_4_i		=> FW4,
 	S_FW_A_i	=> dummy_S_FWA2exe,
 	S_FW_B_i	=> dummy_S_FWB2exe,
 	muxed_dest	=> muxed_dest2exe,
@@ -526,13 +533,15 @@ was_taken <= (was_taken_from_jl and was_branch) or was_jmp;
 	L2wb		<= DRAM_Dout_i;
 
 	UMEM_REGS: mem_regs
-	Port Map (W2wb,D22D3,wb2reg,D32reg,clock,rst);
+	Port Map (W2wb,D22D3,wb2reg,D32reg,FW4,clock,rst);
 
 	UMEM_BLOCK: mem_block
 	Port Map (X2wb,L2wb,dummy_S_MUX_MEM,W2wb);
 
 	UFW_LOGIC: fw_logic
  	Port Map(
+	clock		=> clock,
+	reset		=> rst,
 	D1_i		=> muxed_dest2exe,
 	D2_i		=> D22D3,
 	D3_i		=> D32reg,

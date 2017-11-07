@@ -17,6 +17,7 @@ entity execute_block is
 	S_MUX_ALUIN_i	: in  std_logic;
 	FW_X_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	FW_W_i		: in  std_logic_vector(SIZE - 1 downto 0);
+	FW_4_i		: in  std_logic_vector(SIZE - 1 downto 0);
 	S_FW_A_i	: in  std_logic_vector(1 downto 0);
 	S_FW_B_i	: in  std_logic_vector(1 downto 0);
 	muxed_dest	: out std_logic_vector(4 downto 0);
@@ -118,7 +119,7 @@ MUX_FWA: mux41 	generic map(
 	IN0	=> A_i, 
 	IN1	=> FW_X_i, 
 	IN2	=> FW_W_i, 
-	IN3	=> "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", -- TODO: remove this, avoid meta state during synth 
+	IN3	=> FW_4_i,
 	CTRL	=> S_FW_A_i, 
 	OUT1	=> FWA2alu
 	);
@@ -130,7 +131,7 @@ MUX_FWB: mux41 	generic map(
 	IN0	=> MUXED_B_i, 
 	IN1	=> FW_X_i,
 	IN2	=> FW_W_i, 
-	IN3	=> "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", -- TODO: remove this, avoid meta state during synth 
+	IN3	=> FW_4_i,
 	CTRL	=> S_FW_B_i, 
 	OUT1	=> FWB2mux
 	);

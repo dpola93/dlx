@@ -113,6 +113,7 @@ end component;
 component alu_ctrl is
 	port (
 	OP		: in  AluOp;
+	BOOTH_STALL	: in  std_logic;
 	ALU_WORD	: out std_logic_vector(12 downto 0)
 	);
 
@@ -194,6 +195,7 @@ CWM : cw_mem
 ALU_C: alu_ctrl
 	port map(
 	OP		=> aluopcode_d,
+	BOOTH_STALL	=> stall_dec_o_TEMP,	
 	ALU_WORD	=> ALU_WORD_o
 	);
 

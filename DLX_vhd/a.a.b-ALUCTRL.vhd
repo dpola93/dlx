@@ -7,6 +7,7 @@ use work.myTypes.all;
 entity alu_ctrl is
 	port (
 	OP		: in  AluOp;
+	BOOTH_STALL	: in  std_logic;
 	ALU_WORD	: out std_logic_vector(12 downto 0)
 	);
 
@@ -24,7 +25,7 @@ signal enable_to_booth	: std_logic;
 signal sign_to_booth	: std_logic;
 
 begin
-enable_to_booth <=	'1' when OP = MULTS or OP = MULTU else
+enable_to_booth <=	'1' when (OP = MULTS or OP = MULTU) and BOOTH_STALL = '0' else
 			'0';
 
 ALU_WORD <= out_mux_sel&left_right&logic_arith&sign_to_adder&lu_ctrl&comp_sel&enable_to_booth&sign_to_booth;

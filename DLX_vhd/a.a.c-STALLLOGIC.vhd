@@ -68,12 +68,13 @@ STALL_JMP_BRANCH_LOAD <= IS_JMP_BRANCH and S_mem_LOAD_i and (not or_reduce(rA_i 
 
 -- TODO: check if all R type operations need both A and B
 -- stall if there is data dependency between current op in dec and the next is a LOAD
-STALL_LOAD_RTYPE <= S_exe_LOAD_i and (not or_reduce(OPCODE_i xor RTYPE)) and ( (not or_reduce(rA_i xor D1_i)) or (not or_reduce(rB_i xor D1_i))) ;
+STALL_LOAD_RTYPE <= S_exe_LOAD_i and ((not or_reduce(OPCODE_i xor RTYPE)) or (not or_reduce(OPCODE_i xor FTYPE))) and ( (not or_reduce(rA_i xor D1_i)) or (not or_reduce(rB_i xor D1_i))) ;
 
 -- TODO: check if all ITYPE operation require A (  also already checked in IS_NO_STALL )
 -- ITYPE instructions only need to look at A
-STALL_LOAD_ITYPE <= S_exe_LOAD_i and (or_reduce(OPCODE_i xor RTYPE)) and (not IS_NO_STALL) and (not or_reduce(rA_i xor D1_i)) ;
- 
+-- TODO: IS RTYPE HERE CORRECT OR NOT??? CHECK WITH A TESTBENCH
+STALL_LOAD_ITYPE <= S_exe_LOAD_i and (or_reduce(OPCODE_i xor RTYPE) and or_reduce(OPCODE_i xor FTYPE)) and (not IS_NO_STALL) and (not or_reduce(rA_i xor D1_i)) ;
+--TODO: add stall for MULT and MULTU 
 
 --exe is never stopped at the moment
 stall_exe_o <= '0'; 
